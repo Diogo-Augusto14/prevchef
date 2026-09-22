@@ -15,17 +15,30 @@ de JSON embutidos no bundle. O único código de servidor é um route handler
 
 ## Tudo é automático
 
-O gerente escolhe só **o dia** e **a praça**. A partir daí o sistema sozinho:
+O gerente escolhe só **o dia**. A partir daí o sistema sozinho:
 
-1. busca a **previsão do tempo real** na Open-Meteo (temperatura e chuva);
-2. **detecta o feriado** pela data, incluindo os móveis (Carnaval, Sexta-feira
+1. pega a **localização do aparelho** (`navigator.geolocation`) e traduz a
+   coordenada em nome de lugar;
+2. busca a **previsão do tempo real** na Open-Meteo para aquele ponto;
+3. **detecta o feriado** pela data, incluindo os móveis (Carnaval, Sexta-feira
    Santa, Corpus Christi), calculados a partir da Páscoa;
-3. roda o **KNN** com esse cenário e prevê cada prato;
-4. cruza com a ficha técnica e o estoque e monta a lista de compras;
-5. manda tudo para a **IA**, que devolve a leitura do dia e as sugestões.
+4. roda o **KNN** com esse cenário e prevê cada prato;
+5. cruza com a ficha técnica e o estoque e monta a lista de compras;
+6. manda tudo para a **IA**, que devolve a leitura do dia e as sugestões.
 
-Não existe chat, nem campo de pergunta, nem botão de "gerar": mudou o dia ou a
-cidade, tudo recalcula.
+Não existe chat, nem campo de pergunta, nem botão de "gerar": mudou o dia ou o
+lugar, tudo recalcula.
+
+### Localização e privacidade
+
+O navegador só entrega a posição depois que a pessoa autoriza — não há como
+contornar isso, e é assim que deve ser. Se ela recusar, o painel cai para uma
+lista de cidades e continua funcionando.
+
+A coordenada é **arredondada para 2 casas decimais (~1,1 km) antes de sair do
+navegador**, e a posição exata nunca é guardada. Quem recebe essa coordenada
+aproximada é a Open-Meteo (para o clima) e a BigDataCloud (para o nome do
+lugar). Nenhuma das duas pede chave, e nada disso passa pelo nosso servidor.
 
 ## Como rodar
 
@@ -114,9 +127,10 @@ Cuidados embutidos:
 ## Fluxo (entrada → inteligência → decisão)
 
 ```
-Dia + praça
+Dia (único campo)
    ↓
-Open-Meteo (clima real) + detecção de feriado        ← entrada automática
+Localização do aparelho → Open-Meteo (clima real)
+       + detecção de feriado                         ← entrada automática
    ↓
 KNN sobre 365 dias simulados                          ← inteligência (previsão)
    ↓

@@ -8,57 +8,26 @@ import {
   numero,
 } from "@/lib/dados";
 import type { ResumoDoDia } from "@/lib/previsao";
-import { CABECALHO_TABELA, CELULA, Cartao, Etiqueta, Indicador, Vazio } from "./ui";
-
-export default function ResultadoDia({ resumo }: { resumo: ResumoDoDia }) {
-  return (
-    <div className="space-y-7">
-      <Destaques resumo={resumo} />
-      <PrevisaoPorPrato resumo={resumo} />
-
-      <div className="grid gap-[18px] lg:grid-cols-2">
-        <PratoDoDia resumo={resumo} />
-        <Alertas resumo={resumo} />
-      </div>
-
-      <ListaDeCompras resumo={resumo} />
-      <DiasParecidos resumo={resumo} />
-    </div>
-  );
-}
+import { CABECALHO_TABELA, CELULA, Etiqueta, Painel, Secao, Vazio } from "./ui";
 
 /* ------------------------------------------------------------------ */
-
-function Destaques({ resumo }: { resumo: ResumoDoDia }) {
-  return (
-    <section>
-      <h2 className="rotulo mb-3">Destaques do dia</h2>
-      <div className="grid gap-[18px] sm:grid-cols-2 xl:grid-cols-4">
-        {resumo.destaques.map((d, i) => (
-          <Indicador
-            key={d.rotulo}
-            rotulo={d.rotulo}
-            valor={d.valor}
-            detalhe={d.detalhe}
-            destaque={i === 2}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
+/* Instrumento: os 5 pratos numa lista densa, não em 5 cartões iguais   */
 /* ------------------------------------------------------------------ */
 
-function PrevisaoPorPrato({ resumo }: { resumo: ResumoDoDia }) {
-  const escala = Math.max(...resumo.previsoes.map((p) => p.maximo), 1);
+export function InstrumentoDePratos({ resumo }: { resumo: ResumoDoDia }) {
+  // Escala comum a todos, para as barras serem comparáveis entre si.
+  const escala = Math.max(
+    ...resumo.previsoes.map((p) => Math.max(p.maximo, p.mediaDoDiaSemana)),
+    1
+  );
+  const pct = (v: number) => `${(v / escala) * 100}%`;
 
   return (
-    <Cartao
+    <Secao
       titulo="Previsão por prato"
-      descricao={`KNN com os ${resumo.diasParecidos.length} dias mais parecidos do histórico · a faixa é o menor e o maior valor observado nesses dias`}
+      descricao="Barra = faixa dos 5 dias parecidos · ponto = previsão · traço = média do mesmo dia da semana"
     >
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <ul>
         {resumo.previsoes
           .slice()
           .sort((a, b) => b.previsao - a.previsao)
@@ -66,253 +35,210 @@ function PrevisaoPorPrato({ resumo }: { resumo: ResumoDoDia }) {
             const alta = p.variacao > 5;
             const baixa = p.variacao < -5;
             return (
-              <div
+              <li
                 key={p.pratoId}
-                className={`rounded-[18px] px-5 py-[18px] ${
-                  alta ? "vidro-jade" : "vidro-bloco"
-                }`}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-white/[0.06] py-3.5 md:grid-cols-[minmax(130px,1.05fr)_minmax(0,2.3fr)_auto] md:gap-6"
               >
-                <div className="flex items-start justify-between gap-2.5">
-                  <h3
-                    className={`font-display text-[19px] font-medium ${
+                <div className="min-w-0">
+                  <p
+                    className={`truncate font-display text-[17px] font-normal ${
                       alta ? "text-jade-200" : "text-marfim"
                     }`}
                   >
                     {p.nome}
-                  </h3>
-                  <Etiqueta cor={alta ? "jade" : baixa ? "ambar" : "neutro"}>
-                    {p.variacao > 0 ? "+" : ""}
-                    {p.variacao}%
-                  </Etiqueta>
+                  </p>
+                  <p className="tabular mt-0.5 text-[11px] text-marfim/50">
+                    faixa {p.minimo}–{p.maximo} · média {numero(p.mediaDoDiaSemana)}
+                  </p>
                 </div>
 
-                <p
-                  className={`tabular mt-3 font-display text-[40px] font-light leading-none tracking-tight ${
-                    alta ? "text-jade-100" : "text-marfim"
-                  }`}
-                >
-                  {numero(p.previsao)}
-                </p>
-
-                <div className="trilho mt-4">
-                  <div
-                    className="absolute h-[6px] rounded-full bg-jade-400/35"
-                    style={{
-                      left: `${(p.minimo / escala) * 100}%`,
-                      width: `${Math.max(((p.maximo - p.minimo) / escala) * 100, 1.5)}%`,
-                    }}
-                  />
-                  <div
-                    className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-tinta/85 bg-jade-300 shadow-[0_0_16px_rgba(155,235,203,0.85)]"
-                    style={{ left: `${(p.previsao / escala) * 100}%` }}
-                  />
+                <div className="order-3 col-span-2 md:order-none md:col-span-1">
+                  <div className="trilho">
+                    <div
+                      className={`absolute h-[6px] rounded-full ${
+                        alta ? "bg-jade-400/45" : "bg-white/15"
+                      }`}
+                      style={{
+                        left: pct(p.minimo),
+                        width: `max(${pct(p.maximo - p.minimo)}, 2px)`,
+                      }}
+                    />
+                    {/* Média do dia da semana: a régua contra a qual se lê o ponto. */}
+                    <div
+                      className="absolute top-1/2 h-3.5 w-px -translate-y-1/2 bg-marfim/35"
+                      style={{ left: pct(p.mediaDoDiaSemana) }}
+                      aria-hidden
+                    />
+                    <div
+                      className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-tinta bg-jade-300 shadow-[0_0_14px_rgba(155,235,203,0.8)]"
+                      style={{ left: pct(p.previsao) }}
+                    />
+                  </div>
                 </div>
 
-                <p
-                  className={`tabular mt-3 text-xs leading-snug ${
-                    alta ? "text-jade-200/72" : "text-marfim/58"
-                  }`}
-                >
-                  faixa {p.minimo}–{p.maximo} · média do mesmo dia da semana{" "}
-                  {numero(p.mediaDoDiaSemana)}
-                </p>
-              </div>
+                <div className="flex items-baseline justify-end gap-2.5">
+                  <span
+                    className={`tabular font-display text-[30px] font-light leading-none tracking-tight ${
+                      alta ? "text-jade-100" : "text-marfim"
+                    }`}
+                  >
+                    {numero(p.previsao)}
+                  </span>
+                  <span className="w-14 text-right">
+                    <Etiqueta cor={alta ? "jade" : baixa ? "ambar" : "neutro"}>
+                      {p.variacao > 0 ? "+" : ""}
+                      {p.variacao}%
+                    </Etiqueta>
+                  </span>
+                </div>
+              </li>
             );
           })}
-      </div>
-    </Cartao>
+      </ul>
+    </Secao>
   );
 }
 
 /* ------------------------------------------------------------------ */
+/* Trilho da decisão                                                   */
+/* ------------------------------------------------------------------ */
 
-function PratoDoDia({ resumo }: { resumo: ResumoDoDia }) {
+export function PratoDoDia({ resumo }: { resumo: ResumoDoDia }) {
   const p = resumo.pratoDoDia;
+  if (!p) return null;
 
   return (
-    <Cartao
-      titulo="Prato do dia sugerido"
-      descricao="Escolhido pelo ingrediente mais perto do vencimento que ainda dá para aproveitar."
-      className="h-full"
-    >
-      {p ? (
-        <div>
-          <p className="font-display text-[32px] font-normal tracking-tight text-jade-200">
-            {p.nome}
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-marfim/84">
-            Usa <strong className="font-bold text-marfim">{p.ingrediente}</strong>
-            , que vence{" "}
-            {p.diasParaVencer === 0
-              ? "no próprio dia"
-              : `em ${p.diasParaVencer} dia${p.diasParaVencer > 1 ? "s" : ""}`}{" "}
-            — há {numero(p.quantidadeEmEstoque, 1)} {p.unidade} em estoque.
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-marfim/68">
-            Previsão de {numero(p.porcoesPrevistas)} porções. Destacar no cardápio
-            ajuda a girar esse ingrediente antes de virar perda.
-          </p>
-        </div>
-      ) : (
-        <Vazio>Nenhum ingrediente perto do vencimento no estoque simulado.</Vazio>
-      )}
-    </Cartao>
+    <Painel>
+      <p className="rotulo">Prato do dia sugerido</p>
+      <p className="mt-2 font-display text-[26px] font-normal leading-tight tracking-tight text-jade-200">
+        {p.nome}
+      </p>
+      <p className="mt-2.5 text-[13px] leading-relaxed text-marfim/78">
+        Aproveita <strong className="font-semibold text-marfim">{p.ingrediente}</strong>
+        , que vence{" "}
+        {p.diasParaVencer === 0
+          ? "no próprio dia"
+          : `em ${p.diasParaVencer} dia${p.diasParaVencer > 1 ? "s" : ""}`}{" "}
+        — {numero(p.quantidadeEmEstoque, 1)} {p.unidade} parados, contra{" "}
+        {numero(p.porcoesPrevistas)} porções previstas.
+      </p>
+    </Painel>
   );
 }
-
-/* ------------------------------------------------------------------ */
 
 const CORES_ALERTA = {
-  alto: { caixa: "vidro-brasa", titulo: "text-brasa-300", texto: "text-brasa-300/82" },
-  medio: { caixa: "vidro-ambar", titulo: "text-ambar-300", texto: "text-ambar-200/82" },
-  info: { caixa: "vidro-nevoa", titulo: "text-nevoa-300", texto: "text-nevoa-300/82" },
+  alto: { pino: "bg-brasa-300", titulo: "text-brasa-300" },
+  medio: { pino: "bg-ambar-500", titulo: "text-ambar-300" },
+  info: { pino: "bg-nevoa-300", titulo: "text-nevoa-300" },
 } as const;
 
-function Alertas({ resumo }: { resumo: ResumoDoDia }) {
+export function Alertas({ resumo }: { resumo: ResumoDoDia }) {
   return (
-    <Cartao
-      titulo="Alertas"
-      descricao="O que pode dar errado no serviço."
-      className="h-full"
-    >
+    <Secao titulo="Alertas" descricao="O que pode dar errado no serviço.">
       {resumo.alertas.length === 0 ? (
         <Vazio>Nada urgente para este cenário.</Vazio>
       ) : (
-        <ul className="space-y-2.5">
+        <ul className="space-y-0">
           {resumo.alertas.map((a, i) => {
             const cor = CORES_ALERTA[a.nivel];
             return (
               <li
                 key={`${a.titulo}-${i}`}
-                className={`${cor.caixa} rounded-2xl px-4 py-3.5`}
+                className="flex gap-3 border-b border-white/[0.06] py-3 last:border-b-0"
               >
-                <p className={`text-sm font-bold ${cor.titulo}`}>{a.titulo}</p>
-                <p className={`mt-1 text-[12.5px] leading-relaxed ${cor.texto}`}>
-                  {a.detalhe}
-                </p>
+                <span
+                  className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${cor.pino}`}
+                  aria-hidden
+                />
+                <div>
+                  <p className={`text-[13px] font-bold ${cor.titulo}`}>{a.titulo}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-marfim/62">
+                    {a.detalhe}
+                  </p>
+                </div>
               </li>
             );
           })}
         </ul>
       )}
-    </Cartao>
+    </Secao>
   );
 }
 
-/* ------------------------------------------------------------------ */
-
-function ListaDeCompras({ resumo }: { resumo: ResumoDoDia }) {
+export function ListaDeCompras({ resumo }: { resumo: ResumoDoDia }) {
   const aComprar = resumo.compras.filter((c) => c.comprar > 0);
-  const cobertos = resumo.compras.filter((c) => c.comprar === 0);
 
   return (
-    <Cartao
+    <Secao
       titulo="Lista de compras"
-      descricao="Previsão × ficha técnica − estoque. O que está vencido na data escolhida não conta como disponível."
+      descricao="Previsão × ficha técnica − estoque."
       acao={
-        <div className="text-right">
-          <p className="rotulo">Custo estimado</p>
-          <p className="tabular mt-1 font-display text-[26px] font-normal text-marfim">
-            {dinheiro(resumo.custoDaCompra)}
-          </p>
-        </div>
+        <span className="tabular font-display text-2xl font-light text-marfim">
+          {dinheiro(resumo.custoDaCompra)}
+        </span>
       }
     >
       {aComprar.length === 0 ? (
         <Vazio>O estoque cobre toda a previsão deste cenário.</Vazio>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left">
-                <th className={`${CABECALHO_TABELA} pr-3`}>Ingrediente</th>
-                <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Vai usar</th>
-                <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Em estoque</th>
-                <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Comprar</th>
-                <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Custo</th>
-                <th className={`${CABECALHO_TABELA} pl-5`}>Validade</th>
-              </tr>
-            </thead>
-            <tbody className="tabular">
-              {aComprar.map((c) => (
-                <tr key={c.id}>
-                  <td className={`${CELULA} pr-3 font-semibold text-marfim`}>
-                    {c.nome}
-                  </td>
-                  <td className={`${CELULA} pr-3 text-right text-marfim/72`}>
-                    {numero(c.necessario, 2)} {c.unidade}
-                  </td>
-                  <td className={`${CELULA} pr-3 text-right text-marfim/72`}>
-                    {numero(c.emEstoque, 2)} {c.unidade}
-                    {c.vencido && (
-                      <span className="ml-1.5 align-middle">
-                        <Etiqueta cor="brasa">vencido</Etiqueta>
-                      </span>
-                    )}
-                  </td>
-                  <td className={`${CELULA} pr-3 text-right font-bold text-jade-300`}>
-                    {numero(c.comprar, 2)} {c.unidade}
-                  </td>
-                  <td className={`${CELULA} pr-3 text-right text-marfim/72`}>
-                    {dinheiro(c.custoEstimado)}
-                  </td>
-                  <td className={`${CELULA} pl-5 text-marfim/62`}>
-                    {c.validade ? (
-                      <>
-                        {dataLonga(c.validade)}{" "}
-                        {c.diasParaVencer !== null &&
-                          c.diasParaVencer >= 0 &&
-                          c.diasParaVencer <= 3 && (
-                            <Etiqueta cor={c.diasParaVencer <= 1 ? "brasa" : "ambar"}>
-                              {c.diasParaVencer === 0
-                                ? "vence no dia"
-                                : `${c.diasParaVencer}d`}
-                            </Etiqueta>
-                          )}
-                      </>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ul className="tabular">
+          {aComprar.map((c) => (
+            <li
+              key={c.id}
+              className="flex items-baseline justify-between gap-3 border-b border-white/[0.06] py-2.5 last:border-b-0"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-semibold text-marfim">
+                  {c.nome}
+                  {c.vencido && (
+                    <span className="ml-2 align-middle">
+                      <Etiqueta cor="brasa">vencido</Etiqueta>
+                    </span>
+                  )}
+                </p>
+                <p className="mt-0.5 text-[11px] text-marfim/50">
+                  usar {numero(c.necessario, 2)} · tem {numero(c.emEstoque, 2)}{" "}
+                  {c.unidade}
+                </p>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="text-[13px] font-bold text-jade-300">
+                  {numero(c.comprar, 2)} {c.unidade}
+                </p>
+                <p className="mt-0.5 text-[11px] text-marfim/50">
+                  {dinheiro(c.custoEstimado)}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
-
-      {cobertos.length > 0 && (
-        <p className="mt-4 text-xs leading-relaxed text-marfim/52">
-          <strong className="font-semibold text-marfim/68">
-            Já coberto pelo estoque:
-          </strong>{" "}
-          {cobertos.map((c) => c.nome).join(", ")}.
-        </p>
-      )}
-    </Cartao>
+    </Secao>
   );
 }
 
 /* ------------------------------------------------------------------ */
+/* Raciocínio: os vizinhos que geraram a previsão                      */
+/* ------------------------------------------------------------------ */
 
-function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
+export function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
   return (
-    <Cartao
+    <Secao
       titulo="Dias parecidos usados na previsão"
-      descricao="São os vizinhos que o KNN encontrou. A previsão de cada prato é a média destas linhas."
+      descricao="Os vizinhos que o KNN encontrou. A previsão de cada prato é a média destas linhas."
     >
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-[13px]">
           <thead>
             <tr className="text-left">
               <th className={`${CABECALHO_TABELA} pr-3`}>Data</th>
               <th className={`${CABECALHO_TABELA} pr-3`}>Dia</th>
               <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Temp.</th>
               <th className={`${CABECALHO_TABELA} pr-3`}>Condições</th>
-              <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Distância</th>
+              <th className={`${CABECALHO_TABELA} pr-3 text-right`}>Dist.</th>
               {PRATOS.map((p) => (
                 <th key={p.id} className={`${CABECALHO_TABELA} pr-3 text-right`}>
-                  {p.nome}
+                  {p.nome.split(" ")[0]}
                 </th>
               ))}
             </tr>
@@ -323,14 +249,14 @@ function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
                 <td className={`${CELULA} pr-3 font-semibold text-marfim`}>
                   {dataLonga(v.registro.data)}
                 </td>
-                <td className={`${CELULA} pr-3 text-marfim/72`}>
+                <td className={`${CELULA} pr-3 text-marfim/70`}>
                   {NOMES_DIAS_CURTOS[v.registro.diaSemana]}
                 </td>
-                <td className={`${CELULA} pr-3 text-right text-marfim/72`}>
-                  {numero(v.registro.temperatura)} °C
+                <td className={`${CELULA} pr-3 text-right text-marfim/70`}>
+                  {numero(v.registro.temperatura)}°
                 </td>
                 <td className={`${CELULA} pr-3`}>
-                  <span className="flex flex-wrap gap-1.5">
+                  <span className="flex flex-wrap gap-1">
                     {v.registro.chuva && <Etiqueta cor="nevoa">chuva</Etiqueta>}
                     {v.registro.feriado && <Etiqueta cor="ambar">feriado</Etiqueta>}
                     {v.registro.inicioMes && (
@@ -339,15 +265,15 @@ function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
                     {!v.registro.chuva &&
                       !v.registro.feriado &&
                       !v.registro.inicioMes && (
-                        <span className="text-marfim/40">dia comum</span>
+                        <span className="text-marfim/35">—</span>
                       )}
                   </span>
                 </td>
-                <td className={`${CELULA} pr-3 text-right text-marfim/55`}>
+                <td className={`${CELULA} pr-3 text-right text-marfim/50`}>
                   {v.distancia.toFixed(3)}
                 </td>
                 {PRATOS.map((p) => (
-                  <td key={p.id} className={`${CELULA} pr-3 text-right text-marfim/72`}>
+                  <td key={p.id} className={`${CELULA} pr-3 text-right text-marfim/70`}>
                     {v.registro.vendas[p.id] ?? 0}
                   </td>
                 ))}
@@ -356,13 +282,13 @@ function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={5} className="pt-3.5 pr-3 font-semibold text-marfim/82">
-                Média (= previsão)
+              <td colSpan={5} className="pt-3 pr-3 text-xs font-semibold text-marfim/75">
+                Média — a previsão
               </td>
               {PRATOS.map((p) => (
                 <td
                   key={p.id}
-                  className="tabular pt-3.5 pr-3 text-right font-bold text-jade-300"
+                  className="tabular pt-3 pr-3 text-right text-[13px] font-bold text-jade-300"
                 >
                   {numero(
                     resumo.previsoes.find((x) => x.pratoId === p.id)?.previsao ?? 0
@@ -373,9 +299,6 @@ function DiasParecidos({ resumo }: { resumo: ResumoDoDia }) {
           </tfoot>
         </table>
       </div>
-      <p className="mt-4 text-xs leading-relaxed text-marfim/52">
-        Distância 0 seria um dia idêntico ao cenário atual.
-      </p>
-    </Cartao>
+    </Secao>
   );
 }

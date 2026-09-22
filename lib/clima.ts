@@ -1,12 +1,28 @@
 /**
- * Clima real, buscado automaticamente na Open-Meteo.
+ * Localização e clima real, buscados automaticamente.
  *
- * A Open-Meteo é aberta e não pede chave de API, então a busca acontece
- * direto do navegador, sem passar por servidor. O painel usa isso para
- * preencher temperatura e chuva sozinho, sem o gerente digitar nada.
+ * O painel tenta primeiro a localização do próprio dispositivo. Se o
+ * navegador negar ou falhar, cai para uma cidade escolhida na lista.
+ *
+ * Duas APIs abertas, nenhuma pede chave:
+ *   - Open-Meteo      → previsão do tempo
+ *   - BigDataCloud    → nome do lugar a partir da coordenada
+ *
+ * Privacidade: a coordenada é arredondada para 2 casas (~1,1 km) ANTES de
+ * sair do navegador. Nem a previsão nem o nome do lugar recebem a posição
+ * exata, e a coordenada precisa nunca é guardada.
  *
  * Atenção: o clima é REAL; o histórico de vendas continua SIMULADO.
  */
+
+export type Coordenadas = { latitude: number; longitude: number };
+
+export type Local = Coordenadas & {
+  nome: string;
+  /** De onde veio: o aparelho do usuário ou a lista de cidades. */
+  fonte: "dispositivo" | "cidade";
+  fuso?: string;
+};
 
 export type Cidade = {
   id: string;
@@ -17,6 +33,7 @@ export type Cidade = {
   fuso: string;
 };
 
+/** Lista de apoio, usada quando a localização do aparelho não está disponível. */
 export const CIDADES: Cidade[] = [
   { id: "sao-paulo", nome: "São Paulo", uf: "SP", latitude: -23.5505, longitude: -46.6333, fuso: "America/Sao_Paulo" },
   { id: "rio-de-janeiro", nome: "Rio de Janeiro", uf: "RJ", latitude: -22.9068, longitude: -43.1729, fuso: "America/Sao_Paulo" },
@@ -30,6 +47,111 @@ export const CIDADES: Cidade[] = [
 
 export const CIDADE_PADRAO = CIDADES[0];
 
+export const localDaCidade = (cidade: Cidade): Local => ({
+  latitude: cidade.latitude,
+  longitude: cidade.longitude,
+  nome: `${cidade.nome}, ${cidade.uf}`,
+  fonte: "cidade",
+  fuso: cidade.fuso,
+});
+
+/* ------------------------------------------------------------------ */
+/* Localização do dispositivo                                          */
+/* ------------------------------------------------------------------ */
+
+export type FalhaDeLocalizacao =
+  | "sem-suporte"
+  | "negada"
+  | "indisponivel"
+  | "demorou";
+
+/** Corta a coordenada em 2 casas: ~1,1 km, o bastante para o clima. */
+const arredondarCoordenada = (v: number) => Math.round(v * 100) / 100;
+
+/**
+ * Pede a posição ao navegador. O usuário vê o pedido de permissão do
+ * próprio navegador — não há como obter isso sem o consentimento dele.
+ */
+export function localizacaoDoDispositivo(): Promise<Coordenadas> {
+  return new Promise((resolver, rejeitar) => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      rejeitar("sem-suporte" as FalhaDeLocalizacao);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (posicao) =>
+        resolver({
+          latitude: arredondarCoordenada(posicao.coords.latitude),
+          longitude: arredondarCoordenada(posicao.coords.longitude),
+        }),
+      (erro) => {
+        const falhas: Record<number, FalhaDeLocalizacao> = {
+          1: "negada",
+          2: "indisponivel",
+          3: "demorou",
+        };
+        rejeitar(falhas[erro.code] ?? "indisponivel");
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 5 * 60 * 1000 }
+    );
+  });
+}
+
+export const MENSAGEM_DE_FALHA: Record<FalhaDeLocalizacao, string> = {
+  "sem-suporte": "Este navegador não informa a localização.",
+  negada: "Permissão de localização negada.",
+  indisponivel: "O aparelho não conseguiu obter a posição.",
+  demorou: "A localização demorou demais para responder.",
+};
+
+type RespostaGeocodificacao = {
+  locality?: string;
+  city?: string;
+  principalSubdivisionCode?: string;
+  principalSubdivision?: string;
+  countryName?: string;
+};
+
+/** Nome legível do lugar. Se falhar, devolve a coordenada formatada. */
+export async function nomeDoLugar(
+  coords: Coordenadas,
+  sinal?: AbortSignal
+): Promise<string> {
+  const formatada = `${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`;
+
+  try {
+    const resposta = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.latitude}&longitude=${coords.longitude}&localityLanguage=pt`,
+      { signal: sinal }
+    );
+    if (!resposta.ok) return formatada;
+
+    const dados = (await resposta.json()) as RespostaGeocodificacao;
+    const cidade = dados.locality || dados.city;
+    const uf = (dados.principalSubdivisionCode || "").replace("BR-", "");
+
+    if (!cidade) return dados.principalSubdivision || formatada;
+    return uf ? `${cidade}, ${uf}` : cidade;
+  } catch {
+    return formatada;
+  }
+}
+
+/** Junta posição e nome num Local pronto para a tela. */
+export async function localDoDispositivo(sinal?: AbortSignal): Promise<Local> {
+  const coords = await localizacaoDoDispositivo();
+  return {
+    ...coords,
+    nome: await nomeDoLugar(coords, sinal),
+    fonte: "dispositivo",
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Previsão do tempo                                                   */
+/* ------------------------------------------------------------------ */
+
 export type PrevisaoDoTempo = {
   data: string;
   temperaturaMaxima: number;
@@ -42,7 +164,6 @@ export type PrevisaoDoTempo = {
   chuva: boolean;
 };
 
-/** A partir de quando o dia conta como chuvoso para o modelo. */
 const CHANCE_MINIMA_DE_CHUVA = 55;
 const MILIMETROS_MINIMOS = 1;
 
@@ -61,20 +182,21 @@ type RespostaOpenMeteo = {
 const arredondar = (v: number) => Math.round(v * 10) / 10;
 
 /**
- * Busca a previsão dos próximos dias. A Open-Meteo entrega até 16 dias;
- * datas fora dessa janela simplesmente não aparecem no resultado.
+ * Busca a previsão dos próximos dias para uma coordenada qualquer.
+ * A Open-Meteo entrega até 16 dias; datas fora dessa janela não aparecem.
  */
 export async function buscarPrevisao(
-  cidade: Cidade,
+  local: Coordenadas & { fuso?: string },
   dias = 16,
   sinal?: AbortSignal
 ): Promise<PrevisaoDoTempo[]> {
   const parametros = new URLSearchParams({
-    latitude: String(cidade.latitude),
-    longitude: String(cidade.longitude),
+    latitude: String(local.latitude),
+    longitude: String(local.longitude),
     daily:
       "temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max",
-    timezone: cidade.fuso,
+    // "auto" deixa a própria API resolver o fuso da coordenada.
+    timezone: local.fuso ?? "auto",
     forecast_days: String(Math.min(16, Math.max(1, dias))),
   });
 

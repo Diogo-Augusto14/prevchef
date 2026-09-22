@@ -1,15 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import AnaliseIA from "./components/AnaliseIA";
-import ResultadoDia from "./components/ResultadoDia";
-import { Cartao, Etiqueta, TituloDaTela } from "./components/ui";
+import { DetalheDaIA, ResumoDaIA } from "./components/AnaliseIA";
+import {
+  Alertas,
+  DiasParecidos,
+  InstrumentoDePratos,
+  ListaDeCompras,
+  PratoDoDia,
+} from "./components/ResultadoDia";
+import { AvisoSimulado, Etiqueta, Heroi, TituloDaTela } from "./components/ui";
 import {
   DIA_PADRAO,
-  GERADO_EM,
-  HISTORICO,
   NOMES_DIAS,
-  dataLonga,
+  dinheiro,
   diaSemanaDe,
   inicioDoMes,
   numero,
@@ -17,9 +21,14 @@ import {
 import {
   CIDADES,
   CIDADE_PADRAO,
+  MENSAGEM_DE_FALHA,
   buscarPrevisao,
   faixaDeClima,
+  localDaCidade,
+  localDoDispositivo,
   rotuloDoClima,
+  type FalhaDeLocalizacao,
+  type Local,
   type PrevisaoDoTempo,
 } from "@/lib/clima";
 import { feriadoDe } from "@/lib/feriados";
@@ -34,21 +43,36 @@ import {
 
 export default function PainelPage() {
   const [data, setData] = useState(DIA_PADRAO);
-  const [cidadeId, setCidadeId] = useState(CIDADE_PADRAO.id);
+  const [local, setLocal] = useState<Local>(() => localDaCidade(CIDADE_PADRAO));
+  const [buscandoLocal, setBuscandoLocal] = useState(true);
+  const [falhaLocal, setFalhaLocal] = useState<string | null>(null);
   const [tempo, setTempo] = useState<PrevisaoDoTempo[]>([]);
   const [erroClima, setErroClima] = useState<string | null>(null);
   const [carregandoClima, setCarregandoClima] = useState(true);
   const [analise, setAnalise] = useState<EstadoDaAnalise>({ estado: "ocioso" });
 
-  const cidade = CIDADES.find((c) => c.id === cidadeId) ?? CIDADE_PADRAO;
+  /* Localização real: tenta o aparelho; se negar, fica na cidade da lista. */
+  const detectarLocal = useCallback(() => {
+    setBuscandoLocal(true);
+    setFalhaLocal(null);
 
-  /* Clima real: busca sozinho ao abrir e sempre que a cidade muda. */
+    localDoDispositivo()
+      .then((encontrado) => setLocal(encontrado))
+      .catch((falha: FalhaDeLocalizacao) =>
+        setFalhaLocal(MENSAGEM_DE_FALHA[falha] ?? MENSAGEM_DE_FALHA.indisponivel)
+      )
+      .finally(() => setBuscandoLocal(false));
+  }, []);
+
+  useEffect(detectarLocal, [detectarLocal]);
+
+  /* Clima real do ponto onde a pessoa está. */
   useEffect(() => {
     const controle = new AbortController();
     setCarregandoClima(true);
     setErroClima(null);
 
-    buscarPrevisao(cidade, 16, controle.signal)
+    buscarPrevisao(local, 16, controle.signal)
       .then((previsoes) => {
         setTempo(previsoes);
         // Se a data aberta já passou, pula para o primeiro dia com previsão.
@@ -63,7 +87,7 @@ export default function PainelPage() {
       .finally(() => setCarregandoClima(false));
 
     return () => controle.abort();
-  }, [cidade]);
+  }, [local]);
 
   const tempoDoDia = useMemo(
     () => tempo.find((t) => t.data === data) ?? null,
@@ -74,7 +98,6 @@ export default function PainelPage() {
   const diaSemana = dataValida ? diaSemanaDe(data) : 0;
   const feriado = dataValida ? feriadoDe(data) : null;
 
-  /* Cenário montado automaticamente: clima real + calendário. */
   const cenario = useMemo(
     () => ({
       diaSemana,
@@ -86,13 +109,12 @@ export default function PainelPage() {
     [diaSemana, tempoDoDia, data, feriado, dataValida]
   );
 
-  /* Previsão do KNN: recalcula sozinha quando o cenário muda. */
   const resumo = useMemo(
     () => (dataValida ? gerarResumoDoDia(cenario, data, K_PADRAO) : null),
     [cenario, data, dataValida]
   );
 
-  /* Análise da IA: dispara sozinha, com um respiro para não chamar a cada tecla. */
+  /* Análise da IA: dispara sozinha, com um respiro entre mudanças. */
   const controleAnalise = useRef<AbortController | null>(null);
 
   const rodarAnalise = useCallback(() => {
@@ -104,12 +126,12 @@ export default function PainelPage() {
 
     setAnalise({ estado: "carregando" });
     pedirAnalise(
-      montarPayloadDaAnalise(resumo, cidade, tempoDoDia),
+      montarPayloadDaAnalise(resumo, local, tempoDoDia),
       controle.signal
     ).then((resultado) => {
       if (!controle.signal.aborted) setAnalise(resultado);
     });
-  }, [resumo, cidade, tempoDoDia, carregandoClima]);
+  }, [resumo, local, tempoDoDia, carregandoClima]);
 
   useEffect(() => {
     if (!resumo || carregandoClima) return;
@@ -118,22 +140,15 @@ export default function PainelPage() {
   }, [rodarAnalise, resumo, carregandoClima]);
 
   return (
-    <div className="space-y-7">
-      <TituloDaTela titulo="Painel do dia">
-        O sistema busca o clima real, detecta o feriado, prevê a venda de cada
-        prato e analisa tudo sozinho. Você escolhe só o dia e a praça.
+    <div className="space-y-8">
+      <TituloDaTela titulo="Painel do dia" acao={<AvisoSimulado className="max-w-md" />}>
+        Localização, clima e feriado entram sozinhos. Você escolhe só o dia.
       </TituloDaTela>
 
-      <Cartao
-        titulo="Condições do dia"
-        descricao={`Detectadas automaticamente · histórico simulado de ${
-          HISTORICO.length
-        } dias, até ${dataLonga(
-          HISTORICO[HISTORICO.length - 1].data
-        )} (gerado em ${dataLonga(GERADO_EM)})`}
-      >
-        <div className="grid gap-[18px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.35fr)]">
-          <div className="flex flex-col gap-2">
+      {/* Faixa herói: onde, como está o tempo, quanto vai sair, e a leitura. */}
+      <Heroi>
+        <div className="grid gap-y-6 p-6 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_minmax(0,0.9fr)] md:gap-y-0">
+          <div className="md:pr-7">
             <label htmlFor="data" className="rotulo">
               Dia
             </label>
@@ -142,9 +157,9 @@ export default function PainelPage() {
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="campo tabular"
+              className="campo tabular mt-2"
             />
-            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
               {dataValida ? (
                 <>
                   <Etiqueta cor="neutro">{NOMES_DIAS[diaSemana]}</Etiqueta>
@@ -154,32 +169,9 @@ export default function PainelPage() {
                   )}
                 </>
               ) : (
-                <span className="text-xs text-ambar-300">
-                  Informe uma data válida.
-                </span>
+                <span className="text-xs text-ambar-300">Data inválida.</span>
               )}
             </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label htmlFor="cidade" className="rotulo">
-              Praça
-            </label>
-            <select
-              id="cidade"
-              value={cidadeId}
-              onChange={(e) => setCidadeId(e.target.value)}
-              className="campo"
-            >
-              {CIDADES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nome} — {c.uf}
-                </option>
-              ))}
-            </select>
-            <span className="mt-0.5 text-xs text-marfim/55">
-              Define de onde vem a previsão do tempo.
-            </span>
           </div>
 
           <Clima
@@ -188,15 +180,63 @@ export default function PainelPage() {
             tempo={tempoDoDia}
             temperaturaUsada={cenario.temperatura}
           />
+
+          <div className="md:border-l md:border-white/10 md:pl-7">
+            <p className="rotulo">Movimento previsto</p>
+            <p className="tabular mt-2 font-display text-[44px] font-light leading-none tracking-tight text-jade-100">
+              {resumo ? Math.round(resumo.totalPorcoes) : "—"}
+              <span className="ml-2 font-corpo text-sm font-medium text-marfim/60">
+                porções
+              </span>
+            </p>
+            <p className="tabular mt-2 text-[13px] text-marfim/62">
+              {resumo ? dinheiro(resumo.faturamentoEstimado) : "—"} estimados ·{" "}
+              {resumo ? dinheiro(resumo.custoDaCompra) : "—"} de compras
+            </p>
+          </div>
         </div>
-      </Cartao>
 
-      <AnaliseIA estado={analise} aoTentarDeNovo={rodarAnalise} />
+        <div className="border-t border-white/10 px-6 py-5">
+          <ResumoDaIA estado={analise} />
+        </div>
+      </Heroi>
 
-      {resumo && <ResultadoDia resumo={resumo} />}
+      <Localizacao
+        local={local}
+        buscando={buscandoLocal}
+        falha={falhaLocal}
+        aoDetectar={detectarLocal}
+        aoEscolherCidade={(id) => {
+          const cidade = CIDADES.find((c) => c.id === id);
+          if (cidade) {
+            setLocal(localDaCidade(cidade));
+            setFalhaLocal(null);
+          }
+        }}
+      />
+
+      {resumo && (
+        <div className="grid gap-x-10 gap-y-8 lg:grid-cols-12">
+          {/* Raciocínio */}
+          <div className="space-y-8 lg:col-span-7 xl:col-span-8">
+            <InstrumentoDePratos resumo={resumo} />
+            <DetalheDaIA estado={analise} aoTentarDeNovo={rodarAnalise} />
+            <DiasParecidos resumo={resumo} />
+          </div>
+
+          {/* Decisão */}
+          <aside className="space-y-7 lg:col-span-5 xl:col-span-4">
+            <PratoDoDia resumo={resumo} />
+            <ListaDeCompras resumo={resumo} />
+            <Alertas resumo={resumo} />
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
 
 function Clima({
   carregando,
@@ -212,8 +252,8 @@ function Clima({
   const faixa = faixaDeClima(temperaturaUsada);
 
   return (
-    <div className="rounded-[18px] border border-white/12 bg-gradient-to-br from-[rgba(56,118,160,0.20)] to-white/[0.03] px-[18px] py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]">
-      <div className="flex items-center justify-between gap-2.5">
+    <div className="md:border-l md:border-white/10 md:px-7">
+      <div className="flex items-center gap-2.5">
         <span className="rotulo">Clima</span>
         <Etiqueta cor={faixa === "quente" ? "ambar" : faixa === "frio" ? "nevoa" : "jade"}>
           {rotuloDoClima(temperaturaUsada)}
@@ -221,23 +261,22 @@ function Clima({
       </div>
 
       {carregando ? (
-        <p className="mt-3 text-xs text-marfim/55">Buscando a previsão…</p>
+        <p className="mt-3 text-xs text-marfim/50">Buscando a previsão…</p>
       ) : erro ? (
         <p className="mt-3 text-xs text-ambar-300">{erro}</p>
       ) : tempo ? (
         <>
-          <p className="tabular mt-2.5 font-display text-[42px] font-light leading-none tracking-tight text-marfim">
+          <p className="tabular mt-2 font-display text-[44px] font-light leading-none tracking-tight text-marfim">
             {numero(tempo.temperatura)}
-            <span className="ml-1.5 text-[17px] text-marfim/62">°C</span>
+            <span className="ml-1 text-lg text-marfim/55">°C</span>
           </p>
-          <p className="tabular mt-2 text-xs leading-snug text-marfim/62">
-            mín {numero(tempo.temperaturaMinima)} · máx{" "}
-            {numero(tempo.temperaturaMaxima)} · {tempo.chanceDeChuva}% de chance
-            de chuva
-            {tempo.chuvaMm > 0 && ` (${numero(tempo.chuvaMm)} mm)`}
+          <p className="tabular mt-2 text-[13px] leading-snug text-marfim/62">
+            {numero(tempo.temperaturaMinima)}–{numero(tempo.temperaturaMaxima)}°
+            · {tempo.chanceDeChuva}% de chuva
+            {tempo.chuvaMm > 0 && ` · ${numero(tempo.chuvaMm)} mm`}
           </p>
-          <div className="mt-2.5 flex flex-wrap items-center gap-2">
-            {tempo.chuva ? (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {tempo.chuva && (
               <Etiqueta cor="nevoa">
                 <svg
                   width="12"
@@ -254,26 +293,111 @@ function Clima({
                 </svg>
                 dia de chuva
               </Etiqueta>
-            ) : (
-              <Etiqueta cor="neutro">sem chuva</Etiqueta>
             )}
-            <span className="text-[11px] text-marfim/48">
-              previsão real · Open-Meteo
-            </span>
+            <span className="text-[11px] text-marfim/45">Open-Meteo</span>
           </div>
         </>
       ) : (
         <>
-          <p className="tabular mt-2.5 font-display text-[42px] font-light leading-none tracking-tight text-marfim">
+          <p className="tabular mt-2 font-display text-[44px] font-light leading-none tracking-tight text-marfim">
             {numero(temperaturaUsada)}
-            <span className="ml-1.5 text-[17px] text-marfim/62">°C</span>
+            <span className="ml-1 text-lg text-marfim/55">°C</span>
           </p>
           <p className="mt-2 text-xs leading-snug text-ambar-300/90">
-            Sem previsão real para esta data (a Open-Meteo vai até 16 dias).
-            Usando a média histórica desta época do ano.
+            Sem previsão real para esta data — a Open-Meteo vai até 16 dias.
+            Usando a média histórica da época.
           </p>
         </>
       )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+function Localizacao({
+  local,
+  buscando,
+  falha,
+  aoDetectar,
+  aoEscolherCidade,
+}: {
+  local: Local;
+  buscando: boolean;
+  falha: string | null;
+  aoDetectar: () => void;
+  aoEscolherCidade: (id: string) => void;
+}) {
+  const doAparelho = local.fonte === "dispositivo";
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-y border-white/10 py-3.5">
+      <span className="flex items-center gap-2.5">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+          className={doAparelho ? "text-jade-300" : "text-marfim/45"}
+        >
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <span className="text-sm font-semibold text-marfim">
+          {buscando ? "Detectando sua localização…" : local.nome}
+        </span>
+        {!buscando && doAparelho && (
+          <Etiqueta cor="jadeSuave">sua localização</Etiqueta>
+        )}
+      </span>
+
+      {!buscando && !doAparelho && (
+        <>
+          <label htmlFor="cidade" className="sr-only">
+            Cidade
+          </label>
+          <select
+            id="cidade"
+            value={CIDADES.find((c) => `${c.nome}, ${c.uf}` === local.nome)?.id ?? ""}
+            onChange={(e) => aoEscolherCidade(e.target.value)}
+            className="campo !w-auto !py-1.5 !text-[13px]"
+          >
+            {CIDADES.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nome} — {c.uf}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={aoDetectar}
+            className="rounded-lg border border-white/12 px-3 py-1.5 text-xs font-semibold text-marfim/80 transition hover:border-jade-400/40 hover:text-marfim"
+          >
+            Usar minha localização
+          </button>
+        </>
+      )}
+
+      {!buscando && doAparelho && (
+        <button
+          type="button"
+          onClick={aoDetectar}
+          className="rounded-lg border border-white/12 px-3 py-1.5 text-xs font-semibold text-marfim/80 transition hover:border-jade-400/40 hover:text-marfim"
+        >
+          Atualizar
+        </button>
+      )}
+
+      {falha && <span className="text-xs text-ambar-300/90">{falha}</span>}
+
+      <span className="ml-auto text-[11px] text-marfim/40">
+        Coordenada arredondada para ~1 km antes de sair do navegador.
+      </span>
     </div>
   );
 }

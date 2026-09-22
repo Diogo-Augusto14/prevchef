@@ -7,7 +7,7 @@
 
 import type { AnaliseDoDia } from "@/app/api/analise/route";
 import { NOMES_DIAS, dataLonga } from "./dados";
-import { faixaDeClima, type Cidade, type PrevisaoDoTempo } from "./clima";
+import { faixaDeClima, type Local, type PrevisaoDoTempo } from "./clima";
 import {
   mediaEmDiasParecidos,
   padroesPorPrato,
@@ -23,7 +23,7 @@ export type { AnaliseDoDia };
  */
 export function montarPayloadDaAnalise(
   resumo: ResumoDoDia,
-  cidade: Cidade,
+  local: Local,
   tempo: PrevisaoDoTempo | null
 ) {
   const faixa = faixaDeClima(resumo.cenario.temperatura);
@@ -50,7 +50,7 @@ export function montarPayloadDaAnalise(
     },
     climaReal: tempo
       ? {
-          cidade: `${cidade.nome}/${cidade.uf}`,
+          cidade: local.nome,
           fonte: "Open-Meteo",
           temperaturaMedia: tempo.temperatura,
           temperaturaMinima: tempo.temperaturaMinima,
@@ -60,7 +60,7 @@ export function montarPayloadDaAnalise(
           classificacao: faixa,
         }
       : {
-          cidade: `${cidade.nome}/${cidade.uf}`,
+          cidade: local.nome,
           fonte: "sem previsão para esta data (fora da janela da Open-Meteo)",
           temperaturaMedia: resumo.cenario.temperatura,
           classificacao: faixa,

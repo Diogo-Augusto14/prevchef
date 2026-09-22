@@ -1,35 +1,57 @@
 import type { ReactNode } from "react";
 
-export function Cartao({
+/*
+ * Três níveis de superfície. A regra: a maioria do conteúdo fica no nível 1,
+ * assentado direto no fundo. Só o que precisa flutuar vira vidro, e há um
+ * único herói por tela. Quando tudo é cartão, nada é hierarquia.
+ */
+
+/** Nível 3 — o herói. Um por tela. */
+export function Heroi({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`vidro-jade overflow-hidden rounded-[28px] ${className}`}
+    >
+      {children}
+    </section>
+  );
+}
+
+/** Nível 2 — painel de vidro. */
+export function Painel({
   titulo,
   descricao,
   acao,
   children,
   className = "",
-  destaque = false,
+  /** Deixa o conteúdo encostar na borda (gráfico sangrando). */
+  semRespiro = false,
 }: {
   titulo?: string;
   descricao?: string;
   acao?: ReactNode;
   children: ReactNode;
   className?: string;
-  /** Véu de jade — no máximo um por tela. */
-  destaque?: boolean;
+  semRespiro?: boolean;
 }) {
   return (
-    <section
-      className={`rounded-3xl ${destaque ? "vidro-jade" : "vidro"} ${className}`}
-    >
+    <section className={`vidro overflow-hidden rounded-3xl ${className}`}>
       {(titulo || acao) && (
-        <header className="flex flex-wrap items-start justify-between gap-4 px-6 pb-4 pt-6">
+        <header className="flex flex-wrap items-start justify-between gap-4 px-5 pb-3 pt-5">
           <div>
             {titulo && (
-              <h2 className="font-display text-[22px] font-normal text-marfim">
+              <h2 className="font-display text-lg font-normal text-marfim">
                 {titulo}
               </h2>
             )}
             {descricao && (
-              <p className="mt-1.5 max-w-3xl text-[13px] leading-relaxed text-marfim/58">
+              <p className="mt-1 max-w-2xl text-xs leading-relaxed text-marfim/55">
                 {descricao}
               </p>
             )}
@@ -37,8 +59,83 @@ export function Cartao({
           {acao}
         </header>
       )}
-      <div className={titulo || acao ? "px-6 pb-6" : "p-6"}>{children}</div>
+      <div className={semRespiro ? "" : titulo || acao ? "px-5 pb-5" : "p-5"}>
+        {children}
+      </div>
     </section>
+  );
+}
+
+/** Nível 1 — assentado no fundo. Só tipografia e um filete. */
+export function Secao({
+  titulo,
+  descricao,
+  acao,
+  children,
+  className = "",
+}: {
+  titulo: string;
+  descricao?: string;
+  acao?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={className}>
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-2.5">
+        <div>
+          <h2 className="font-display text-lg font-normal text-marfim">
+            {titulo}
+          </h2>
+          {descricao && (
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-marfim/55">
+              {descricao}
+            </p>
+          )}
+        </div>
+        {acao}
+      </header>
+      <div className="pt-4">{children}</div>
+    </section>
+  );
+}
+
+/**
+ * Números em linha, separados por filete — substitui a fileira de cartões
+ * idênticos, que é a assinatura de painel gerado automaticamente.
+ */
+export function LinhaDeNumeros({
+  itens,
+  className = "",
+}: {
+  itens: { rotulo: string; valor: ReactNode; detalhe?: ReactNode; forte?: boolean }[];
+  className?: string;
+}) {
+  return (
+    <dl className={`flex flex-wrap items-stretch ${className}`}>
+      {itens.map((item, i) => (
+        <div
+          key={item.rotulo}
+          className={`flex-1 basis-40 ${i > 0 ? "border-l border-white/10 pl-5" : ""} ${
+            i < itens.length - 1 ? "pr-5" : ""
+          }`}
+        >
+          <dt className="rotulo">{item.rotulo}</dt>
+          <dd
+            className={`tabular mt-1.5 font-display text-[28px] font-light leading-none tracking-tight ${
+              item.forte ? "text-jade-200" : "text-marfim"
+            }`}
+          >
+            {item.valor}
+          </dd>
+          {item.detalhe && (
+            <dd className="mt-1.5 text-xs leading-snug text-marfim/58">
+              {item.detalhe}
+            </dd>
+          )}
+        </div>
+      ))}
+    </dl>
   );
 }
 
@@ -70,16 +167,16 @@ export function Etiqueta({
 /** Aviso fixo de que o histórico não vem de um restaurante de verdade. */
 export function AvisoSimulado({ className = "" }: { className?: string }) {
   return (
-    <div
-      className={`vidro-ambar flex items-start gap-3 rounded-2xl px-[18px] py-3.5 ${className}`}
+    <p
+      className={`flex items-start gap-2.5 text-xs leading-relaxed text-marfim/55 ${className}`}
     >
       <svg
-        width="18"
-        height="18"
+        width="15"
+        height="15"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="1.8"
         strokeLinecap="round"
         aria-hidden
         className="mt-0.5 shrink-0 text-ambar-500"
@@ -87,109 +184,50 @@ export function AvisoSimulado({ className = "" }: { className?: string }) {
         <circle cx="12" cy="12" r="9" />
         <path d="M12 8h.01M12 11v5" />
       </svg>
-      <p className="text-[13px] leading-relaxed text-ambar-200/92">
-        <strong className="font-bold text-ambar-300">Dados simulados.</strong> O
-        histórico de vendas, o estoque e as fichas técnicas foram gerados por um
-        script de exemplo (
-        <code className="font-mono text-ambar-300/90">scripts/gerar-dados.mjs</code>
-        ) e não vêm de um restaurante real. Só duas coisas são reais: a{" "}
-        <strong className="font-semibold">previsão do tempo</strong> (Open-Meteo)
-        e a <strong className="font-semibold">análise escrita pela IA</strong>.
-      </p>
-    </div>
+      <span>
+        <strong className="font-semibold text-ambar-300">Dados simulados.</strong>{" "}
+        Histórico de vendas, fichas técnicas e estoque saem de um script de
+        exemplo e não vêm de um restaurante real. Reais são só a previsão do
+        tempo, a sua localização e a análise escrita pela IA.
+      </span>
+    </p>
   );
 }
 
 export function Vazio({ children }: { children: ReactNode }) {
   return (
-    <p className="rounded-2xl border border-dashed border-white/13 px-5 py-9 text-center text-sm leading-relaxed text-marfim/58">
+    <p className="rounded-2xl border border-dashed border-white/13 px-4 py-7 text-center text-sm leading-relaxed text-marfim/58">
       {children}
     </p>
   );
 }
 
-/** Cartão de número, usado nas faixas de resumo das três telas. */
-export function Indicador({
-  rotulo,
-  valor,
-  detalhe,
-  destaque = false,
-  tom = "jade",
-}: {
-  rotulo: string;
-  valor: ReactNode;
-  detalhe: ReactNode;
-  destaque?: boolean;
-  tom?: "jade" | "ambar";
-}) {
-  const jade = tom === "jade";
-  return (
-    <div
-      className={`rounded-[20px] px-[22px] py-5 ${
-        destaque
-          ? jade
-            ? "vidro-jade"
-            : "vidro-ambar"
-          : "vidro"
-      }`}
-    >
-      <p
-        className={`text-[11px] font-bold uppercase tracking-[0.08em] ${
-          destaque
-            ? jade
-              ? "text-jade-300/78"
-              : "text-ambar-300/82"
-            : "text-marfim/52"
-        }`}
-      >
-        {rotulo}
-      </p>
-      <p
-        className={`tabular mt-2.5 font-display text-[32px] font-light leading-tight tracking-tight ${
-          destaque ? (jade ? "text-jade-100" : "text-ambar-200") : "text-marfim"
-        }`}
-      >
-        {valor}
-      </p>
-      <p
-        className={`tabular mt-1 text-[13px] leading-snug ${
-          destaque
-            ? jade
-              ? "text-jade-200/82"
-              : "text-ambar-200/82"
-            : "text-marfim/62"
-        }`}
-      >
-        {detalhe}
-      </p>
-    </div>
-  );
-}
-
-/** Cabeçalho padrão das três telas. */
+/** Cabeçalho da tela: título grande e o aviso, sem caixa em volta. */
 export function TituloDaTela({
   titulo,
   children,
+  acao,
 }: {
   titulo: string;
   children: ReactNode;
+  acao?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-wrap items-end justify-between gap-5">
       <div>
-        <h1 className="font-display text-[44px] font-light leading-[1.05] tracking-tight text-marfim">
+        <h1 className="font-display text-[40px] font-light leading-[1.05] tracking-tight text-marfim">
           {titulo}
         </h1>
-        <p className="mt-2.5 max-w-2xl text-[15px] leading-relaxed text-marfim/68">
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-marfim/68">
           {children}
         </p>
       </div>
-      <AvisoSimulado />
+      {acao}
     </div>
   );
 }
 
-/* Estilos de tabela reaproveitados nas três telas. */
+/* Tabelas densas: filete fino, linha baixa, número tabular. */
 export const CABECALHO_TABELA =
-  "border-b border-white/10 pb-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-marfim/50";
-export const CELULA = "py-3.5 border-b border-white/[0.06]";
+  "border-b border-white/10 pb-2 text-[10px] font-bold uppercase tracking-[0.1em] text-marfim/45";
+export const CELULA = "py-2.5 border-b border-white/[0.05]";
