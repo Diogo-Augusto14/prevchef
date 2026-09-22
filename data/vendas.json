@@ -1,0 +1,5847 @@
+{
+  "aviso": "DADOS SIMULADOS — gerados por scripts/gerar-dados.mjs, não representam vendas reais.",
+  "geradoEm": "2026-09-22",
+  "dias": 365,
+  "registros": [
+    {
+      "data": "2025-09-22",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 22.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 15,
+        "caldo-verde": 14,
+        "salada": 32,
+        "parmegiana": 24,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2025-09-23",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 26,
+        "salada": 25,
+        "parmegiana": 37,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2025-09-24",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 22.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 18,
+        "salada": 30,
+        "parmegiana": 31,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-09-25",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 18.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 22,
+        "salada": 16,
+        "parmegiana": 28,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2025-09-26",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 23.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 18,
+        "salada": 25,
+        "parmegiana": 39,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2025-09-27",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 23.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 48,
+        "caldo-verde": 19,
+        "salada": 19,
+        "parmegiana": 38,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2025-09-28",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 24.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 14,
+        "salada": 17,
+        "parmegiana": 36,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2025-09-29",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 16.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 11,
+        "caldo-verde": 26,
+        "salada": 13,
+        "parmegiana": 30,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2025-09-30",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 22.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 13,
+        "salada": 24,
+        "parmegiana": 24,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2025-10-01",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 21.3,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 47,
+        "caldo-verde": 25,
+        "salada": 25,
+        "parmegiana": 43,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-10-02",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 20.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 32,
+        "salada": 27,
+        "parmegiana": 39,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2025-10-03",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 20,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 37,
+        "salada": 17,
+        "parmegiana": 55,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-10-04",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 20,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 83,
+        "caldo-verde": 24,
+        "salada": 20,
+        "parmegiana": 46,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2025-10-05",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 24.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 12,
+        "salada": 23,
+        "parmegiana": 48,
+        "frango-grelhado": 32
+      }
+    },
+    {
+      "data": "2025-10-06",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 20.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 25,
+        "salada": 25,
+        "parmegiana": 29,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2025-10-07",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 20,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 24,
+        "salada": 17,
+        "parmegiana": 28,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2025-10-08",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 16,
+        "salada": 29,
+        "parmegiana": 28,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-10-09",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 16.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 35,
+        "salada": 12,
+        "parmegiana": 33,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2025-10-10",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 23.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 16,
+        "salada": 30,
+        "parmegiana": 45,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2025-10-11",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 24.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 62,
+        "caldo-verde": 15,
+        "salada": 24,
+        "parmegiana": 34,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2025-10-12",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 20.8,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 46,
+        "caldo-verde": 25,
+        "salada": 23,
+        "parmegiana": 67,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2025-10-13",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 22,
+        "salada": 26,
+        "parmegiana": 26,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-10-14",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 26.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 8,
+        "salada": 41,
+        "parmegiana": 27,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2025-10-15",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 20.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 45,
+        "caldo-verde": 30,
+        "salada": 15,
+        "parmegiana": 38,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2025-10-16",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 21.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 17,
+        "salada": 25,
+        "parmegiana": 36,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2025-10-17",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 21.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 23,
+        "salada": 24,
+        "parmegiana": 47,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-10-18",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 24.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 72,
+        "caldo-verde": 13,
+        "salada": 16,
+        "parmegiana": 44,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2025-10-19",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 18.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 27,
+        "salada": 21,
+        "parmegiana": 42,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2025-10-20",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 16,
+        "salada": 32,
+        "parmegiana": 28,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-10-21",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 27.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 7,
+        "salada": 39,
+        "parmegiana": 20,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2025-10-22",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 26.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 12,
+        "salada": 27,
+        "parmegiana": 35,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2025-10-23",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 20.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 15,
+        "salada": 19,
+        "parmegiana": 34,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2025-10-24",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 20.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 26,
+        "salada": 15,
+        "parmegiana": 55,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2025-10-25",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 26.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 54,
+        "caldo-verde": 6,
+        "salada": 26,
+        "parmegiana": 40,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2025-10-26",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 23.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 14,
+        "salada": 16,
+        "parmegiana": 47,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2025-10-27",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 24.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 11,
+        "salada": 32,
+        "parmegiana": 23,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-10-28",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 24.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 14,
+        "salada": 30,
+        "parmegiana": 28,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2025-10-29",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 26.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 8,
+        "salada": 24,
+        "parmegiana": 30,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2025-10-30",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 27.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 6,
+        "salada": 30,
+        "parmegiana": 36,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2025-10-31",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 26.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 8,
+        "salada": 27,
+        "parmegiana": 39,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-11-01",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 27.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 76,
+        "caldo-verde": 11,
+        "salada": 37,
+        "parmegiana": 45,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2025-11-02",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 24.1,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 20,
+        "salada": 32,
+        "parmegiana": 53,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2025-11-03",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 24.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 15,
+        "salada": 43,
+        "parmegiana": 28,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2025-11-04",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 28,
+        "salada": 26,
+        "parmegiana": 39,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-11-05",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 27,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 7,
+        "salada": 42,
+        "parmegiana": 35,
+        "frango-grelhado": 67
+      }
+    },
+    {
+      "data": "2025-11-06",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 22.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 21,
+        "salada": 27,
+        "parmegiana": 36,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-11-07",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 21,
+        "salada": 17,
+        "parmegiana": 50,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2025-11-08",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 22.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 69,
+        "caldo-verde": 18,
+        "salada": 21,
+        "parmegiana": 43,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2025-11-09",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 23.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 13,
+        "salada": 21,
+        "parmegiana": 40,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2025-11-10",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 13,
+        "salada": 47,
+        "parmegiana": 27,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2025-11-11",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 21,
+        "salada": 27,
+        "parmegiana": 32,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-11-12",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 24.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 12,
+        "salada": 32,
+        "parmegiana": 30,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2025-11-13",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 21.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 22,
+        "salada": 25,
+        "parmegiana": 34,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2025-11-14",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 25.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 8,
+        "salada": 30,
+        "parmegiana": 46,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2025-11-15",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 24,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 86,
+        "caldo-verde": 17,
+        "salada": 29,
+        "parmegiana": 45,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2025-11-16",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 29.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 3,
+        "salada": 32,
+        "parmegiana": 36,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2025-11-17",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 24,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 13,
+        "salada": 28,
+        "parmegiana": 20,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-11-18",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 27.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 5,
+        "salada": 44,
+        "parmegiana": 31,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2025-11-19",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 23.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 19,
+        "salada": 23,
+        "parmegiana": 43,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-11-20",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 25.9,
+      "chuva": true,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 17,
+        "salada": 38,
+        "parmegiana": 51,
+        "frango-grelhado": 54
+      }
+    },
+    {
+      "data": "2025-11-21",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 23.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 15,
+        "salada": 26,
+        "parmegiana": 38,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-11-22",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 25.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 69,
+        "caldo-verde": 10,
+        "salada": 27,
+        "parmegiana": 43,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2025-11-23",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 6,
+        "salada": 28,
+        "parmegiana": 35,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2025-11-24",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 29.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 17,
+        "caldo-verde": 4,
+        "salada": 50,
+        "parmegiana": 28,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2025-11-25",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 20,
+        "salada": 26,
+        "parmegiana": 31,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-11-26",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 25.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 11,
+        "salada": 32,
+        "parmegiana": 30,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-11-27",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 24.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 14,
+        "salada": 28,
+        "parmegiana": 36,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2025-11-28",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 29,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 4,
+        "salada": 33,
+        "parmegiana": 33,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2025-11-29",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 26.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 70,
+        "caldo-verde": 13,
+        "salada": 16,
+        "parmegiana": 37,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2025-11-30",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 24.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 33,
+        "caldo-verde": 9,
+        "salada": 25,
+        "parmegiana": 40,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2025-12-01",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 27.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 15,
+        "caldo-verde": 10,
+        "salada": 53,
+        "parmegiana": 32,
+        "frango-grelhado": 57
+      }
+    },
+    {
+      "data": "2025-12-02",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 26.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 16,
+        "salada": 43,
+        "parmegiana": 40,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2025-12-03",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 29.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 8,
+        "salada": 41,
+        "parmegiana": 35,
+        "frango-grelhado": 67
+      }
+    },
+    {
+      "data": "2025-12-04",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 28.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 9,
+        "salada": 39,
+        "parmegiana": 42,
+        "frango-grelhado": 57
+      }
+    },
+    {
+      "data": "2025-12-05",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 26.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 11,
+        "salada": 38,
+        "parmegiana": 52,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2025-12-06",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 30.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 56,
+        "caldo-verde": 3,
+        "salada": 36,
+        "parmegiana": 36,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2025-12-07",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 26.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 8,
+        "salada": 26,
+        "parmegiana": 41,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2025-12-08",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 14,
+        "caldo-verde": 11,
+        "salada": 41,
+        "parmegiana": 39,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2025-12-09",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 27.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 7,
+        "salada": 42,
+        "parmegiana": 32,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2025-12-10",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 27.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 5,
+        "salada": 40,
+        "parmegiana": 28,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2025-12-11",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 26.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 5,
+        "salada": 39,
+        "parmegiana": 37,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2025-12-12",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 29.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 6,
+        "salada": 35,
+        "parmegiana": 35,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2025-12-13",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 62,
+        "caldo-verde": 1,
+        "salada": 32,
+        "parmegiana": 49,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2025-12-14",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 27,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 44,
+        "caldo-verde": 10,
+        "salada": 24,
+        "parmegiana": 45,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2025-12-15",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 17,
+        "caldo-verde": 7,
+        "salada": 41,
+        "parmegiana": 36,
+        "frango-grelhado": 57
+      }
+    },
+    {
+      "data": "2025-12-16",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 20,
+        "salada": 21,
+        "parmegiana": 38,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2025-12-17",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 7,
+        "salada": 35,
+        "parmegiana": 27,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2025-12-18",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 25.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 8,
+        "salada": 35,
+        "parmegiana": 38,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2025-12-19",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 8,
+        "salada": 36,
+        "parmegiana": 40,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2025-12-20",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 28.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 51,
+        "caldo-verde": 6,
+        "salada": 29,
+        "parmegiana": 47,
+        "frango-grelhado": 32
+      }
+    },
+    {
+      "data": "2025-12-21",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 28.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 8,
+        "salada": 27,
+        "parmegiana": 46,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2025-12-22",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 28.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 6,
+        "salada": 41,
+        "parmegiana": 28,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2025-12-23",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 28,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 8,
+        "salada": 33,
+        "parmegiana": 30,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2025-12-24",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 29,
+      "chuva": true,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 50,
+        "caldo-verde": 8,
+        "salada": 50,
+        "parmegiana": 41,
+        "frango-grelhado": 54
+      }
+    },
+    {
+      "data": "2025-12-25",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 26.6,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 10,
+        "salada": 44,
+        "parmegiana": 40,
+        "frango-grelhado": 54
+      }
+    },
+    {
+      "data": "2025-12-26",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 31.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 7,
+        "salada": 40,
+        "parmegiana": 41,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2025-12-27",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 32,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 59,
+        "caldo-verde": 8,
+        "salada": 27,
+        "parmegiana": 35,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2025-12-28",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 26.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 8,
+        "salada": 20,
+        "parmegiana": 40,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2025-12-29",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 31.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 6,
+        "salada": 48,
+        "parmegiana": 20,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2025-12-30",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 29.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 7,
+        "salada": 35,
+        "parmegiana": 21,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2025-12-31",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 24.4,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 15,
+        "salada": 29,
+        "parmegiana": 33,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2026-01-01",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 29.8,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 7,
+        "salada": 53,
+        "parmegiana": 47,
+        "frango-grelhado": 79
+      }
+    },
+    {
+      "data": "2026-01-02",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 26.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 10,
+        "salada": 45,
+        "parmegiana": 44,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-01-03",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 30.3,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 67,
+        "caldo-verde": 13,
+        "salada": 25,
+        "parmegiana": 43,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-01-04",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 27.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 5,
+        "salada": 30,
+        "parmegiana": 43,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-01-05",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 27.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 7,
+        "salada": 48,
+        "parmegiana": 35,
+        "frango-grelhado": 55
+      }
+    },
+    {
+      "data": "2026-01-06",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 32,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 8,
+        "salada": 34,
+        "parmegiana": 38,
+        "frango-grelhado": 61
+      }
+    },
+    {
+      "data": "2026-01-07",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 25.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 10,
+        "salada": 39,
+        "parmegiana": 32,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-01-08",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 8,
+        "salada": 33,
+        "parmegiana": 34,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-01-09",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 29.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 6,
+        "salada": 33,
+        "parmegiana": 44,
+        "frango-grelhado": 55
+      }
+    },
+    {
+      "data": "2026-01-10",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 30.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 64,
+        "caldo-verde": 7,
+        "salada": 31,
+        "parmegiana": 39,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-01-11",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 30.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 6,
+        "salada": 34,
+        "parmegiana": 38,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2026-01-12",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 30.3,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 7,
+        "salada": 43,
+        "parmegiana": 28,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-01-13",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 30.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 6,
+        "salada": 41,
+        "parmegiana": 27,
+        "frango-grelhado": 59
+      }
+    },
+    {
+      "data": "2026-01-14",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 32.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 7,
+        "salada": 33,
+        "parmegiana": 35,
+        "frango-grelhado": 62
+      }
+    },
+    {
+      "data": "2026-01-15",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 28.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 5,
+        "salada": 38,
+        "parmegiana": 25,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-01-16",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 29.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 6,
+        "salada": 32,
+        "parmegiana": 45,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-01-17",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 33.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 50,
+        "caldo-verde": 7,
+        "salada": 45,
+        "parmegiana": 35,
+        "frango-grelhado": 32
+      }
+    },
+    {
+      "data": "2026-01-18",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 30.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 6,
+        "salada": 36,
+        "parmegiana": 28,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-01-19",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 27.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 4,
+        "salada": 49,
+        "parmegiana": 25,
+        "frango-grelhado": 54
+      }
+    },
+    {
+      "data": "2026-01-20",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 31.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 6,
+        "salada": 50,
+        "parmegiana": 27,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-01-21",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 27,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 8,
+        "salada": 26,
+        "parmegiana": 42,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-01-22",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 22.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 20,
+        "salada": 29,
+        "parmegiana": 31,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-01-23",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 31.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 2,
+        "salada": 51,
+        "parmegiana": 47,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-01-24",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 30.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 71,
+        "caldo-verde": 5,
+        "salada": 25,
+        "parmegiana": 40,
+        "frango-grelhado": 32
+      }
+    },
+    {
+      "data": "2026-01-25",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 30.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 33,
+        "caldo-verde": 6,
+        "salada": 24,
+        "parmegiana": 24,
+        "frango-grelhado": 21
+      }
+    },
+    {
+      "data": "2026-01-26",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 33.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 7,
+        "salada": 46,
+        "parmegiana": 26,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-01-27",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 30,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 16,
+        "caldo-verde": 7,
+        "salada": 34,
+        "parmegiana": 33,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-01-28",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 31.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 7,
+        "salada": 26,
+        "parmegiana": 25,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-01-29",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 32.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 4,
+        "salada": 45,
+        "parmegiana": 30,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-01-30",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 16,
+        "caldo-verde": 7,
+        "salada": 29,
+        "parmegiana": 41,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-01-31",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 27.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 58,
+        "caldo-verde": 7,
+        "salada": 25,
+        "parmegiana": 38,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-02-01",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 30.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 10,
+        "salada": 35,
+        "parmegiana": 54,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-02-02",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 12,
+        "salada": 45,
+        "parmegiana": 31,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2026-02-03",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 28.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 8,
+        "salada": 43,
+        "parmegiana": 36,
+        "frango-grelhado": 65
+      }
+    },
+    {
+      "data": "2026-02-04",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 30.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 6,
+        "salada": 52,
+        "parmegiana": 31,
+        "frango-grelhado": 58
+      }
+    },
+    {
+      "data": "2026-02-05",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 33,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 12,
+        "salada": 54,
+        "parmegiana": 44,
+        "frango-grelhado": 54
+      }
+    },
+    {
+      "data": "2026-02-06",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 29,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 5,
+        "salada": 44,
+        "parmegiana": 37,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-02-07",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 28.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 70,
+        "caldo-verde": 2,
+        "salada": 39,
+        "parmegiana": 37,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-02-08",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 24.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 12,
+        "salada": 21,
+        "parmegiana": 38,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-02-09",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 29.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 5,
+        "salada": 46,
+        "parmegiana": 24,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2026-02-10",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 28.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 7,
+        "salada": 44,
+        "parmegiana": 27,
+        "frango-grelhado": 55
+      }
+    },
+    {
+      "data": "2026-02-11",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 31.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 8,
+        "salada": 35,
+        "parmegiana": 35,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-02-12",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 25.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 7,
+        "salada": 34,
+        "parmegiana": 36,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-02-13",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 13,
+        "salada": 25,
+        "parmegiana": 49,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-02-14",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 29.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 53,
+        "caldo-verde": 4,
+        "salada": 39,
+        "parmegiana": 34,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-02-15",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 28.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 7,
+        "salada": 35,
+        "parmegiana": 40,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-02-16",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 31.1,
+      "chuva": true,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 5,
+        "salada": 65,
+        "parmegiana": 38,
+        "frango-grelhado": 63
+      }
+    },
+    {
+      "data": "2026-02-17",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 28.4,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 8,
+        "salada": 49,
+        "parmegiana": 46,
+        "frango-grelhado": 67
+      }
+    },
+    {
+      "data": "2026-02-18",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 30.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 7,
+        "salada": 39,
+        "parmegiana": 40,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-02-19",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 29,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 5,
+        "salada": 43,
+        "parmegiana": 30,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-02-20",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 13,
+        "salada": 34,
+        "parmegiana": 52,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-02-21",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 30.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 69,
+        "caldo-verde": 3,
+        "salada": 31,
+        "parmegiana": 38,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-02-22",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 28,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 3,
+        "salada": 28,
+        "parmegiana": 39,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2026-02-23",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 27.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 7,
+        "salada": 35,
+        "parmegiana": 28,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-02-24",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 26.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 10,
+        "salada": 31,
+        "parmegiana": 31,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2026-02-25",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 28.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 6,
+        "salada": 35,
+        "parmegiana": 31,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-02-26",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 27.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 6,
+        "salada": 42,
+        "parmegiana": 33,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2026-02-27",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 21.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 20,
+        "salada": 22,
+        "parmegiana": 45,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-02-28",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 25.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 64,
+        "caldo-verde": 13,
+        "salada": 22,
+        "parmegiana": 32,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-03-01",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 29,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 7,
+        "salada": 30,
+        "parmegiana": 49,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-03-02",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 22.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 21,
+        "salada": 42,
+        "parmegiana": 35,
+        "frango-grelhado": 61
+      }
+    },
+    {
+      "data": "2026-03-03",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 29.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 5,
+        "salada": 54,
+        "parmegiana": 32,
+        "frango-grelhado": 59
+      }
+    },
+    {
+      "data": "2026-03-04",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 28.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 45,
+        "caldo-verde": 6,
+        "salada": 49,
+        "parmegiana": 41,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2026-03-05",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 30.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 11,
+        "salada": 45,
+        "parmegiana": 31,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2026-03-06",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 10,
+        "salada": 41,
+        "parmegiana": 40,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2026-03-07",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 26.8,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 72,
+        "caldo-verde": 8,
+        "salada": 26,
+        "parmegiana": 44,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-03-08",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 23.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 17,
+        "salada": 20,
+        "parmegiana": 41,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-03-09",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 14.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 37,
+        "salada": 9,
+        "parmegiana": 33,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-03-10",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 28.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 13,
+        "caldo-verde": 5,
+        "salada": 46,
+        "parmegiana": 25,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2026-03-11",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 23.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 14,
+        "salada": 27,
+        "parmegiana": 31,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-03-12",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 27.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 6,
+        "salada": 36,
+        "parmegiana": 35,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-03-13",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 28.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 10,
+        "salada": 44,
+        "parmegiana": 38,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-03-14",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 27,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 61,
+        "caldo-verde": 7,
+        "salada": 23,
+        "parmegiana": 43,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-03-15",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 26.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 7,
+        "salada": 25,
+        "parmegiana": 47,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-03-16",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 11,
+        "salada": 42,
+        "parmegiana": 24,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-03-17",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 17,
+        "salada": 23,
+        "parmegiana": 28,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-03-18",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 20.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 49,
+        "caldo-verde": 24,
+        "salada": 21,
+        "parmegiana": 38,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-03-19",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 28.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 7,
+        "salada": 32,
+        "parmegiana": 36,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-03-20",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 12,
+        "salada": 34,
+        "parmegiana": 57,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2026-03-21",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 23.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 76,
+        "caldo-verde": 15,
+        "salada": 24,
+        "parmegiana": 47,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-03-22",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 27.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 4,
+        "salada": 29,
+        "parmegiana": 43,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-03-23",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 17,
+        "caldo-verde": 12,
+        "salada": 28,
+        "parmegiana": 31,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-03-24",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 22.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 12,
+        "salada": 27,
+        "parmegiana": 26,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2026-03-25",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 22.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 12,
+        "salada": 26,
+        "parmegiana": 36,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-03-26",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 28.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 16,
+        "caldo-verde": 2,
+        "salada": 35,
+        "parmegiana": 30,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-03-27",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 27.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 14,
+        "salada": 30,
+        "parmegiana": 47,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-03-28",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 26.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 69,
+        "caldo-verde": 10,
+        "salada": 24,
+        "parmegiana": 36,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-03-29",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 12,
+        "salada": 19,
+        "parmegiana": 42,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-03-30",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 21.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 19,
+        "salada": 25,
+        "parmegiana": 32,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-03-31",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 22.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 11,
+        "salada": 23,
+        "parmegiana": 22,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-04-01",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 24.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 45,
+        "caldo-verde": 12,
+        "salada": 34,
+        "parmegiana": 36,
+        "frango-grelhado": 64
+      }
+    },
+    {
+      "data": "2026-04-02",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 24,
+        "salada": 34,
+        "parmegiana": 41,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2026-04-03",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24.4,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 24,
+        "salada": 38,
+        "parmegiana": 55,
+        "frango-grelhado": 60
+      }
+    },
+    {
+      "data": "2026-04-04",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 21.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 92,
+        "caldo-verde": 18,
+        "salada": 29,
+        "parmegiana": 48,
+        "frango-grelhado": 32
+      }
+    },
+    {
+      "data": "2026-04-05",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 26.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 12,
+        "salada": 26,
+        "parmegiana": 54,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-04-06",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 25,
+        "salada": 21,
+        "parmegiana": 33,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-04-07",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 19,
+        "salada": 32,
+        "parmegiana": 32,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-04-08",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 26.8,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 10,
+        "salada": 29,
+        "parmegiana": 33,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-04-09",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 25.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 19,
+        "caldo-verde": 13,
+        "salada": 35,
+        "parmegiana": 33,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-04-10",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 16,
+        "salada": 31,
+        "parmegiana": 50,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-04-11",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 21.3,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 75,
+        "caldo-verde": 26,
+        "salada": 12,
+        "parmegiana": 40,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-04-12",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 22.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 19,
+        "salada": 27,
+        "parmegiana": 40,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-04-13",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 22.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 21,
+        "salada": 32,
+        "parmegiana": 29,
+        "frango-grelhado": 53
+      }
+    },
+    {
+      "data": "2026-04-14",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 23.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 14,
+        "salada": 33,
+        "parmegiana": 35,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2026-04-15",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 25.3,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 44,
+        "caldo-verde": 13,
+        "salada": 27,
+        "parmegiana": 34,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-04-16",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 23.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 16,
+        "salada": 29,
+        "parmegiana": 33,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2026-04-17",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 15,
+        "salada": 27,
+        "parmegiana": 46,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-04-18",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 20.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 74,
+        "caldo-verde": 26,
+        "salada": 16,
+        "parmegiana": 41,
+        "frango-grelhado": 21
+      }
+    },
+    {
+      "data": "2026-04-19",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 21.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 23,
+        "salada": 21,
+        "parmegiana": 44,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2026-04-20",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 23.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 14,
+        "salada": 37,
+        "parmegiana": 34,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-04-21",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 16.5,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 38,
+        "salada": 22,
+        "parmegiana": 44,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-04-22",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 16,
+        "salada": 34,
+        "parmegiana": 32,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-04-23",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 26.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 10,
+        "salada": 33,
+        "parmegiana": 41,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-04-24",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 25.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 21,
+        "salada": 28,
+        "parmegiana": 43,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-04-25",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 19.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 76,
+        "caldo-verde": 27,
+        "salada": 10,
+        "parmegiana": 41,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2026-04-26",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 23.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 17,
+        "salada": 12,
+        "parmegiana": 46,
+        "frango-grelhado": 20
+      }
+    },
+    {
+      "data": "2026-04-27",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 33,
+        "salada": 20,
+        "parmegiana": 36,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-04-28",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 20.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 23,
+        "salada": 21,
+        "parmegiana": 25,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-04-29",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 25.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 12,
+        "salada": 26,
+        "parmegiana": 32,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-04-30",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 19.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 24,
+        "salada": 18,
+        "parmegiana": 36,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-05-01",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 22.5,
+      "chuva": true,
+      "feriado": true,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 39,
+        "salada": 28,
+        "parmegiana": 72,
+        "frango-grelhado": 59
+      }
+    },
+    {
+      "data": "2026-05-02",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 21.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 93,
+        "caldo-verde": 21,
+        "salada": 24,
+        "parmegiana": 54,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-05-03",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 21.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 19,
+        "salada": 23,
+        "parmegiana": 45,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-05-04",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 25.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 21,
+        "salada": 44,
+        "parmegiana": 47,
+        "frango-grelhado": 61
+      }
+    },
+    {
+      "data": "2026-05-05",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 18.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 32,
+        "salada": 24,
+        "parmegiana": 30,
+        "frango-grelhado": 64
+      }
+    },
+    {
+      "data": "2026-05-06",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 23.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 47,
+        "caldo-verde": 17,
+        "salada": 22,
+        "parmegiana": 43,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-05-07",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 17.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 29,
+        "salada": 15,
+        "parmegiana": 43,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-05-08",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 20.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 33,
+        "caldo-verde": 24,
+        "salada": 23,
+        "parmegiana": 43,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-05-09",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 23.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 54,
+        "caldo-verde": 13,
+        "salada": 27,
+        "parmegiana": 36,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-05-10",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 19.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 35,
+        "salada": 15,
+        "parmegiana": 49,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2026-05-11",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 20.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 24,
+        "salada": 26,
+        "parmegiana": 30,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-05-12",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 27,
+        "salada": 28,
+        "parmegiana": 34,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-05-13",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 21.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 24,
+        "salada": 30,
+        "parmegiana": 32,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-05-14",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 24.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 19,
+        "salada": 25,
+        "parmegiana": 43,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-05-15",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 25,
+        "salada": 21,
+        "parmegiana": 55,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-05-16",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 16.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 85,
+        "caldo-verde": 31,
+        "salada": 10,
+        "parmegiana": 51,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-05-17",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 22.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 14,
+        "salada": 25,
+        "parmegiana": 45,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-05-18",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 17.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 26,
+        "salada": 19,
+        "parmegiana": 34,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-05-19",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 33,
+        "salada": 29,
+        "parmegiana": 31,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-05-20",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 21.8,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 50,
+        "caldo-verde": 26,
+        "salada": 18,
+        "parmegiana": 33,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-05-21",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 16.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 30,
+        "salada": 14,
+        "parmegiana": 35,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-05-22",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.1,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 35,
+        "salada": 15,
+        "parmegiana": 53,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2026-05-23",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 20.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 68,
+        "caldo-verde": 17,
+        "salada": 22,
+        "parmegiana": 36,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2026-05-24",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 17.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 26,
+        "salada": 15,
+        "parmegiana": 41,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2026-05-25",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 18,
+        "caldo-verde": 26,
+        "salada": 16,
+        "parmegiana": 28,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-05-26",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 15.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 35,
+        "salada": 9,
+        "parmegiana": 32,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-05-27",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 16.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 45,
+        "caldo-verde": 30,
+        "salada": 11,
+        "parmegiana": 33,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-05-28",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 18.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 32,
+        "salada": 16,
+        "parmegiana": 50,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-05-29",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 20.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 33,
+        "salada": 19,
+        "parmegiana": 56,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-05-30",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 20.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 74,
+        "caldo-verde": 26,
+        "salada": 18,
+        "parmegiana": 42,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-05-31",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 16.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 26,
+        "salada": 9,
+        "parmegiana": 39,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2026-06-01",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 30,
+        "salada": 27,
+        "parmegiana": 36,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-06-02",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 32,
+        "salada": 23,
+        "parmegiana": 36,
+        "frango-grelhado": 57
+      }
+    },
+    {
+      "data": "2026-06-03",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 21.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 43,
+        "caldo-verde": 26,
+        "salada": 25,
+        "parmegiana": 38,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-06-04",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 17.2,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 47,
+        "caldo-verde": 49,
+        "salada": 27,
+        "parmegiana": 56,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-06-05",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 14.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 41,
+        "salada": 10,
+        "parmegiana": 62,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-06-06",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 20,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 61,
+        "caldo-verde": 23,
+        "salada": 18,
+        "parmegiana": 41,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-06-07",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 20.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 25,
+        "salada": 18,
+        "parmegiana": 47,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-06-08",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 14.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 35,
+        "salada": 10,
+        "parmegiana": 27,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-06-09",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 18.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 24,
+        "salada": 21,
+        "parmegiana": 28,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-06-10",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 20,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 47,
+        "caldo-verde": 25,
+        "salada": 21,
+        "parmegiana": 32,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-06-11",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 21.5,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 25,
+        "salada": 19,
+        "parmegiana": 43,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-06-12",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 24.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 12,
+        "salada": 32,
+        "parmegiana": 40,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-06-13",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 16.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 82,
+        "caldo-verde": 34,
+        "salada": 13,
+        "parmegiana": 46,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-06-14",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 23.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 16,
+        "salada": 24,
+        "parmegiana": 36,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-06-15",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 24,
+        "salada": 27,
+        "parmegiana": 32,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-06-16",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 24,
+        "salada": 19,
+        "parmegiana": 30,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-06-17",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 18.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 28,
+        "salada": 20,
+        "parmegiana": 36,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-06-18",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 15.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 33,
+        "salada": 13,
+        "parmegiana": 36,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-06-19",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 30,
+        "salada": 16,
+        "parmegiana": 42,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-06-20",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 15.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 73,
+        "caldo-verde": 42,
+        "salada": 11,
+        "parmegiana": 44,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-06-21",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 18,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 28,
+        "salada": 12,
+        "parmegiana": 39,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-06-22",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 17.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 29,
+        "salada": 20,
+        "parmegiana": 28,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-06-23",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 15.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 34,
+        "salada": 12,
+        "parmegiana": 36,
+        "frango-grelhado": 42
+      }
+    },
+    {
+      "data": "2026-06-24",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 14.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 51,
+        "caldo-verde": 34,
+        "salada": 7,
+        "parmegiana": 37,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-06-25",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 17.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 33,
+        "salada": 17,
+        "parmegiana": 32,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2026-06-26",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 16.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 37,
+        "salada": 12,
+        "parmegiana": 53,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-06-27",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 19.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 72,
+        "caldo-verde": 20,
+        "salada": 16,
+        "parmegiana": 31,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2026-06-28",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 17,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 22,
+        "salada": 13,
+        "parmegiana": 33,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2026-06-29",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 16.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 25,
+        "salada": 16,
+        "parmegiana": 30,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-06-30",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 18.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 20,
+        "caldo-verde": 27,
+        "salada": 19,
+        "parmegiana": 38,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-07-01",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 20.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 60,
+        "caldo-verde": 20,
+        "salada": 29,
+        "parmegiana": 51,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-07-02",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 15.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 39,
+        "salada": 15,
+        "parmegiana": 46,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-07-03",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 18.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 34,
+        "salada": 25,
+        "parmegiana": 57,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2026-07-04",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 17.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 108,
+        "caldo-verde": 25,
+        "salada": 15,
+        "parmegiana": 56,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-07-05",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 22,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 20,
+        "salada": 23,
+        "parmegiana": 55,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-07-06",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 26,
+        "salada": 21,
+        "parmegiana": 30,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-07-07",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 13.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 35,
+        "salada": 14,
+        "parmegiana": 39,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-07-08",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 15.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 38,
+        "caldo-verde": 36,
+        "salada": 13,
+        "parmegiana": 37,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2026-07-09",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 20.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 21,
+        "salada": 19,
+        "parmegiana": 35,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-07-10",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 17.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 40,
+        "salada": 20,
+        "parmegiana": 49,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-07-11",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 15.7,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 73,
+        "caldo-verde": 40,
+        "salada": 10,
+        "parmegiana": 51,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-07-12",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 14.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 47,
+        "salada": 8,
+        "parmegiana": 58,
+        "frango-grelhado": 28
+      }
+    },
+    {
+      "data": "2026-07-13",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 24.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 12,
+        "salada": 40,
+        "parmegiana": 26,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-07-14",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 13,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 46,
+        "salada": 10,
+        "parmegiana": 44,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-07-15",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 16.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 49,
+        "caldo-verde": 25,
+        "salada": 11,
+        "parmegiana": 32,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-07-16",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 14,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 38,
+        "salada": 8,
+        "parmegiana": 44,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-07-17",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 13.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 53,
+        "salada": 11,
+        "parmegiana": 56,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2026-07-18",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 13.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 89,
+        "caldo-verde": 37,
+        "salada": 9,
+        "parmegiana": 50,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2026-07-19",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 20.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 18,
+        "salada": 18,
+        "parmegiana": 44,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-07-20",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 17.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 27,
+        "salada": 14,
+        "parmegiana": 33,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-07-21",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.2,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 40,
+        "salada": 14,
+        "parmegiana": 40,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-07-22",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 15.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 49,
+        "caldo-verde": 31,
+        "salada": 16,
+        "parmegiana": 40,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-07-23",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 17.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 31,
+        "salada": 18,
+        "parmegiana": 44,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-07-24",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 14.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 43,
+        "salada": 8,
+        "parmegiana": 53,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2026-07-25",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 15.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 79,
+        "caldo-verde": 26,
+        "salada": 8,
+        "parmegiana": 43,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2026-07-26",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 20,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 16,
+        "salada": 15,
+        "parmegiana": 36,
+        "frango-grelhado": 23
+      }
+    },
+    {
+      "data": "2026-07-27",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 23,
+        "salada": 22,
+        "parmegiana": 35,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-07-28",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 20.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 30,
+        "salada": 15,
+        "parmegiana": 31,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-07-29",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 18,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 54,
+        "caldo-verde": 29,
+        "salada": 18,
+        "parmegiana": 37,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-07-30",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 19.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 22,
+        "salada": 16,
+        "parmegiana": 39,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-07-31",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 15.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 41,
+        "salada": 11,
+        "parmegiana": 42,
+        "frango-grelhado": 33
+      }
+    },
+    {
+      "data": "2026-08-01",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 18.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 83,
+        "caldo-verde": 39,
+        "salada": 18,
+        "parmegiana": 54,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2026-08-02",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 19.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 24,
+        "salada": 20,
+        "parmegiana": 55,
+        "frango-grelhado": 35
+      }
+    },
+    {
+      "data": "2026-08-03",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 13.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 33,
+        "caldo-verde": 46,
+        "salada": 10,
+        "parmegiana": 36,
+        "frango-grelhado": 60
+      }
+    },
+    {
+      "data": "2026-08-04",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 16.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 34,
+        "caldo-verde": 41,
+        "salada": 13,
+        "parmegiana": 30,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-08-05",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 13.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 58,
+        "caldo-verde": 51,
+        "salada": 15,
+        "parmegiana": 43,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-08-06",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 16.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 30,
+        "salada": 17,
+        "parmegiana": 39,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-08-07",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 36,
+        "caldo-verde": 27,
+        "salada": 15,
+        "parmegiana": 46,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-08-08",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 15.9,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 100,
+        "caldo-verde": 46,
+        "salada": 10,
+        "parmegiana": 50,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-08-09",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 15.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 46,
+        "caldo-verde": 26,
+        "salada": 8,
+        "parmegiana": 60,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2026-08-10",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 33,
+        "caldo-verde": 27,
+        "salada": 24,
+        "parmegiana": 28,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-08-11",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 13.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 42,
+        "salada": 12,
+        "parmegiana": 39,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-08-12",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 16.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 46,
+        "caldo-verde": 38,
+        "salada": 14,
+        "parmegiana": 33,
+        "frango-grelhado": 43
+      }
+    },
+    {
+      "data": "2026-08-13",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 18.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 33,
+        "salada": 17,
+        "parmegiana": 46,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-08-14",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 18.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 39,
+        "salada": 16,
+        "parmegiana": 47,
+        "frango-grelhado": 37
+      }
+    },
+    {
+      "data": "2026-08-15",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 21.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 86,
+        "caldo-verde": 28,
+        "salada": 18,
+        "parmegiana": 42,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-08-16",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 18,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 41,
+        "caldo-verde": 28,
+        "salada": 13,
+        "parmegiana": 44,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2026-08-17",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 12.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 54,
+        "salada": 11,
+        "parmegiana": 33,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-08-18",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 26,
+        "salada": 19,
+        "parmegiana": 31,
+        "frango-grelhado": 45
+      }
+    },
+    {
+      "data": "2026-08-19",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 13.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 53,
+        "caldo-verde": 42,
+        "salada": 9,
+        "parmegiana": 35,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-08-20",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 17.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 27,
+        "salada": 21,
+        "parmegiana": 40,
+        "frango-grelhado": 41
+      }
+    },
+    {
+      "data": "2026-08-21",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 27,
+        "salada": 21,
+        "parmegiana": 52,
+        "frango-grelhado": 36
+      }
+    },
+    {
+      "data": "2026-08-22",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 18.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 73,
+        "caldo-verde": 35,
+        "salada": 18,
+        "parmegiana": 43,
+        "frango-grelhado": 27
+      }
+    },
+    {
+      "data": "2026-08-23",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 21.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 20,
+        "salada": 18,
+        "parmegiana": 48,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-08-24",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 15.6,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 21,
+        "caldo-verde": 42,
+        "salada": 10,
+        "parmegiana": 40,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-08-25",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 18.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 28,
+        "salada": 19,
+        "parmegiana": 30,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2026-08-26",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 21.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 23,
+        "salada": 19,
+        "parmegiana": 35,
+        "frango-grelhado": 39
+      }
+    },
+    {
+      "data": "2026-08-27",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 20.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 24,
+        "salada": 23,
+        "parmegiana": 31,
+        "frango-grelhado": 51
+      }
+    },
+    {
+      "data": "2026-08-28",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 12.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 39,
+        "caldo-verde": 45,
+        "salada": 9,
+        "parmegiana": 49,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-08-29",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 19.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 73,
+        "caldo-verde": 25,
+        "salada": 18,
+        "parmegiana": 36,
+        "frango-grelhado": 29
+      }
+    },
+    {
+      "data": "2026-08-30",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 17.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 24,
+        "caldo-verde": 28,
+        "salada": 11,
+        "parmegiana": 35,
+        "frango-grelhado": 19
+      }
+    },
+    {
+      "data": "2026-08-31",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 21.5,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 22,
+        "caldo-verde": 17,
+        "salada": 30,
+        "parmegiana": 31,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-09-01",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 19.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 32,
+        "caldo-verde": 28,
+        "salada": 24,
+        "parmegiana": 46,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-09-02",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 20.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 48,
+        "caldo-verde": 34,
+        "salada": 30,
+        "parmegiana": 43,
+        "frango-grelhado": 62
+      }
+    },
+    {
+      "data": "2026-09-03",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 22.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 35,
+        "caldo-verde": 24,
+        "salada": 27,
+        "parmegiana": 48,
+        "frango-grelhado": 56
+      }
+    },
+    {
+      "data": "2026-09-04",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 16.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 37,
+        "caldo-verde": 38,
+        "salada": 17,
+        "parmegiana": 54,
+        "frango-grelhado": 49
+      }
+    },
+    {
+      "data": "2026-09-05",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 15.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": true,
+      "vendas": {
+        "feijoada": 99,
+        "caldo-verde": 42,
+        "salada": 11,
+        "parmegiana": 59,
+        "frango-grelhado": 31
+      }
+    },
+    {
+      "data": "2026-09-06",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 19,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 27,
+        "salada": 14,
+        "parmegiana": 51,
+        "frango-grelhado": 26
+      }
+    },
+    {
+      "data": "2026-09-07",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.2,
+      "chuva": false,
+      "feriado": true,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 30,
+        "caldo-verde": 39,
+        "salada": 29,
+        "parmegiana": 42,
+        "frango-grelhado": 57
+      }
+    },
+    {
+      "data": "2026-09-08",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 20.4,
+      "chuva": true,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 30,
+        "salada": 20,
+        "parmegiana": 32,
+        "frango-grelhado": 44
+      }
+    },
+    {
+      "data": "2026-09-09",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 19.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 51,
+        "caldo-verde": 24,
+        "salada": 18,
+        "parmegiana": 38,
+        "frango-grelhado": 40
+      }
+    },
+    {
+      "data": "2026-09-10",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 20.8,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 23,
+        "caldo-verde": 24,
+        "salada": 15,
+        "parmegiana": 45,
+        "frango-grelhado": 46
+      }
+    },
+    {
+      "data": "2026-09-11",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 19.4,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 27,
+        "caldo-verde": 26,
+        "salada": 17,
+        "parmegiana": 48,
+        "frango-grelhado": 34
+      }
+    },
+    {
+      "data": "2026-09-12",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 16.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 99,
+        "caldo-verde": 26,
+        "salada": 15,
+        "parmegiana": 47,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2026-09-13",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 16.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 42,
+        "caldo-verde": 34,
+        "salada": 11,
+        "parmegiana": 47,
+        "frango-grelhado": 25
+      }
+    },
+    {
+      "data": "2026-09-14",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 18.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 28,
+        "caldo-verde": 29,
+        "salada": 25,
+        "parmegiana": 36,
+        "frango-grelhado": 48
+      }
+    },
+    {
+      "data": "2026-09-15",
+      "diaSemana": 2,
+      "diaSemanaNome": "terça",
+      "temperatura": 17.7,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 29,
+        "caldo-verde": 32,
+        "salada": 17,
+        "parmegiana": 35,
+        "frango-grelhado": 47
+      }
+    },
+    {
+      "data": "2026-09-16",
+      "diaSemana": 3,
+      "diaSemanaNome": "quarta",
+      "temperatura": 17.2,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 40,
+        "caldo-verde": 33,
+        "salada": 13,
+        "parmegiana": 37,
+        "frango-grelhado": 50
+      }
+    },
+    {
+      "data": "2026-09-17",
+      "diaSemana": 4,
+      "diaSemanaNome": "quinta",
+      "temperatura": 19.9,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 25,
+        "caldo-verde": 24,
+        "salada": 19,
+        "parmegiana": 34,
+        "frango-grelhado": 52
+      }
+    },
+    {
+      "data": "2026-09-18",
+      "diaSemana": 5,
+      "diaSemanaNome": "sexta",
+      "temperatura": 20.3,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 31,
+        "caldo-verde": 26,
+        "salada": 24,
+        "parmegiana": 43,
+        "frango-grelhado": 38
+      }
+    },
+    {
+      "data": "2026-09-19",
+      "diaSemana": 6,
+      "diaSemanaNome": "sábado",
+      "temperatura": 18.6,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 77,
+        "caldo-verde": 29,
+        "salada": 14,
+        "parmegiana": 53,
+        "frango-grelhado": 30
+      }
+    },
+    {
+      "data": "2026-09-20",
+      "diaSemana": 0,
+      "diaSemanaNome": "domingo",
+      "temperatura": 19.1,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 47,
+        "caldo-verde": 25,
+        "salada": 17,
+        "parmegiana": 53,
+        "frango-grelhado": 24
+      }
+    },
+    {
+      "data": "2026-09-21",
+      "diaSemana": 1,
+      "diaSemanaNome": "segunda",
+      "temperatura": 19,
+      "chuva": false,
+      "feriado": false,
+      "inicioMes": false,
+      "vendas": {
+        "feijoada": 26,
+        "caldo-verde": 28,
+        "salada": 27,
+        "parmegiana": 32,
+        "frango-grelhado": 36
+      }
+    }
+  ]
+}

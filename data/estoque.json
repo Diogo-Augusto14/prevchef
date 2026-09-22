@@ -1,0 +1,178 @@
+[
+  {
+    "id": "feijao-preto",
+    "nome": "Feijão preto",
+    "unidade": "kg",
+    "quantidade": 14,
+    "validade": "2027-01-20",
+    "custoUnitario": 9.4
+  },
+  {
+    "id": "carne-seca",
+    "nome": "Carne seca",
+    "unidade": "kg",
+    "quantidade": 6.5,
+    "validade": "2026-10-01",
+    "custoUnitario": 42.9
+  },
+  {
+    "id": "linguica",
+    "nome": "Linguiça calabresa",
+    "unidade": "kg",
+    "quantidade": 7,
+    "validade": "2026-09-29",
+    "custoUnitario": 27.5
+  },
+  {
+    "id": "bacon",
+    "nome": "Bacon",
+    "unidade": "kg",
+    "quantidade": 3.2,
+    "validade": "2026-10-03",
+    "custoUnitario": 34
+  },
+  {
+    "id": "arroz",
+    "nome": "Arroz",
+    "unidade": "kg",
+    "quantidade": 30,
+    "validade": "2027-03-21",
+    "custoUnitario": 6.2
+  },
+  {
+    "id": "couve",
+    "nome": "Couve",
+    "unidade": "kg",
+    "quantidade": 4,
+    "validade": "2026-09-24",
+    "custoUnitario": 12
+  },
+  {
+    "id": "laranja",
+    "nome": "Laranja",
+    "unidade": "kg",
+    "quantidade": 9,
+    "validade": "2026-09-28",
+    "custoUnitario": 5.5
+  },
+  {
+    "id": "batata",
+    "nome": "Batata",
+    "unidade": "kg",
+    "quantidade": 22,
+    "validade": "2026-10-07",
+    "custoUnitario": 4.8
+  },
+  {
+    "id": "cebola",
+    "nome": "Cebola",
+    "unidade": "kg",
+    "quantidade": 6,
+    "validade": "2026-10-12",
+    "custoUnitario": 5.2
+  },
+  {
+    "id": "alho",
+    "nome": "Alho",
+    "unidade": "kg",
+    "quantidade": 1.2,
+    "validade": "2026-11-06",
+    "custoUnitario": 38
+  },
+  {
+    "id": "azeite",
+    "nome": "Azeite",
+    "unidade": "L",
+    "quantidade": 4,
+    "validade": "2027-07-19",
+    "custoUnitario": 46
+  },
+  {
+    "id": "alface",
+    "nome": "Alface",
+    "unidade": "kg",
+    "quantidade": 2.6,
+    "validade": "2026-09-25",
+    "custoUnitario": 14.5
+  },
+  {
+    "id": "tomate",
+    "nome": "Tomate",
+    "unidade": "kg",
+    "quantidade": 7.5,
+    "validade": "2026-09-27",
+    "custoUnitario": 8.9
+  },
+  {
+    "id": "cenoura",
+    "nome": "Cenoura",
+    "unidade": "kg",
+    "quantidade": 4.5,
+    "validade": "2026-10-04",
+    "custoUnitario": 6.4
+  },
+  {
+    "id": "pepino",
+    "nome": "Pepino",
+    "unidade": "kg",
+    "quantidade": 2.8,
+    "validade": "2026-09-26",
+    "custoUnitario": 7.2
+  },
+  {
+    "id": "queijo-branco",
+    "nome": "Queijo branco",
+    "unidade": "kg",
+    "quantidade": 2.2,
+    "validade": "2026-09-30",
+    "custoUnitario": 48
+  },
+  {
+    "id": "file-frango",
+    "nome": "Filé de frango",
+    "unidade": "kg",
+    "quantidade": 16,
+    "validade": "2026-09-25",
+    "custoUnitario": 26.9
+  },
+  {
+    "id": "mussarela",
+    "nome": "Queijo mussarela",
+    "unidade": "kg",
+    "quantidade": 4.5,
+    "validade": "2026-10-06",
+    "custoUnitario": 52
+  },
+  {
+    "id": "molho-tomate",
+    "nome": "Molho de tomate",
+    "unidade": "kg",
+    "quantidade": 8,
+    "validade": "2026-12-21",
+    "custoUnitario": 11.5
+  },
+  {
+    "id": "farinha-rosca",
+    "nome": "Farinha de rosca",
+    "unidade": "kg",
+    "quantidade": 5,
+    "validade": "2026-11-21",
+    "custoUnitario": 9
+  },
+  {
+    "id": "ovo",
+    "nome": "Ovo",
+    "unidade": "un",
+    "quantidade": 180,
+    "validade": "2026-10-10",
+    "custoUnitario": 0.85
+  },
+  {
+    "id": "feijao-carioca",
+    "nome": "Feijão carioca",
+    "unidade": "kg",
+    "quantidade": 12,
+    "validade": "2027-01-20",
+    "custoUnitario": 8.1
+  }
+]

@@ -1,0 +1,229 @@
+[
+  {
+    "id": "feijoada",
+    "nome": "Feijoada",
+    "precoVenda": 52,
+    "ingredientes": [
+      {
+        "id": "feijao-preto",
+        "nome": "Feijão preto",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.12
+      },
+      {
+        "id": "carne-seca",
+        "nome": "Carne seca",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.08
+      },
+      {
+        "id": "linguica",
+        "nome": "Linguiça calabresa",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.07
+      },
+      {
+        "id": "bacon",
+        "nome": "Bacon",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.04
+      },
+      {
+        "id": "arroz",
+        "nome": "Arroz",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.15
+      },
+      {
+        "id": "couve",
+        "nome": "Couve",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.05
+      },
+      {
+        "id": "laranja",
+        "nome": "Laranja",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.08
+      }
+    ]
+  },
+  {
+    "id": "caldo-verde",
+    "nome": "Caldo verde",
+    "precoVenda": 28,
+    "ingredientes": [
+      {
+        "id": "batata",
+        "nome": "Batata",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.18
+      },
+      {
+        "id": "couve",
+        "nome": "Couve",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.06
+      },
+      {
+        "id": "linguica",
+        "nome": "Linguiça calabresa",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.05
+      },
+      {
+        "id": "cebola",
+        "nome": "Cebola",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.03
+      },
+      {
+        "id": "alho",
+        "nome": "Alho",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.005
+      },
+      {
+        "id": "azeite",
+        "nome": "Azeite",
+        "unidade": "L",
+        "quantidadePorPorcao": 0.01
+      }
+    ]
+  },
+  {
+    "id": "salada",
+    "nome": "Salada da casa",
+    "precoVenda": 32,
+    "ingredientes": [
+      {
+        "id": "alface",
+        "nome": "Alface",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.08
+      },
+      {
+        "id": "tomate",
+        "nome": "Tomate",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.07
+      },
+      {
+        "id": "cenoura",
+        "nome": "Cenoura",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.04
+      },
+      {
+        "id": "pepino",
+        "nome": "Pepino",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.05
+      },
+      {
+        "id": "queijo-branco",
+        "nome": "Queijo branco",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.03
+      },
+      {
+        "id": "azeite",
+        "nome": "Azeite",
+        "unidade": "L",
+        "quantidadePorPorcao": 0.01
+      }
+    ]
+  },
+  {
+    "id": "parmegiana",
+    "nome": "Parmegiana",
+    "precoVenda": 48,
+    "ingredientes": [
+      {
+        "id": "file-frango",
+        "nome": "Filé de frango",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.18
+      },
+      {
+        "id": "mussarela",
+        "nome": "Queijo mussarela",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.06
+      },
+      {
+        "id": "molho-tomate",
+        "nome": "Molho de tomate",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.1
+      },
+      {
+        "id": "farinha-rosca",
+        "nome": "Farinha de rosca",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.04
+      },
+      {
+        "id": "ovo",
+        "nome": "Ovo",
+        "unidade": "un",
+        "quantidadePorPorcao": 1
+      },
+      {
+        "id": "arroz",
+        "nome": "Arroz",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.15
+      },
+      {
+        "id": "batata",
+        "nome": "Batata",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.12
+      }
+    ]
+  },
+  {
+    "id": "frango-grelhado",
+    "nome": "Frango grelhado",
+    "precoVenda": 38,
+    "ingredientes": [
+      {
+        "id": "file-frango",
+        "nome": "Filé de frango",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.2
+      },
+      {
+        "id": "arroz",
+        "nome": "Arroz",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.15
+      },
+      {
+        "id": "feijao-carioca",
+        "nome": "Feijão carioca",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.1
+      },
+      {
+        "id": "alface",
+        "nome": "Alface",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.04
+      },
+      {
+        "id": "tomate",
+        "nome": "Tomate",
+        "unidade": "kg",
+        "quantidadePorPorcao": 0.04
+      },
+      {
+        "id": "azeite",
+        "nome": "Azeite",
+        "unidade": "L",
+        "quantidadePorPorcao": 0.01
+      }
+    ]
+  }
+]
