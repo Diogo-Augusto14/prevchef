@@ -30,7 +30,11 @@ export type PadroesDoPrato = {
   melhorDia: { dia: string; media: number; variacao: number };
   /** Faixa de temperatura em que mais sai. */
   melhorClima: { clima: string; media: number; variacao: number };
-  /** Efeito da chuva, em % sobre a média dos dias sem chuva. */
+  /**
+   * Efeito de cada condição em %, medido dentro da mesma faixa de
+   * temperatura (ver `efeitoDentroDoClima`) para não confundir o efeito da
+   * chuva com o do calor.
+   */
   efeitoChuva: number;
   efeitoFeriado: number;
   efeitoInicioMes: number;
@@ -103,15 +107,72 @@ export function porCondicoesDoDia(): MediaPorCondicao[] {
   ]);
 }
 
+const FAIXAS = ["frio", "ameno", "quente"] as const;
+
+/**
+ * Efeito percentual de uma condição, medido DENTRO de cada faixa de
+ * temperatura e só depois combinado.
+ *
+ * Sem essa separação o número sai com o sinal trocado. No histórico
+ * simulado chove mais no calor (25,4 °C nos dias de chuva contra 22,1 °C
+ * nos secos), então comparar "com chuva" × "sem chuva" direto mistura o
+ * efeito da chuva com o do calor: o caldo verde, que a chuva faz subir,
+ * aparecia caindo 14%.
+ */
+function efeitoDentroDoClima(
+  pratoId: string,
+  temACondicao: (d: RegistroVenda) => boolean,
+  minimoDeDias = 5
+): number {
+  let somaDasRazoes = 0;
+  let somaDosPesos = 0;
+
+  for (const faixa of FAIXAS) {
+    const grupo = HISTORICO.filter((d) => faixaDeClima(d.temperatura) === faixa);
+    const com = grupo.filter(temACondicao);
+    const sem = grupo.filter((d) => !temACondicao(d));
+    if (com.length < minimoDeDias || sem.length < minimoDeDias) continue;
+
+    const base = mediaDoGrupo(sem, pratoId);
+    if (!base) continue;
+
+    // Cada faixa pesa pelo número de dias que ela contribui.
+    somaDasRazoes += (mediaDoGrupo(com, pratoId) / base) * com.length;
+    somaDosPesos += com.length;
+  }
+
+  if (somaDosPesos === 0) {
+    // Nenhuma faixa com dias suficientes (feriado é raro): volta ao simples.
+    const com = HISTORICO.filter(temACondicao);
+    const base = mediaDoGrupo(HISTORICO.filter((d) => !temACondicao(d)), pratoId);
+    return base ? Math.round((mediaDoGrupo(com, pratoId) / base - 1) * 100) : 0;
+  }
+
+  return Math.round((somaDasRazoes / somaDosPesos - 1) * 100);
+}
+
+/**
+ * Média por prato nos dias com a mesma faixa de temperatura E a mesma
+ * condição de chuva — o recorte que de fato descreve o dia consultado.
+ */
+export function mediaEmDiasParecidos(temperatura: number, chuva: boolean) {
+  const faixa = faixaDeClima(temperatura);
+  const dias = HISTORICO.filter(
+    (d) => faixaDeClima(d.temperatura) === faixa && d.chuva === chuva
+  );
+
+  const porPrato: Record<string, number> = {};
+  for (const id of PRATO_IDS) porPrato[id] = arredondar(mediaDoGrupo(dias, id));
+
+  return {
+    condicao: `${faixa} ${chuva ? "com chuva" : "sem chuva"}`,
+    dias: dias.length,
+    porPrato,
+  };
+}
+
 /** Resumo por prato: onde cada um vende melhor e o peso de cada condição. */
 export function padroesPorPrato(): PadroesDoPrato[] {
-  const comChuva = HISTORICO.filter((d) => d.chuva);
-  const semChuva = HISTORICO.filter((d) => !d.chuva);
-  const feriados = HISTORICO.filter((d) => d.feriado);
-  const comuns = HISTORICO.filter((d) => !d.feriado);
-  const inicio = HISTORICO.filter((d) => d.inicioMes);
-  const resto = HISTORICO.filter((d) => !d.inicioMes);
-
   const climas = [
     { clima: "frio", dias: HISTORICO.filter((d) => faixaDeClima(d.temperatura) === "frio") },
     { clima: "ameno", dias: HISTORICO.filter((d) => faixaDeClima(d.temperatura) === "ameno") },
@@ -136,10 +197,6 @@ export function padroesPorPrato(): PadroesDoPrato[] {
       }))
       .sort((a, b) => b.media - a.media);
 
-    const mediaSemChuva = mediaDoGrupo(semChuva, prato.id);
-    const mediaComum = mediaDoGrupo(comuns, prato.id);
-    const mediaResto = mediaDoGrupo(resto, prato.id);
-
     return {
       pratoId: prato.id,
       nome: prato.nome,
@@ -154,9 +211,9 @@ export function padroesPorPrato(): PadroesDoPrato[] {
         media: arredondar(porClima[0].media),
         variacao: variacao(porClima[0].media, geral),
       },
-      efeitoChuva: variacao(mediaDoGrupo(comChuva, prato.id), mediaSemChuva),
-      efeitoFeriado: variacao(mediaDoGrupo(feriados, prato.id), mediaComum),
-      efeitoInicioMes: variacao(mediaDoGrupo(inicio, prato.id), mediaResto),
+      efeitoChuva: efeitoDentroDoClima(prato.id, (d) => d.chuva),
+      efeitoFeriado: efeitoDentroDoClima(prato.id, (d) => d.feriado),
+      efeitoInicioMes: efeitoDentroDoClima(prato.id, (d) => d.inicioMes),
     };
   });
 }

@@ -8,7 +8,11 @@
 import type { AnaliseDoDia } from "@/app/api/analise/route";
 import { NOMES_DIAS, dataLonga } from "./dados";
 import { faixaDeClima, type Cidade, type PrevisaoDoTempo } from "./clima";
-import { padroesPorPrato, porCondicoesDoDia, porDiaDaSemana, porFaixaDeClima } from "./padroes";
+import {
+  mediaEmDiasParecidos,
+  padroesPorPrato,
+  porDiaDaSemana,
+} from "./padroes";
 import { DIAS_ALERTA_VALIDADE, estoqueComValidade, type ResumoDoDia } from "./previsao";
 
 export type { AnaliseDoDia };
@@ -26,10 +30,11 @@ export function montarPayloadDaAnalise(
   const diaDaSemana = NOMES_DIAS[resumo.cenario.diaSemana];
 
   const mediaDoDia = porDiaDaSemana().find((m) => m.condicao === diaDaSemana);
-  const mediaDoClima = porFaixaDeClima().find((m) => m.condicao.startsWith(faixa));
-  const condicoes = porCondicoesDoDia();
-  const chuva = condicoes.find(
-    (c) => c.condicao === (resumo.cenario.chuva ? "com chuva" : "sem chuva")
+  // Clima e chuva juntos: separados, o número engana, porque no histórico
+  // chove mais nos dias quentes.
+  const diasAssim = mediaEmDiasParecidos(
+    resumo.cenario.temperatura,
+    resumo.cenario.chuva
   );
 
   const estoque = estoqueComValidade(resumo.dataAlvo);
@@ -74,9 +79,12 @@ export function montarPayloadDaAnalise(
       })),
     },
     oQueECommumVender: {
+      nota: "Os efeitos percentuais são medidos dentro da mesma faixa de temperatura, para não confundir o efeito da chuva com o do calor.",
       mediaNesteDiaDaSemana: mediaDoDia?.porPrato,
-      mediaNestaFaixaDeClima: mediaDoClima?.porPrato,
-      mediaComEstaCondicaoDeChuva: chuva?.porPrato,
+      mediaEmDiasAssim: {
+        recorte: `${diasAssim.condicao} (${diasAssim.dias} dias no histórico)`,
+        porPrato: diasAssim.porPrato,
+      },
       porPrato: padroesPorPrato().map((p) => ({
         prato: p.nome,
         mediaDiaria: p.media,
