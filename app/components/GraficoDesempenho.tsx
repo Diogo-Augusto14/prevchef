@@ -13,6 +13,12 @@ import {
 import { dataCurta, dataLonga } from "@/lib/dados";
 import type { PontoComparacao } from "@/lib/mae";
 
+/* Cores do tema escuro — o gráfico não herda as classes do Tailwind. */
+const EIXO = "rgba(244,247,245,0.50)";
+const GRADE = "rgba(255,255,255,0.08)";
+const REAL = "rgba(244,247,245,0.38)";
+const PREVISTO = "#6FDCB0";
+
 export default function GraficoDesempenho({
   serie,
 }: {
@@ -24,16 +30,16 @@ export default function GraficoDesempenho({
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={dados} margin={{ top: 8, right: 12, bottom: 0, left: -8 }}>
-          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid stroke={GRADE} vertical={false} />
           <XAxis
             dataKey="rotulo"
-            tick={{ fontSize: 11, fill: "#64748b" }}
+            tick={{ fontSize: 11, fill: EIXO }}
             tickLine={false}
-            axisLine={{ stroke: "#cbd5e1" }}
+            axisLine={{ stroke: GRADE }}
             minTickGap={24}
           />
           <YAxis
-            tick={{ fontSize: 11, fill: "#64748b" }}
+            tick={{ fontSize: 11, fill: EIXO }}
             tickLine={false}
             axisLine={false}
             width={48}
@@ -42,10 +48,11 @@ export default function GraficoDesempenho({
               angle: -90,
               position: "insideLeft",
               offset: 16,
-              style: { fontSize: 11, fill: "#94a3b8" },
+              style: { fontSize: 11, fill: "rgba(244,247,245,0.40)" },
             }}
           />
           <Tooltip
+            cursor={{ stroke: "rgba(255,255,255,0.18)" }}
             formatter={(valor: number, nome: string) => [
               `${valor} porções`,
               nome === "real" ? "Real" : "Previsto",
@@ -55,19 +62,29 @@ export default function GraficoDesempenho({
               return ponto ? dataLonga(ponto.data) : "";
             }}
             contentStyle={{
-              borderRadius: 8,
-              border: "1px solid #e2e8f0",
+              borderRadius: 14,
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(15,23,20,0.92)",
+              backdropFilter: "blur(16px)",
+              color: "#F4F7F5",
               fontSize: 12,
+              boxShadow: "0 18px 40px -20px rgba(0,0,0,0.9)",
             }}
+            labelStyle={{ color: "rgba(244,247,245,0.62)" }}
+            itemStyle={{ color: "#F4F7F5" }}
           />
           <Legend
-            formatter={(valor) => (valor === "real" ? "Real" : "Previsto (KNN)")}
+            formatter={(valor) => (
+              <span style={{ color: "rgba(244,247,245,0.72)" }}>
+                {valor === "real" ? "Real" : "Previsto (KNN)"}
+              </span>
+            )}
             wrapperStyle={{ fontSize: 12 }}
           />
           <Line
             type="monotone"
             dataKey="real"
-            stroke="#94a3b8"
+            stroke={REAL}
             strokeWidth={2}
             dot={false}
             isAnimationActive={false}
@@ -75,8 +92,8 @@ export default function GraficoDesempenho({
           <Line
             type="monotone"
             dataKey="previsto"
-            stroke="#059669"
-            strokeWidth={2}
+            stroke={PREVISTO}
+            strokeWidth={2.4}
             dot={false}
             isAnimationActive={false}
           />

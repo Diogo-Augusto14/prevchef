@@ -1,24 +1,151 @@
 @import "tailwindcss";
 
 @theme {
-  --color-marca-50: oklch(0.97 0.02 150);
-  --color-marca-100: oklch(0.94 0.04 150);
-  --color-marca-600: oklch(0.58 0.13 150);
-  --color-marca-700: oklch(0.5 0.12 150);
-  --color-marca-900: oklch(0.32 0.07 150);
+  /* Tinta e vidro */
+  --color-tinta: #080d0b;
+  --color-tinta-2: #0f1714;
+  --color-marfim: #f4f7f5;
+
+  /* Jade — acento único: previsão, valores bons, aba ativa */
+  --color-jade-100: #e6fbf2;
+  --color-jade-200: #c8f5e1;
+  --color-jade-300: #9bebcb;
+  --color-jade-400: #7fe3bc;
+  --color-jade-500: #4fc79b;
+
+  /* Âmbar — só onde existe prazo ou risco */
+  --color-ambar-200: #f7dcaa;
+  --color-ambar-300: #f5c87e;
+  --color-ambar-500: #f0b056;
+
+  /* Névoa — chuva e observação */
+  --color-nevoa-300: #9fd0f0;
+
+  /* Brasa — vencido e falta grave */
+  --color-brasa-300: #f2766b;
+
+  --font-display: var(--fonte-display), Georgia, "Times New Roman", serif;
+  --font-corpo: var(--fonte-corpo), system-ui, sans-serif;
 }
 
+/*
+ * Tema escuro fixo. `color-scheme` é o que faz o navegador desenhar os
+ * controles nativos (lista do select, calendário do date, barra de rolagem)
+ * em escuro — sem ele a lista do select abre branca e o texto claro some.
+ */
 html {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
-  background-color: var(--color-slate-50);
-  color: var(--color-slate-800);
+  min-height: 100vh;
+  color: var(--color-marfim);
+  font-family: var(--font-corpo);
   -webkit-font-smoothing: antialiased;
+  background-color: var(--color-tinta);
+  /*
+   * Poças de luz em vez de degradê corrido: dá ao vidro algo para borrar
+   * sem virar papel de parede. `fixed` mantém a composição ao rolar.
+   */
+  background-image:
+    radial-gradient(1000px 640px at 8% -6%, rgba(52, 185, 138, 0.2), transparent 62%),
+    radial-gradient(760px 520px at 96% 2%, rgba(240, 176, 86, 0.13), transparent 64%),
+    radial-gradient(920px 780px at 64% 82%, rgba(56, 118, 160, 0.17), transparent 66%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
-/* Números em tabelas e cartões alinham melhor com dígitos de largura fixa. */
+/* Alguns navegadores (Firefox no Windows) ignoram color-scheme na lista
+   aberta do select, então as opções recebem cor explícita. */
+option,
+optgroup {
+  background-color: var(--color-tinta-2);
+  color: var(--color-marfim);
+}
+
+/* Números em tabelas e cartões alinham com dígitos de largura fixa. */
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Camadas de vidro                                                    */
+/* ------------------------------------------------------------------ */
+
+/* Painel: a superfície que flutua sobre o fundo. */
+.vidro {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 24px 60px -32px rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* Bloco interno: vidro dentro de vidro não recebe blur próprio, senão
+   as camadas viram sopa. */
+.vidro-bloco {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* Destaque: um por tela, no máximo. */
+.vidro-jade {
+  background: linear-gradient(150deg, rgba(111, 220, 176, 0.13), rgba(255, 255, 255, 0.035));
+  border: 1px solid rgba(111, 220, 176, 0.26);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.vidro-ambar {
+  background: rgba(240, 176, 86, 0.09);
+  border: 1px solid rgba(240, 176, 86, 0.26);
+}
+
+.vidro-nevoa {
+  background: rgba(86, 150, 200, 0.11);
+  border: 1px solid rgba(120, 180, 225, 0.28);
+}
+
+.vidro-brasa {
+  background: rgba(242, 118, 107, 0.1);
+  border: 1px solid rgba(242, 118, 107, 0.28);
+}
+
+/* ------------------------------------------------------------------ */
+/* Controles                                                           */
+/* ------------------------------------------------------------------ */
+
+.campo {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+  border-radius: 0.875rem;
+  font-size: 0.9375rem;
+  color: var(--color-marfim);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.campo:focus {
+  outline: none;
+  border-color: rgba(127, 227, 188, 0.55);
+  box-shadow: 0 0 0 3px rgba(127, 227, 188, 0.14);
+}
+
+.rotulo {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 247, 245, 0.52);
+}
+
+/* Trilho da faixa do KNN. */
+.trilho {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
 }

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AnaliseIA from "./components/AnaliseIA";
 import ResultadoDia from "./components/ResultadoDia";
-import { AvisoSimulado, Cartao, Etiqueta } from "./components/ui";
+import { Cartao, Etiqueta, TituloDaTela } from "./components/ui";
 import {
   DIA_PADRAO,
   GERADO_EM,
@@ -118,31 +118,23 @@ export default function PainelPage() {
   }, [rodarAnalise, resumo, carregandoClima]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Painel do dia
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            O sistema busca o clima real, detecta o feriado, prevê a venda de
-            cada prato e analisa tudo sozinho. Você só escolhe o dia e a praça.
-          </p>
-        </div>
-        <AvisoSimulado />
-      </div>
+    <div className="space-y-7">
+      <TituloDaTela titulo="Painel do dia">
+        O sistema busca o clima real, detecta o feriado, prevê a venda de cada
+        prato e analisa tudo sozinho. Você escolhe só o dia e a praça.
+      </TituloDaTela>
 
       <Cartao
         titulo="Condições do dia"
-        descricao={`Detectadas automaticamente. Histórico simulado: ${
+        descricao={`Detectadas automaticamente · histórico simulado de ${
           HISTORICO.length
         } dias, até ${dataLonga(
           HISTORICO[HISTORICO.length - 1].data
-        )} (gerado em ${dataLonga(GERADO_EM)}).`}
+        )} (gerado em ${dataLonga(GERADO_EM)})`}
       >
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)]">
-          <div>
-            <label htmlFor="data" className="block text-sm font-medium text-slate-700">
+        <div className="grid gap-[18px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="data" className="rotulo">
               Dia
             </label>
             <input
@@ -150,26 +142,34 @@ export default function PainelPage() {
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-marca-600 focus:outline-none focus:ring-2 focus:ring-marca-100"
+              className="campo tabular"
             />
-            <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-              {dataValida ? NOMES_DIAS[diaSemana] : "Informe uma data válida."}
-              {feriado && <Etiqueta cor="ambar">{feriado}</Etiqueta>}
-              {dataValida && inicioDoMes(data) && (
-                <Etiqueta cor="verde">início do mês</Etiqueta>
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              {dataValida ? (
+                <>
+                  <Etiqueta cor="neutro">{NOMES_DIAS[diaSemana]}</Etiqueta>
+                  {feriado && <Etiqueta cor="ambar">{feriado}</Etiqueta>}
+                  {inicioDoMes(data) && (
+                    <Etiqueta cor="jadeSuave">início do mês</Etiqueta>
+                  )}
+                </>
+              ) : (
+                <span className="text-xs text-ambar-300">
+                  Informe uma data válida.
+                </span>
               )}
-            </p>
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="cidade" className="block text-sm font-medium text-slate-700">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="cidade" className="rotulo">
               Praça
             </label>
             <select
               id="cidade"
               value={cidadeId}
               onChange={(e) => setCidadeId(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-marca-600 focus:outline-none focus:ring-2 focus:ring-marca-100"
+              className="campo"
             >
               {CIDADES.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -177,9 +177,9 @@ export default function PainelPage() {
                 </option>
               ))}
             </select>
-            <p className="mt-1.5 text-xs text-slate-500">
+            <span className="mt-0.5 text-xs text-marfim/55">
               Define de onde vem a previsão do tempo.
-            </p>
+            </span>
           </div>
 
           <Clima
@@ -210,45 +210,65 @@ function Clima({
   temperaturaUsada: number;
 }) {
   const faixa = faixaDeClima(temperaturaUsada);
-  const cor = faixa === "frio" ? "azul" : faixa === "quente" ? "ambar" : "verde";
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-slate-700">Clima</span>
-        <Etiqueta cor={cor}>{rotuloDoClima(temperaturaUsada)}</Etiqueta>
+    <div className="rounded-[18px] border border-white/12 bg-gradient-to-br from-[rgba(56,118,160,0.20)] to-white/[0.03] px-[18px] py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]">
+      <div className="flex items-center justify-between gap-2.5">
+        <span className="rotulo">Clima</span>
+        <Etiqueta cor={faixa === "quente" ? "ambar" : faixa === "frio" ? "nevoa" : "jade"}>
+          {rotuloDoClima(temperaturaUsada)}
+        </Etiqueta>
       </div>
 
       {carregando ? (
-        <p className="mt-2 text-xs text-slate-500">Buscando a previsão…</p>
+        <p className="mt-3 text-xs text-marfim/55">Buscando a previsão…</p>
       ) : erro ? (
-        <p className="mt-2 text-xs text-amber-700">{erro}</p>
+        <p className="mt-3 text-xs text-ambar-300">{erro}</p>
       ) : tempo ? (
         <>
-          <p className="tabular mt-2 text-2xl font-semibold text-slate-900">
-            {numero(tempo.temperatura)} °C
+          <p className="tabular mt-2.5 font-display text-[42px] font-light leading-none tracking-tight text-marfim">
+            {numero(tempo.temperatura)}
+            <span className="ml-1.5 text-[17px] text-marfim/62">°C</span>
           </p>
-          <p className="tabular mt-0.5 text-xs text-slate-500">
-            mínima {numero(tempo.temperaturaMinima)} °C · máxima{" "}
-            {numero(tempo.temperaturaMaxima)} °C · {tempo.chanceDeChuva}% de
-            chance de chuva
+          <p className="tabular mt-2 text-xs leading-snug text-marfim/62">
+            mín {numero(tempo.temperaturaMinima)} · máx{" "}
+            {numero(tempo.temperaturaMaxima)} · {tempo.chanceDeChuva}% de chance
+            de chuva
             {tempo.chuvaMm > 0 && ` (${numero(tempo.chuvaMm)} mm)`}
           </p>
-          <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+          <div className="mt-2.5 flex flex-wrap items-center gap-2">
             {tempo.chuva ? (
-              <Etiqueta cor="azul">dia de chuva</Etiqueta>
+              <Etiqueta cor="nevoa">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  aria-hidden
+                >
+                  <path d="M8 19l-1 2M12 19l-1 2M16 19l-1 2" />
+                  <path d="M18 16a4 4 0 0 0 .5-8 6 6 0 0 0-11.6 1.6A3.5 3.5 0 0 0 7 16Z" />
+                </svg>
+                dia de chuva
+              </Etiqueta>
             ) : (
               <Etiqueta cor="neutro">sem chuva</Etiqueta>
             )}
-            <span>previsão real · Open-Meteo</span>
-          </p>
+            <span className="text-[11px] text-marfim/48">
+              previsão real · Open-Meteo
+            </span>
+          </div>
         </>
       ) : (
         <>
-          <p className="tabular mt-2 text-2xl font-semibold text-slate-900">
-            {numero(temperaturaUsada)} °C
+          <p className="tabular mt-2.5 font-display text-[42px] font-light leading-none tracking-tight text-marfim">
+            {numero(temperaturaUsada)}
+            <span className="ml-1.5 text-[17px] text-marfim/62">°C</span>
           </p>
-          <p className="mt-1 text-xs text-amber-700">
+          <p className="mt-2 text-xs leading-snug text-ambar-300/90">
             Sem previsão real para esta data (a Open-Meteo vai até 16 dias).
             Usando a média histórica desta época do ano.
           </p>

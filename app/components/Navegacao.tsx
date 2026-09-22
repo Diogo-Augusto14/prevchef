@@ -13,7 +13,7 @@ export default function Navegacao() {
   const caminho = usePathname();
 
   return (
-    <nav className="flex gap-1" aria-label="Seções do PrevChef">
+    <nav className="flex gap-2" aria-label="Seções do PrevChef">
       {ABAS.map((aba) => {
         const ativa = caminho === aba.href;
         return (
@@ -21,11 +21,11 @@ export default function Navegacao() {
             key={aba.href}
             href={aba.href}
             aria-current={ativa ? "page" : undefined}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+            className={
               ativa
-                ? "bg-marca-600 text-white"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
+                ? "rounded-full bg-gradient-to-b from-jade-400 to-jade-500 px-[18px] py-2.5 text-sm font-semibold text-tinta shadow-[0_8px_22px_-10px_rgba(111,220,176,0.9)]"
+                : "rounded-full border border-white/10 px-[18px] py-2.5 text-sm font-medium text-marfim/80 transition hover:border-white/20 hover:bg-white/5 hover:text-marfim"
+            }
           >
             {aba.rotulo}
           </Link>

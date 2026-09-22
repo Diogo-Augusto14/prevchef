@@ -2,7 +2,14 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-import { AvisoSimulado, Cartao, Etiqueta } from "../components/ui";
+import {
+  CABECALHO_TABELA,
+  CELULA,
+  Cartao,
+  Etiqueta,
+  Indicador,
+  TituloDaTela,
+} from "../components/ui";
 import { HISTORICO, PRATOS, PRATO_IDS, dataLonga, numero } from "@/lib/dados";
 import {
   KS_AVALIADOS,
@@ -15,7 +22,7 @@ import {
 const GraficoDesempenho = dynamic(() => import("../components/GraficoDesempenho"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-80 items-center justify-center text-sm text-slate-400">
+    <div className="flex h-80 items-center justify-center text-sm text-marfim/45">
       Montando o gráfico…
     </div>
   ),
@@ -44,37 +51,29 @@ export default function DesempenhoPage() {
   }, [serie]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Desempenho do modelo
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Treino nos 10 primeiros meses, teste nos 2 últimos. O modelo nunca vê
-            os dias de teste antes de prever.
-          </p>
-        </div>
-        <AvisoSimulado />
-      </div>
+    <div className="space-y-7">
+      <TituloDaTela titulo="Desempenho do modelo">
+        Treino nos 10 primeiros meses, teste nos 2 últimos. O modelo nunca vê os
+        dias de teste antes de prever.
+      </TituloDaTela>
 
       {avaliacao && (
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Resumo
+        <div className="grid gap-[18px] sm:grid-cols-3">
+          <Indicador
             rotulo="Treino"
             valor={`${avaliacao.particao.treino.dias} dias`}
             detalhe={`${dataLonga(avaliacao.particao.treino.inicio)} a ${dataLonga(
               avaliacao.particao.treino.fim
             )}`}
           />
-          <Resumo
+          <Indicador
             rotulo="Teste"
             valor={`${avaliacao.particao.teste.dias} dias`}
             detalhe={`${dataLonga(avaliacao.particao.teste.inicio)} a ${dataLonga(
               avaliacao.particao.teste.fim
             )}`}
           />
-          <Resumo
+          <Indicador
             rotulo="Melhor resultado"
             valor={`MAE ${numero(avaliacao.melhorKnn.geral, 2)}`}
             detalhe={`${avaliacao.melhorKnn.metodo} — erra ${numero(
@@ -83,6 +82,7 @@ export default function DesempenhoPage() {
             )}% ${
               avaliacao.ganhoPercentual >= 0 ? "menos" : "mais"
             } que a média do dia da semana`}
+            destaque
           />
         </div>
       )}
@@ -92,14 +92,15 @@ export default function DesempenhoPage() {
         descricao="Cada ponto é um dia que o modelo não viu no treino."
         acao={
           <div className="flex flex-wrap items-end gap-3">
-            <label className="text-xs text-slate-500">
-              <span className="mb-1 block font-medium uppercase tracking-wide">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="prato" className="rotulo">
                 Prato
-              </span>
+              </label>
               <select
+                id="prato"
                 value={pratoSelecionado}
                 onChange={(e) => setPratoSelecionado(e.target.value)}
-                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-800"
+                className="campo !w-auto !py-2 !text-[13px]"
               >
                 <option value="todos">Todos os pratos</option>
                 {PRATOS.map((p) => (
@@ -108,15 +109,16 @@ export default function DesempenhoPage() {
                   </option>
                 ))}
               </select>
-            </label>
-            <label className="text-xs text-slate-500">
-              <span className="mb-1 block font-medium uppercase tracking-wide">
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="k" className="rotulo">
                 K
-              </span>
+              </label>
               <select
+                id="k"
                 value={k}
                 onChange={(e) => setK(Number(e.target.value))}
-                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-800"
+                className="campo !w-auto !py-2 !text-[13px]"
               >
                 {KS_AVALIADOS.map((valor) => (
                   <option key={valor} value={valor}>
@@ -124,29 +126,29 @@ export default function DesempenhoPage() {
                   </option>
                 ))}
               </select>
-            </label>
+            </div>
           </div>
         }
       >
         <GraficoDesempenho serie={serie} />
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-4 border-t border-white/[0.08] pt-4 text-sm text-marfim/62">
           Erro médio nesta seleção:{" "}
-          <strong className="tabular font-semibold text-slate-700">
+          <strong className="tabular font-bold text-marfim">
             {numero(erroMedioDaSerie, 2)} porções por dia
           </strong>{" "}
           {pratoSelecionado === "todos"
-            ? "(somando os cinco pratos)"
-            : `(apenas ${PRATOS.find((p) => p.id === pratoSelecionado)?.nome})`}
+            ? "somando os cinco pratos"
+            : `apenas ${PRATOS.find((p) => p.id === pratoSelecionado)?.nome}`}
           .
         </p>
       </Cartao>
 
       <Cartao
         titulo="MAE por método"
-        descricao="Erro absoluto médio em porções por dia — quanto menor, melhor. Em verde, o melhor de cada coluna."
+        descricao="Porções de erro por dia — quanto menor, melhor. Em jade, o melhor de cada coluna."
       >
         {!avaliacao ? (
-          <p className="py-6 text-center text-sm text-slate-400">
+          <p className="py-7 text-center text-sm text-marfim/45">
             Calculando o erro em todos os dias de teste…
           </p>
         ) : (
@@ -155,16 +157,19 @@ export default function DesempenhoPage() {
       </Cartao>
 
       <Cartao titulo="Como ler estes números">
-        <ul className="list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-marfim/72 marker:text-jade-400/60">
           <li>
-            <strong>MAE</strong> é a média de quanto a previsão erra, em porções,
-            em cada dia de teste. MAE 4 significa errar quatro porções para mais
-            ou para menos, na média.
+            <strong className="font-semibold text-marfim">MAE</strong> é a média de
+            quanto a previsão erra, em porções, em cada dia de teste. MAE 4
+            significa errar quatro porções para mais ou para menos, na média.
           </li>
           <li>
-            A linha <strong>média do mesmo dia da semana</strong> é a régua: é o
-            que o gerente já faria de cabeça. O KNN só se paga se ficar abaixo
-            dela.
+            A linha{" "}
+            <strong className="font-semibold text-marfim">
+              média do mesmo dia da semana
+            </strong>{" "}
+            é a régua: é o que o gerente já faria de cabeça. O KNN só se paga se
+            ficar abaixo dela.
           </li>
           <li>
             K baixo deixa o modelo mais sensível a um dia atípico; K alto suaviza
@@ -192,22 +197,30 @@ function TabelaMae({ avaliacao }: { avaliacao: Avaliacao }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
-            <th className="py-2 pr-3 font-medium">Método</th>
+          <tr className="text-left">
+            <th className={`${CABECALHO_TABELA} pr-3`}>Método</th>
             {PRATOS.map((p) => (
-              <th key={p.id} className="py-2 pr-3 text-right font-medium">
+              <th key={p.id} className={`${CABECALHO_TABELA} pr-3 text-right`}>
                 {p.nome}
               </th>
             ))}
-            <th className="py-2 text-right font-medium">Geral</th>
+            <th className={`${CABECALHO_TABELA} text-right`}>Geral</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="tabular">
           {avaliacao.linhas.map((linha) => {
             const referencia = linha.metodo === avaliacao.referencia.metodo;
+            const melhorLinha = linha.geral === melhorGeral;
             return (
-              <tr key={linha.metodo} className={referencia ? "bg-slate-50" : ""}>
-                <td className="py-2 pr-3 font-medium text-slate-900">
+              <tr
+                key={linha.metodo}
+                className={melhorLinha ? "bg-jade-400/[0.07]" : undefined}
+              >
+                <td
+                  className={`${CELULA} pl-2.5 pr-3 font-semibold ${
+                    referencia ? "text-marfim/82" : "text-marfim"
+                  }`}
+                >
                   {linha.metodo}
                   {referencia && (
                     <span className="ml-2">
@@ -221,8 +234,8 @@ function TabelaMae({ avaliacao }: { avaliacao: Avaliacao }) {
                   return (
                     <td
                       key={p.id}
-                      className={`tabular py-2 pr-3 text-right ${
-                        melhor ? "font-semibold text-marca-700" : "text-slate-600"
+                      className={`${CELULA} pr-3 text-right ${
+                        melhor ? "font-bold text-jade-300" : "text-marfim/74"
                       }`}
                     >
                       {numero(valor, 2)}
@@ -230,10 +243,10 @@ function TabelaMae({ avaliacao }: { avaliacao: Avaliacao }) {
                   );
                 })}
                 <td
-                  className={`tabular py-2 text-right ${
+                  className={`${CELULA} pr-2.5 text-right ${
                     linha.geral === melhorGeral
-                      ? "font-semibold text-marca-700"
-                      : "text-slate-600"
+                      ? "font-bold text-jade-300"
+                      : "text-marfim/74"
                   }`}
                 >
                   {numero(linha.geral, 2)}
@@ -243,26 +256,6 @@ function TabelaMae({ avaliacao }: { avaliacao: Avaliacao }) {
           })}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-function Resumo({
-  rotulo,
-  valor,
-  detalhe,
-}: {
-  rotulo: string;
-  valor: string;
-  detalhe: string;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-        {rotulo}
-      </p>
-      <p className="tabular mt-1 text-xl font-semibold text-slate-900">{valor}</p>
-      <p className="mt-1 text-sm text-slate-500">{detalhe}</p>
     </div>
   );
 }
