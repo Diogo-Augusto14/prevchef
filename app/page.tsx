@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DetalheDaIA, ResumoDaIA } from "./components/AnaliseIA";
 import CurvaDeChegada from "./components/CurvaDeChegada";
+import FechamentoDoDia from "./components/FechamentoDoDia";
 import {
   Alertas,
   DiasParecidos,
@@ -36,6 +37,8 @@ import { feriadoDe } from "@/lib/feriados";
 import { temperaturaTipicaPara } from "@/lib/padroes";
 import { K_PADRAO } from "@/lib/knn";
 import { gerarResumoDoDia } from "@/lib/previsao";
+import { HISTORICO } from "@/lib/dados";
+import { useOperacao } from "@/lib/operacao";
 import {
   montarPayloadDaAnalise,
   pedirAnalise,
@@ -43,6 +46,7 @@ import {
 } from "@/lib/analise";
 
 export default function PainelPage() {
+  const { estoqueAtual, diasFechados, pronto } = useOperacao();
   const [data, setData] = useState(DIA_PADRAO);
   const [local, setLocal] = useState<Local>(() => localDaCidade(CIDADE_PADRAO));
   const [buscandoLocal, setBuscandoLocal] = useState(true);
@@ -110,9 +114,18 @@ export default function PainelPage() {
     [diaSemana, tempoDoDia, data, feriado, dataValida]
   );
 
+  /* O histórico cresce: cada dia fechado entra como mais um vizinho possível. */
+  const historico = useMemo(
+    () => (diasFechados.length ? [...HISTORICO, ...diasFechados] : HISTORICO),
+    [diasFechados]
+  );
+
   const resumo = useMemo(
-    () => (dataValida ? gerarResumoDoDia(cenario, data, K_PADRAO) : null),
-    [cenario, data, dataValida]
+    () =>
+      dataValida && pronto
+        ? gerarResumoDoDia(cenario, data, K_PADRAO, estoqueAtual, historico)
+        : null,
+    [cenario, data, dataValida, pronto, estoqueAtual, historico]
   );
 
   /* Análise da IA: dispara sozinha, com um respiro entre mudanças. */
@@ -221,6 +234,11 @@ export default function PainelPage() {
           {/* Raciocínio */}
           <div className="space-y-8 lg:col-span-7 xl:col-span-8">
             <InstrumentoDePratos resumo={resumo} />
+            <FechamentoDoDia
+              data={data}
+              cenario={cenario}
+              previsoes={resumo.previsoes}
+            />
             <CurvaDeChegada chegadas={resumo.chegadas} />
             <DetalheDaIA estado={analise} aoTentarDeNovo={rodarAnalise} />
             <DiasParecidos resumo={resumo} />

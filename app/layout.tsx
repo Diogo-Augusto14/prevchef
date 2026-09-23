@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import Navegacao from "./components/Navegacao";
+import BarraDeOperacao from "./components/BarraDeOperacao";
 import { ProvedorDeOperacao } from "@/lib/operacao";
 import "./globals.css";
 
@@ -61,7 +62,10 @@ export default function RootLayout({
                 </p>
               </div>
             </div>
-            <Navegacao />
+            <div className="flex flex-wrap items-center gap-3">
+              <Navegacao />
+              <BarraDeOperacao />
+            </div>
           </div>
         </header>
 

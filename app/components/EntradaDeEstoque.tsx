@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Etiqueta, Secao } from "./ui";
 import { ESTOQUE, dataLonga, dinheiro, numero } from "@/lib/dados";
 import { MOTIVOS_DE_PERDA } from "@/lib/estoque";
+import { operadorPorId, motivoDaNegativa } from "@/lib/equipe";
+import { useOperacao } from "@/lib/operacao";
 import type { MovimentoDeEstoque } from "@/lib/tipos";
 
 /** AAAA-MM-DD de hoje, para o valor inicial do campo de validade. */
@@ -34,6 +36,9 @@ export default function EntradaDeEstoque({
   }) => void;
   aoPerder: (ingredienteId: string, quantidade: number, motivo: string) => void;
 }) {
+  const { operador, autorizado } = useOperacao();
+  const podeMovimentar = autorizado("movimentarEstoque");
+
   const [aba, setAba] = useState<"entrada" | "perda">("entrada");
 
   const [ingredienteId, setIngredienteId] = useState(ESTOQUE[0]?.id ?? "");
@@ -193,7 +198,7 @@ export default function EntradaDeEstoque({
 
         <button
           type="submit"
-          disabled={quantidade <= 0}
+          disabled={quantidade <= 0 || !podeMovimentar}
           className={`rounded-xl px-3.5 py-2 text-[13px] font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${
             aba === "entrada"
               ? "bg-gradient-to-b from-jade-400 to-jade-500 text-tinta"
@@ -203,6 +208,12 @@ export default function EntradaDeEstoque({
           {aba === "entrada" ? "Registrar entrada" : "Lançar perda"}
         </button>
       </form>
+
+      {!podeMovimentar && (
+        <p className="pt-3 text-[12px] text-ambar-300/90">
+          {motivoDaNegativa(operador, "movimentarEstoque")}
+        </p>
+      )}
 
       <div className="pt-1">
         <p className="rotulo mb-1">Últimos lançamentos</p>
@@ -235,6 +246,11 @@ export default function EntradaDeEstoque({
                   </span>
 
                   <span className="flex shrink-0 items-baseline gap-3">
+                    {m.operadorId && (
+                      <span className="text-[11px] text-marfim/45">
+                        {operadorPorId(m.operadorId)?.nome.split(" ")[0] ?? "—"}
+                      </span>
+                    )}
                     {(m.fornecedor || m.motivo) && (
                       <span className="text-[11px] text-marfim/45">
                         {m.fornecedor ?? m.motivo}

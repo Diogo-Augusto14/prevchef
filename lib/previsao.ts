@@ -16,7 +16,7 @@ import {
 import { K_PADRAO, preverPratos, type ResultadoPrevisao, type Vizinho } from "./knn";
 import { mediasPorDiaSemana } from "./mae";
 import { preverChegadas, type PrevisaoDeChegada } from "./chegadas";
-import type { Cenario, ItemEstoque } from "./tipos";
+import type { Cenario, ItemEstoque, RegistroVenda } from "./tipos";
 
 /** Quantos dias antes do vencimento já consideramos "perto de vencer". */
 export const DIAS_ALERTA_VALIDADE = 3;
@@ -100,13 +100,24 @@ export function gerarResumoDoDia(
   dataAlvo: string,
   k: number = K_PADRAO,
   /** Estoque do momento. Sem isso, usa a carga inicial do arquivo. */
-  estoque: ItemEstoque[] = ESTOQUE
+  estoque: ItemEstoque[] = ESTOQUE,
+  /** Histórico do modelo. Cresce a cada dia fechado. */
+  historico: RegistroVenda[] = HISTORICO
 ): ResumoDoDia {
-  const brutas = preverPratos(HISTORICO, cenario, PRATO_IDS, k);
+  /*
+   * O modelo só pode olhar para trás.
+   *
+   * Depois que um dia é fechado, ele entra no histórico — e se fosse
+   * consultável, prever esse mesmo dia acharia um vizinho de distância zero
+   * e o "acerto" seria só a resposta sendo lida de volta. Vazamento do
+   * futuro. Aqui o corte é explícito: nada do próprio dia nem de depois.
+   */
+  const passado = historico.filter((r) => r.data < dataAlvo);
+  const brutas = preverPratos(passado, cenario, PRATO_IDS, k);
 
   const previsoes: PrevisaoDePrato[] = brutas.map((r) => {
     const prato = PRATOS.find((p) => p.id === r.pratoId)!;
-    const mediaSemana = mediasPorDiaSemana(HISTORICO, r.pratoId)[cenario.diaSemana];
+    const mediaSemana = mediasPorDiaSemana(passado, r.pratoId)[cenario.diaSemana];
     return {
       ...r,
       nome: prato.nome,

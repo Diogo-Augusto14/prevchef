@@ -110,6 +110,8 @@ export type Pedido = {
   /** Momento do lançamento, em ISO. */
   lancadoEm: string;
   situacao: SituacaoDoPedido;
+  /** Quem lançou. */
+  operadorId?: string;
 };
 
 /** Um grupo esperando mesa. */
@@ -160,6 +162,8 @@ export type ContaFechada = {
   abertaEm: string;
   fechadaEm: string;
   minutosNaMesa: number;
+  /** Quem fechou. */
+  operadorId?: string;
 };
 
 /* ------------------------------------------------------------------ */
@@ -195,4 +199,6 @@ export type MovimentoDeEstoque = {
   motivo?: string;
   /** Conta que gerou a baixa. */
   contaId?: string;
+  /** Quem lançou o movimento. */
+  operadorId?: string;
 };

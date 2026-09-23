@@ -5,6 +5,8 @@ import { Etiqueta } from "./ui";
 import { dinheiro } from "@/lib/dados";
 import { TAXA_DE_SERVICO, calcularConta } from "@/lib/conta";
 import type { Mesa, Ocupacao, Pedido } from "@/lib/tipos";
+import { motivoDaNegativa } from "@/lib/equipe";
+import { useOperacao } from "@/lib/operacao";
 
 /**
  * Fechamento da conta. Mostra o que a mesa consumiu, a taxa de serviço e a
@@ -23,6 +25,9 @@ export default function Conta({
   agora: Date;
   aoFechar: (comServico: boolean) => void;
 }) {
+  const { operador, autorizado } = useOperacao();
+  const podeFechar = autorizado("fecharConta");
+
   const [comServico, setComServico] = useState(true);
   const [confirmando, setConfirmando] = useState(false);
 
@@ -118,7 +123,11 @@ export default function Conta({
         </p>
       )}
 
-      {!confirmando ? (
+      {!podeFechar ? (
+        <p className="rounded-xl border border-ambar-500/30 bg-ambar-500/[0.07] px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+          {motivoDaNegativa(operador, "fecharConta")}
+        </p>
+      ) : !confirmando ? (
         <button
           type="button"
           onClick={() => setConfirmando(true)}
