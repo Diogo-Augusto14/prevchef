@@ -10,8 +10,8 @@
  * vai consumir. Os dois descontam.
  */
 
-import { ESTOQUE, PRATOS, diasEntre } from "./dados";
-import type { Pedido } from "./tipos";
+import { PRATOS, diasEntre } from "./dados";
+import type { ItemEstoque, Pedido } from "./tipos";
 
 export type SituacaoDoPrato = "disponivel" | "acabando" | "ultimas" | "esgotado";
 
@@ -70,12 +70,13 @@ function porcoesComprometidas(pedidos: Pedido[], pratoId: string): number {
  */
 export function estoqueRestante(
   pedidos: Pedido[],
-  dataAlvo: string
+  dataAlvo: string,
+  estoque: ItemEstoque[]
 ): Map<string, number> {
   const consumo = consumoDosPedidos(pedidos);
   const restante = new Map<string, number>();
 
-  for (const item of ESTOQUE) {
+  for (const item of estoque) {
     const vencido = diasEntre(dataAlvo, item.validade) < 0;
     const disponivel = vencido ? 0 : item.quantidade;
     restante.set(item.id, Math.max(0, disponivel - (consumo.get(item.id) ?? 0)));
@@ -94,9 +95,10 @@ function classificar(porcoes: number): SituacaoDoPrato {
 /** Disponibilidade de todos os pratos do cardápio. */
 export function calcularDisponibilidade(
   pedidos: Pedido[],
-  dataAlvo: string
+  dataAlvo: string,
+  estoque: ItemEstoque[]
 ): DisponibilidadeDoPrato[] {
-  const restante = estoqueRestante(pedidos, dataAlvo);
+  const restante = estoqueRestante(pedidos, dataAlvo, estoque);
 
   return PRATOS.map((prato) => {
     let teto = Infinity;

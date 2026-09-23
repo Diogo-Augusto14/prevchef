@@ -19,9 +19,13 @@ import {
 } from "react";
 import { MESAS } from "./restaurante";
 import { calcularConta } from "./conta";
+import { baixasDaConta, calcularLotes, comoItensDeEstoque } from "./estoque";
 import { mesaParaReserva } from "./salao";
 import type {
   ContaFechada,
+  ItemEstoque,
+  Lote,
+  MovimentoDeEstoque,
   ItemDaFila,
   ItemDePedido,
   Ocupacao,
@@ -39,9 +43,14 @@ type Guardado = {
   fila: ItemDaFila[];
   reservas: Reserva[];
   contasFechadas: ContaFechada[];
+  movimentos: MovimentoDeEstoque[];
 };
 
 type Operacao = Guardado & {
+  /** Lotes vivos, já com entradas, baixas e perdas aplicadas. */
+  lotes: Lote[];
+  /** O mesmo estoque no formato que as telas de previsão esperam. */
+  estoqueAtual: ItemEstoque[];
   /** Instante de referência; avança sozinho. */
   agora: Date;
   /** Falso até o estado do navegador ser lido — evita divergência de hidratação. */
@@ -52,10 +61,25 @@ type Operacao = Guardado & {
   entrarNaFila: (nome: string, pessoas: number) => void;
   sairDaFila: (id: string) => void;
   sentarDaFila: (id: string, mesaId: string) => void;
-  reservar: (nome: string, pessoas: number, para: string, observacao?: string) => void;
+  reservar: (dados: {
+    nome: string;
+    pessoas: number;
+    para: string;
+    cpf: string;
+    telefone: string;
+    observacao?: string;
+  }) => void;
   cancelarReserva: (id: string) => void;
   sentarReserva: (id: string) => void;
   fecharConta: (mesaId: string, comServico?: boolean) => void;
+  registrarEntrada: (entrada: {
+    ingredienteId: string;
+    quantidade: number;
+    validade: string;
+    custoUnitario: number;
+    fornecedor?: string;
+  }) => void;
+  registrarPerda: (ingredienteId: string, quantidade: number, motivo: string) => void;
   mudarSituacao: (pedidoId: string, situacao: SituacaoDoPedido) => void;
   cancelarPedido: (pedidoId: string) => void;
   reiniciarServico: () => void;
@@ -122,6 +146,8 @@ function servicoDeExemplo(): Guardado {
         // Daqui a 40 min: perto o bastante para já segurar a mesa.
         para: daquiA(40),
         mesaId: mesa(12),
+        cpf: "52998224725",
+        telefone: "11987654321",
         observacao: "aniversário",
       },
       {
@@ -130,9 +156,12 @@ function servicoDeExemplo(): Guardado {
         pessoas: 4,
         para: daquiA(150),
         mesaId: mesa(9),
+        cpf: "11144477735",
+        telefone: "11912345678",
       },
     ],
     contasFechadas: [],
+    movimentos: [],
   };
 }
 
@@ -143,6 +172,7 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
     fila: [],
     reservas: [],
     contasFechadas: [],
+    movimentos: [],
   });
   const [pronto, setPronto] = useState(false);
   const [agora, setAgora] = useState(() => new Date(0));
@@ -163,6 +193,7 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
             contasFechadas: Array.isArray(lido.contasFechadas)
               ? lido.contasFechadas
               : [],
+            movimentos: Array.isArray(lido.movimentos) ? lido.movimentos : [],
           };
         }
       }
@@ -286,9 +317,16 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
   /* ---------------------------------------------------------------- */
 
   const reservar = useCallback(
-    (nome: string, pessoas: number, para: string, observacao?: string) => {
-      const limpo = nome.trim();
-      if (!limpo || pessoas <= 0 || !para) return;
+    (dados: {
+      nome: string;
+      pessoas: number;
+      para: string;
+      cpf: string;
+      telefone: string;
+      observacao?: string;
+    }) => {
+      const nome = dados.nome.trim();
+      if (!nome || dados.pessoas <= 0 || !dados.para) return;
 
       setEstado((atual) => ({
         ...atual,
@@ -296,12 +334,15 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
           ...atual.reservas,
           {
             id: `reserva-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-            nome: limpo,
-            pessoas,
-            para,
+            nome,
+            pessoas: dados.pessoas,
+            para: dados.para,
+            cpf: dados.cpf,
+            telefone: dados.telefone,
             // A mesa é escolhida na hora de marcar, evitando choque de horário.
-            mesaId: mesaParaReserva(atual.reservas, pessoas, para)?.id ?? null,
-            observacao: observacao?.trim() || undefined,
+            mesaId:
+              mesaParaReserva(atual.reservas, dados.pessoas, dados.para)?.id ?? null,
+            observacao: dados.observacao?.trim() || undefined,
           },
         ],
       }));
@@ -377,16 +418,80 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
         minutosNaMesa: conta.minutosNaMesa,
       };
 
+      // A venda dá baixa de verdade no estoque: sem isso o ingrediente
+      // consumido voltaria para a câmara quando a conta fechasse.
+      const consumidos = daMesa.flatMap((p) => p.itens);
+      const baixas = baixasDaConta(consumidos, fechada.id, momento.toISOString());
+
       return {
         ...atual,
         // A mesa some dos pedidos abertos e volta para o salão.
         ocupacoes: atual.ocupacoes.filter((o) => o.mesaId !== mesaId),
         pedidos: atual.pedidos.filter((p) => p.mesaId !== mesaId),
         contasFechadas: [...atual.contasFechadas, fechada],
+        movimentos: [...atual.movimentos, ...baixas],
       };
     });
     setAgora(momento);
   }, []);
+
+  /* ---------------------------------------------------------------- */
+  /* Estoque: entrada e perda                                          */
+  /* ---------------------------------------------------------------- */
+
+  const registrarEntrada = useCallback(
+    (entrada: {
+      ingredienteId: string;
+      quantidade: number;
+      validade: string;
+      custoUnitario: number;
+      fornecedor?: string;
+    }) => {
+      if (!entrada.ingredienteId || entrada.quantidade <= 0) return;
+
+      setEstado((atual) => ({
+        ...atual,
+        movimentos: [
+          ...atual.movimentos,
+          {
+            id: `entrada-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            tipo: "entrada",
+            ingredienteId: entrada.ingredienteId,
+            quantidade: entrada.quantidade,
+            em: new Date().toISOString(),
+            validade: entrada.validade,
+            custoUnitario: entrada.custoUnitario,
+            fornecedor: entrada.fornecedor?.trim() || undefined,
+          },
+        ],
+      }));
+      setAgora(new Date());
+    },
+    []
+  );
+
+  const registrarPerda = useCallback(
+    (ingredienteId: string, quantidade: number, motivo: string) => {
+      if (!ingredienteId || quantidade <= 0) return;
+
+      setEstado((atual) => ({
+        ...atual,
+        movimentos: [
+          ...atual.movimentos,
+          {
+            id: `perda-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            tipo: "perda",
+            ingredienteId,
+            quantidade,
+            em: new Date().toISOString(),
+            motivo,
+          },
+        ],
+      }));
+      setAgora(new Date());
+    },
+    []
+  );
 
   const mudarSituacao = useCallback(
     (pedidoId: string, situacao: SituacaoDoPedido) => {
@@ -414,9 +519,14 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
     setAgora(new Date());
   }, []);
 
+  const lotes = useMemo(() => calcularLotes(estado.movimentos), [estado.movimentos]);
+  const estoqueAtual = useMemo(() => comoItensDeEstoque(lotes), [lotes]);
+
   const valor = useMemo<Operacao>(
     () => ({
       ...estado,
+      lotes,
+      estoqueAtual,
       agora,
       pronto,
       sentar,
@@ -429,12 +539,16 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       cancelarReserva,
       sentarReserva,
       fecharConta,
+      registrarEntrada,
+      registrarPerda,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,
     }),
     [
       estado,
+      lotes,
+      estoqueAtual,
       agora,
       pronto,
       sentar,
@@ -447,6 +561,8 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       cancelarReserva,
       sentarReserva,
       fecharConta,
+      registrarEntrada,
+      registrarPerda,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,

@@ -21,14 +21,14 @@ import { calcularDisponibilidade } from "@/lib/disponibilidade";
 import { pedidosAbertos, useOperacao } from "@/lib/operacao";
 
 export default function CozinhaPage() {
-  const { pronto, pedidos, agora, mudarSituacao } = useOperacao();
+  const { pronto, pedidos, agora, mudarSituacao, estoqueAtual } = useOperacao();
 
   const abertos = useMemo(() => pedidosAbertos(pedidos), [pedidos]);
   const agenda = useMemo(() => montarAgenda(abertos, agora), [abertos, agora]);
   const carga = useMemo(() => cargaDasEstacoes(agenda), [agenda]);
   const disponibilidade = useMemo(
-    () => calcularDisponibilidade(abertos, DIA_PADRAO),
-    [abertos]
+    () => calcularDisponibilidade(abertos, DIA_PADRAO, estoqueAtual),
+    [abertos, estoqueAtual]
   );
 
   if (!pronto) {

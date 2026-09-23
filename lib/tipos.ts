@@ -130,7 +130,12 @@ export type Reserva = {
   para: string;
   /** Mesa designada na hora de marcar. */
   mesaId: string | null;
+  /** Só os 11 dígitos. A tela mostra mascarado. */
+  cpf: string;
+  telefone: string;
   observacao?: string;
+  /** Marcada quando o horário passou da tolerância e ninguém apareceu. */
+  naoCompareceu?: boolean;
 };
 
 export type ItemDaConta = {
@@ -155,4 +160,39 @@ export type ContaFechada = {
   abertaEm: string;
   fechadaEm: string;
   minutosNaMesa: number;
+};
+
+/* ------------------------------------------------------------------ */
+/* Estoque como razão de movimentos                                    */
+/* ------------------------------------------------------------------ */
+
+/** Um lote na câmara: validade e custo são do lote, não do ingrediente. */
+export type Lote = {
+  id: string;
+  ingredienteId: string;
+  quantidade: number;
+  validade: string;
+  custoUnitario: number;
+  /** Vazio no lote inicial. */
+  entradaEm: string;
+  origem: "inicial" | "compra";
+};
+
+export type TipoDeMovimento = "entrada" | "baixa" | "perda";
+
+export type MovimentoDeEstoque = {
+  id: string;
+  tipo: TipoDeMovimento;
+  ingredienteId: string;
+  /** Sempre positivo: o tipo diz o sentido. */
+  quantidade: number;
+  em: string;
+  /** Só em entrada. */
+  validade?: string;
+  custoUnitario?: number;
+  fornecedor?: string;
+  /** Só em perda. */
+  motivo?: string;
+  /** Conta que gerou a baixa. */
+  contaId?: string;
 };

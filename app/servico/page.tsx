@@ -48,6 +48,7 @@ export default function ServicoPage() {
     sentarReserva,
     contasFechadas,
     fecharConta,
+    estoqueAtual,
   } = useOperacao();
 
   const [mesaSelecionada, setMesaSelecionada] = useState<string | null>(null);
@@ -91,8 +92,8 @@ export default function ServicoPage() {
 
   const abertos = useMemo(() => pedidosAbertos(pedidos), [pedidos]);
   const disponibilidade = useMemo(
-    () => calcularDisponibilidade(abertos, DIA_PADRAO),
-    [abertos]
+    () => calcularDisponibilidade(abertos, DIA_PADRAO, estoqueAtual),
+    [abertos, estoqueAtual]
   );
 
   const mesa = MESAS.find((m) => m.id === mesaSelecionada) ?? null;

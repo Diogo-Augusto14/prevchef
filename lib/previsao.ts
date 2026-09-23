@@ -98,7 +98,9 @@ const arredondar = (v: number, casas = 2) => {
 export function gerarResumoDoDia(
   cenario: Cenario,
   dataAlvo: string,
-  k: number = K_PADRAO
+  k: number = K_PADRAO,
+  /** Estoque do momento. Sem isso, usa a carga inicial do arquivo. */
+  estoque: ItemEstoque[] = ESTOQUE
 ): ResumoDoDia {
   const brutas = preverPratos(HISTORICO, cenario, PRATO_IDS, k);
 
@@ -116,8 +118,8 @@ export function gerarResumoDoDia(
   });
 
   const diasParecidos = brutas[0]?.vizinhos ?? [];
-  const compras = montarListaDeCompras(previsoes, dataAlvo);
-  const pratoDoDia = escolherPratoDoDia(previsoes, dataAlvo);
+  const compras = montarListaDeCompras(previsoes, dataAlvo, estoque);
+  const pratoDoDia = escolherPratoDoDia(previsoes, dataAlvo, estoque);
 
   const totalPorcoes = previsoes.reduce((s, p) => s + p.previsao, 0);
   const faturamentoEstimado = previsoes.reduce(
@@ -135,7 +137,7 @@ export function gerarResumoDoDia(
     compras,
     destaques: montarDestaques(previsoes, totalPorcoes, faturamentoEstimado),
     pratoDoDia,
-    alertas: montarAlertas(previsoes, compras, cenario, dataAlvo),
+    alertas: montarAlertas(previsoes, compras, cenario, dataAlvo, estoque),
     totalPorcoes: arredondar(totalPorcoes, 1),
     faturamentoEstimado: arredondar(faturamentoEstimado, 2),
     custoDaCompra: arredondar(custoDaCompra, 2),
@@ -148,7 +150,8 @@ export function gerarResumoDoDia(
 
 export function montarListaDeCompras(
   previsoes: PrevisaoDePrato[],
-  dataAlvo: string
+  dataAlvo: string,
+  estoque: ItemEstoque[] = ESTOQUE
 ): ItemCompra[] {
   const necessarioPorIngrediente = new Map<string, number>();
 
@@ -167,7 +170,7 @@ export function montarListaDeCompras(
   const itens: ItemCompra[] = [];
 
   for (const [id, necessarioBruto] of necessarioPorIngrediente) {
-    const item = ESTOQUE.find((e) => e.id === id);
+    const item = estoque.find((e) => e.id === id);
     const necessario = arredondar(necessarioBruto, 2);
     const emEstoque = item?.quantidade ?? 0;
     const diasParaVencer = item ? diasEntre(dataAlvo, item.validade) : null;
@@ -261,9 +264,10 @@ function montarDestaques(
  */
 export function escolherPratoDoDia(
   previsoes: PrevisaoDePrato[],
-  dataAlvo: string
+  dataAlvo: string,
+  estoque: ItemEstoque[] = ESTOQUE
 ): PratoDoDia {
-  const candidatos = ESTOQUE.map((item) => ({
+  const candidatos = estoque.map((item) => ({
     item,
     dias: diasEntre(dataAlvo, item.validade),
   }))
@@ -306,12 +310,13 @@ function montarAlertas(
   previsoes: PrevisaoDePrato[],
   compras: ItemCompra[],
   cenario: Cenario,
-  dataAlvo: string
+  dataAlvo: string,
+  estoque: ItemEstoque[] = ESTOQUE
 ): Alerta[] {
   const alertas: Alerta[] = [];
 
   // Vencidos entram num alerta só, senão a lista vira ruído.
-  const vencidos = ESTOQUE.filter((e) => diasEntre(dataAlvo, e.validade) < 0);
+  const vencidos = estoque.filter((e) => diasEntre(dataAlvo, e.validade) < 0);
   if (vencidos.length > 0) {
     alertas.push({
       nivel: "alto",
@@ -325,7 +330,7 @@ function montarAlertas(
     });
   }
 
-  const vencendo = ESTOQUE.map((e) => ({ e, dias: diasEntre(dataAlvo, e.validade) }))
+  const vencendo = estoque.map((e) => ({ e, dias: diasEntre(dataAlvo, e.validade) }))
     .filter(({ dias }) => dias >= 0 && dias <= DIAS_ALERTA_VALIDADE)
     .sort((a, b) => a.dias - b.dias);
   for (const { e, dias } of vencendo.slice(0, 3)) {
@@ -392,11 +397,14 @@ function montarAlertas(
 }
 
 /** Itens de estoque com os dias restantes até a validade, para a tela Estoque. */
-export function estoqueComValidade(dataBase: string): (ItemEstoque & {
+export function estoqueComValidade(
+  dataBase: string,
+  estoque: ItemEstoque[] = ESTOQUE
+): (ItemEstoque & {
   diasParaVencer: number;
   usadoEm: string[];
 })[] {
-  return ESTOQUE.map((item) => ({
+  return estoque.map((item) => ({
     ...item,
     diasParaVencer: diasEntre(dataBase, item.validade),
     usadoEm: PRATOS.filter((p) => p.ingredientes.some((i) => i.id === item.id)).map(

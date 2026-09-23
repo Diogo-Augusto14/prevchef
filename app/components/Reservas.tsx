@@ -4,6 +4,14 @@ import { useState } from "react";
 import { Etiqueta, Secao, Vazio } from "./ui";
 import { TOLERANCIA_DE_ATRASO } from "@/lib/salao";
 import { mesaPorId } from "@/lib/restaurante";
+import {
+  apenasDigitos,
+  cpfMascarado,
+  cpfValido,
+  formatarCpf,
+  formatarTelefone,
+  telefoneValido,
+} from "@/lib/documento";
 import type { Reserva } from "@/lib/tipos";
 
 /** Monta o ISO da próxima vez que der esse horário: hoje, ou amanhã se já passou. */
@@ -33,14 +41,29 @@ export default function Reservas({
 }: {
   reservas: Reserva[];
   agora: Date;
-  aoReservar: (nome: string, pessoas: number, para: string, obs?: string) => void;
+  aoReservar: (dados: {
+    nome: string;
+    pessoas: number;
+    para: string;
+    cpf: string;
+    telefone: string;
+    observacao?: string;
+  }) => void;
   aoCancelar: (id: string) => void;
   aoChegar: (id: string) => void;
 }) {
   const [nome, setNome] = useState("");
   const [pessoas, setPessoas] = useState(2);
   const [horario, setHorario] = useState("20:00");
+  const [cpf, setCpf] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [observacao, setObservacao] = useState("");
+
+  // A reserva só é aceita com identificação conferida: sem isso qualquer
+  // nome segura mesa e some na hora do movimento.
+  const cpfOk = cpfValido(cpf);
+  const telefoneOk = telefoneValido(telefone);
+  const podeMarcar = Boolean(nome.trim()) && cpfOk && telefoneOk;
 
   const ordenadas = [...reservas].sort((a, b) => a.para.localeCompare(b.para));
 
@@ -60,9 +83,19 @@ export default function Reservas({
         className="flex flex-wrap items-end gap-2.5 border-b border-white/[0.06] pb-4"
         onSubmit={(e) => {
           e.preventDefault();
-          aoReservar(nome, pessoas, proximoHorario(horario, agora), observacao);
+          if (!podeMarcar) return;
+          aoReservar({
+            nome,
+            pessoas,
+            para: proximoHorario(horario, agora),
+            cpf: apenasDigitos(cpf),
+            telefone: apenasDigitos(telefone),
+            observacao,
+          });
           setNome("");
           setPessoas(2);
+          setCpf("");
+          setTelefone("");
           setObservacao("");
         }}
       >
@@ -104,6 +137,42 @@ export default function Reservas({
             className="campo tabular mt-1.5 !w-28 !py-2 !text-[13px]"
           />
         </div>
+        <div className="basis-40">
+          <label htmlFor="cpf-reserva" className="rotulo">
+            CPF
+          </label>
+          <input
+            id="cpf-reserva"
+            inputMode="numeric"
+            value={formatarCpf(cpf)}
+            onChange={(e) => setCpf(apenasDigitos(e.target.value))}
+            placeholder="000.000.000-00"
+            aria-invalid={cpf.length > 0 && !cpfOk}
+            className={`campo tabular mt-1.5 !py-2 !text-[13px] ${
+              cpf.length > 0 && !cpfOk ? "!border-brasa-300/60" : ""
+            }`}
+          />
+          {cpf.length === 11 && !cpfOk && (
+            <p className="mt-1 text-[11px] text-brasa-300">
+              Dígito verificador não fecha.
+            </p>
+          )}
+        </div>
+
+        <div className="basis-36">
+          <label htmlFor="tel-reserva" className="rotulo">
+            Telefone
+          </label>
+          <input
+            id="tel-reserva"
+            inputMode="numeric"
+            value={formatarTelefone(telefone)}
+            onChange={(e) => setTelefone(apenasDigitos(e.target.value, 11))}
+            placeholder="(00) 00000-0000"
+            className="campo tabular mt-1.5 !py-2 !text-[13px]"
+          />
+        </div>
+
         <div className="min-w-0 flex-1 basis-32">
           <label htmlFor="obs-reserva" className="rotulo">
             Observação
@@ -118,7 +187,7 @@ export default function Reservas({
         </div>
         <button
           type="submit"
-          disabled={!nome.trim()}
+          disabled={!podeMarcar}
           className="rounded-xl border border-white/12 px-3.5 py-2 text-[13px] font-semibold text-marfim/85 transition hover:border-jade-400/50 hover:text-jade-200 disabled:cursor-not-allowed disabled:opacity-35"
         >
           Marcar
@@ -164,6 +233,10 @@ export default function Reservas({
                         · {r.observacao}
                       </span>
                     )}
+                  </p>
+                  <p className="tabular mt-0.5 text-[11px] text-marfim/50">
+                    {r.cpf ? cpfMascarado(r.cpf) : "sem CPF"}
+                    {r.telefone && ` · ${formatarTelefone(r.telefone)}`}
                   </p>
                   <p className="tabular mt-0.5 text-[11px] text-marfim/50">
                     {mesa ? `mesa ${mesa.numero}` : "sem mesa disponível nesse horário"}

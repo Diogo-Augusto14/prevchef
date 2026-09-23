@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo } from "react";
 import {
   CABECALHO_TABELA,
   CELULA,
@@ -8,15 +11,43 @@ import {
   TituloDaTela,
 } from "../components/ui";
 import { DIA_PADRAO, dataLonga, dinheiro, numero } from "@/lib/dados";
+import { useOperacao } from "@/lib/operacao";
+import { resumoDosMovimentos } from "@/lib/estoque";
+import EntradaDeEstoque from "../components/EntradaDeEstoque";
 import { DIAS_ALERTA_VALIDADE, estoqueComValidade } from "@/lib/previsao";
-
-export const metadata = { title: "Estoque — PrevChef" };
 
 /** A régua da linha do tempo: 30 dias. O que passa disso encosta no fim. */
 const HORIZONTE = 30;
 
 export default function EstoquePage() {
-  const itens = estoqueComValidade(DIA_PADRAO);
+  const {
+    pronto,
+    estoqueAtual,
+    movimentos,
+    agora,
+    registrarEntrada,
+    registrarPerda,
+  } = useOperacao();
+
+  const itens = useMemo(
+    () => estoqueComValidade(DIA_PADRAO, estoqueAtual),
+    [estoqueAtual]
+  );
+
+  const doDia = useMemo(() => {
+    const inicio = new Date(agora);
+    inicio.setHours(0, 0, 0, 0);
+    return resumoDosMovimentos(movimentos, inicio);
+  }, [movimentos, agora]);
+
+  if (!pronto) {
+    return (
+      <div className="space-y-8">
+        <TituloDaTela titulo="Estoque">Abrindo a câmara…</TituloDaTela>
+      </div>
+    );
+  }
+
   const urgentes = itens.filter((i) => i.diasParaVencer <= DIAS_ALERTA_VALIDADE);
   const valorTotal = itens.reduce((s, i) => s + i.quantidade * i.custoUnitario, 0);
   const valorEmRisco = urgentes.reduce(
@@ -101,11 +132,25 @@ export default function EstoquePage() {
             detalhe: "custo do que está na câmara",
           },
           {
-            rotulo: "Vida útil mediana",
-            valor: `${medianaDeDias(itens)} dias`,
-            detalhe: "metade do estoque vence antes disso",
+            rotulo: "Movimento do dia",
+            valor: `${doDia.entradas + doDia.baixas + doDia.perdas}`,
+            detalhe: `${doDia.entradas} entradas · ${doDia.baixas} baixas · ${doDia.perdas} perdas`,
+          },
+          {
+            rotulo: "Perdido hoje",
+            valor: dinheiro(doDia.custoDasPerdas),
+            detalhe:
+              doDia.custoDasPerdas > 0
+                ? "custo do que foi descartado"
+                : "nada descartado até agora",
           },
         ]}
+      />
+
+      <EntradaDeEstoque
+        movimentos={movimentos}
+        aoEntrar={registrarEntrada}
+        aoPerder={registrarPerda}
       />
 
       <Secao
