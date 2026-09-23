@@ -12,7 +12,7 @@
  * como a cozinha trabalha.
  */
 
-import { ESTOQUE, PRATOS } from "./dados";
+import { ESTOQUE, GERADO_EM, PRATOS, diasEntre, somarDias } from "./dados";
 import type { ItemDePedido, ItemEstoque, Lote, MovimentoDeEstoque } from "./tipos";
 
 export const MOTIVOS_DE_PERDA = [
@@ -24,13 +24,24 @@ export const MOTIVOS_DE_PERDA = [
 
 const centesimos = (v: number) => Math.round(v * 1000) / 1000;
 
+/**
+ * As validades do arquivo foram geradas contando de GERADO_EM: andam junto
+ * com o calendário, senão a carga inicial venceria parada entre uma
+ * apresentação e outra. `hoje` (AAAA-MM-DD) vem de fora para lib/ não ler o
+ * relógio. Antes de GERADO_EM, ou com `hoje` inválido, vale o arquivo.
+ */
+function validadeDaCarga(validade: string, hoje: string): string {
+  const deslocamento = diasEntre(GERADO_EM, hoje);
+  return validade && deslocamento > 0 ? somarDias(validade, deslocamento) : validade;
+}
+
 /** O que veio na carga inicial vira um lote por ingrediente. */
-export function lotesIniciais(): Lote[] {
+export function lotesIniciais(hoje: string): Lote[] {
   return ESTOQUE.map((item) => ({
     id: `lote-inicial-${item.id}`,
     ingredienteId: item.id,
     quantidade: item.quantidade,
-    validade: item.validade,
+    validade: validadeDaCarga(item.validade, hoje),
     custoUnitario: item.custoUnitario,
     entradaEm: "",
     origem: "inicial" as const,
@@ -41,8 +52,8 @@ export function lotesIniciais(): Lote[] {
  * Replaya os movimentos sobre os lotes iniciais.
  * Entrada abre lote novo; baixa e perda consomem do que vence primeiro.
  */
-export function calcularLotes(movimentos: MovimentoDeEstoque[]): Lote[] {
-  const lotes = lotesIniciais();
+export function calcularLotes(movimentos: MovimentoDeEstoque[], hoje: string): Lote[] {
+  const lotes = lotesIniciais(hoje);
 
   const emOrdem = [...movimentos].sort((a, b) => a.em.localeCompare(b.em));
 
@@ -91,9 +102,11 @@ export function saldoDe(lotes: Lote[], ingredienteId: string): number {
 /**
  * Colapsa os lotes de volta ao formato de item de estoque, para as telas e
  * o cálculo de compras continuarem funcionando sem saber de lote.
- * A validade que vale é a do lote que vence primeiro.
+ * A validade que vale é a do lote que vence primeiro. Sem lote (saldo zero),
+ * cai na do arquivo, deslocada igual: o item zerado continua na tela e nos
+ * alertas, e não pode aparecer como vencido só porque o calendário andou.
  */
-export function comoItensDeEstoque(lotes: Lote[]): ItemEstoque[] {
+export function comoItensDeEstoque(lotes: Lote[], hoje: string): ItemEstoque[] {
   return ESTOQUE.map((base) => {
     const doIngrediente = lotes
       .filter((l) => l.ingredienteId === base.id)
@@ -106,7 +119,7 @@ export function comoItensDeEstoque(lotes: Lote[]): ItemEstoque[] {
     return {
       ...base,
       quantidade,
-      validade: doIngrediente[0]?.validade || base.validade,
+      validade: doIngrediente[0]?.validade || validadeDaCarga(base.validade, hoje),
       custoUnitario: doIngrediente[0]?.custoUnitario ?? base.custoUnitario,
     };
   });

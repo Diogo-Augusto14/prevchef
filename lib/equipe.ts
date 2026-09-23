@@ -42,6 +42,7 @@ export type Permissao =
   | "movimentarEstoque"
   | "gerenciarSalao"
   | "tocarCozinha"
+  | "editarCardapio"
   | "fecharODia";
 
 const PERMISSOES: Record<Permissao, Papel[]> = {
@@ -51,6 +52,8 @@ const PERMISSOES: Record<Permissao, Papel[]> = {
   movimentarEstoque: ["gerente"],
   gerenciarSalao: ["gerente", "caixa", "garcom"],
   tocarCozinha: ["gerente", "cozinha"],
+  // Preço e disponibilidade são decisão da casa: só o gerente mexe.
+  editarCardapio: ["gerente"],
   fecharODia: ["gerente"],
 };
 
@@ -64,7 +67,11 @@ export function motivoDaNegativa(
   operador: Operador | null,
   permissao: Permissao
 ): string {
-  const quem = PERMISSOES[permissao].map((p) => NOME_DO_PAPEL[p]).join(" ou ");
+  const nomes = PERMISSOES[permissao].map((p) => NOME_DO_PAPEL[p]);
+  const quem =
+    nomes.length > 1
+      ? `${nomes.slice(0, -1).join(", ")} ou ${nomes[nomes.length - 1]}`
+      : nomes[0];
   if (!operador) return `Escolha quem está operando. Só ${quem} pode fazer isso.`;
   return `${operador.nome} está como ${NOME_DO_PAPEL[operador.papel]}. Só ${quem} pode fazer isso.`;
 }

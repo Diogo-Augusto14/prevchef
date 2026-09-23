@@ -94,11 +94,18 @@ export type Ocupacao = {
   pessoas: number;
   /** Momento em que sentaram, em ISO. */
   desde: string;
+  /**
+   * Mesas juntadas para um grupo só levam o mesmo valor aqui e fecham numa
+   * conta única. Mesa sozinha não tem.
+   */
+  grupo?: string;
 };
 
 export type ItemDePedido = {
   pratoId: string;
   quantidade: number;
+  /** Preço combinado na hora do lançamento. Mudar o preço depois não mexe aqui. */
+  precoUnitario?: number;
 };
 
 export type SituacaoDoPedido = "na-fila" | "em-preparo" | "pronto" | "entregue";
@@ -110,6 +117,12 @@ export type Pedido = {
   /** Momento do lançamento, em ISO. */
   lancadoEm: string;
   situacao: SituacaoDoPedido;
+  /**
+   * Quando a cozinha tocou "Iniciar", em ISO. É o que faz o pedido em preparo
+   * descontar o tempo que já passou no fogo. Pedido gravado antes deste campo
+   * não tem: conta como se tivesse começado agora.
+   */
+  iniciadoEm?: string;
   /** Quem lançou. */
   operadorId?: string;
 };
@@ -130,8 +143,8 @@ export type Reserva = {
   pessoas: number;
   /** Horário marcado, em ISO. */
   para: string;
-  /** Mesa designada na hora de marcar. */
-  mesaId: string | null;
+  /** Mesas designadas na hora de marcar — uma só ou uma junção. Vazio = sem mesa. */
+  mesaIds: string[];
   /** Só os 11 dígitos. A tela mostra mascarado. */
   cpf: string;
   telefone: string;
@@ -153,6 +166,8 @@ export type ContaFechada = {
   id: string;
   mesaId: string;
   mesaNumero: number;
+  /** Numa junção, todas as mesas que a conta cobriu, em ordem de número. */
+  mesasNumeros?: number[];
   pessoas: number;
   itens: ItemDaConta[];
   subtotal: number;
@@ -165,6 +180,21 @@ export type ContaFechada = {
   /** Quem fechou. */
   operadorId?: string;
 };
+
+/* ------------------------------------------------------------------ */
+/* Cardápio do dia                                                     */
+/* ------------------------------------------------------------------ */
+
+/** O que o gerente mudou na operação, por cima da ficha do arquivo. */
+export type AjusteDePrato = {
+  /** Preço de venda de hoje, quando difere do arquivo. */
+  preco?: number;
+  /** Tirado da venda pelo gerente — não é falta de estoque. */
+  pausado?: boolean;
+};
+
+/** Por id do prato. Prato sem entrada segue a ficha do arquivo. */
+export type AjustesDoCardapio = Record<string, AjusteDePrato>;
 
 /* ------------------------------------------------------------------ */
 /* Estoque como razão de movimentos                                    */

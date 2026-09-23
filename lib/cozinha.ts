@@ -14,6 +14,11 @@
  * então um pedido pode ser empurrado para frente se o posto estiver cheio.
  * Os pedidos entram na ordem em que foram lançados — a fila é justa.
  *
+ * O que já está no fogo vem antes de tudo e não é empurrado por ninguém:
+ * o plano dele conta de quando a cozinha tocou "Iniciar", e o tempo que já
+ * passou sai da conta. É isso que faz a barra encolher e o "sai às" ficar
+ * parado enquanto o prato cozinha.
+ *
  * Nada disso passa por IA: é conta de agenda, tem que dar o mesmo resultado
  * sempre e responder na hora.
  */
@@ -23,6 +28,9 @@ import type { Pedido } from "./tipos";
 
 /** Quanto tempo a casa promete entre o pedido e o prato na mesa. */
 export const PRAZO_ALVO_MINUTOS = 30;
+
+/** Sobrando até isto entre sair e o prazo, a mesa está no limite. */
+export const FOLGA_DE_RISCO = 5;
 
 /** Cada porção extra do mesmo prato custa um pouco mais de posto. */
 const MINUTOS_POR_PORCAO_EXTRA = 2;
@@ -34,9 +42,14 @@ export type ItemAgendado = {
   estacao: string;
   estacaoNome: string;
   duracao: number;
-  /** Minutos a partir de agora. */
+  /** Minutos a partir de agora. Negativo: o prato já está no posto há tanto tempo. */
   inicio: number;
   fim: number;
+  /**
+   * Começa quando o posto vaga, e não por ser segurado para sair junto:
+   * é o prato que explica por que a mesa espera.
+   */
+  esperaPosto: boolean;
 };
 
 export type PedidoAgendado = {
@@ -48,15 +61,36 @@ export type PedidoAgendado = {
   prontoEm: number;
   /** Minutos que a mesa já esperou desde o lançamento. */
   esperando: number;
-  /** Espera total prevista: o que já passou mais o que falta. */
-  esperaTotal: number;
+  /** Minutos até vencer a meta, contada do lançamento. Negativo: já venceu. */
+  prazoEm: number;
+  /** O que sobra entre sair e o prazo. Negativo: sai tanto além do prazo. */
+  folga: number;
+  estadoDoPrazo: "folga" | "risco" | "atrasado";
   atrasado: boolean;
+  /** Em preparo cujo plano já acabou: minutos além do previsto. */
+  passouDoPrevisto: number;
 };
 
 const duracaoDoItem = (tempoPreparo: number, quantidade: number) =>
   tempoPreparo + Math.max(0, quantidade - 1) * MINUTOS_POR_PORCAO_EXTRA;
 
-type Atribuicao = { indice: number; slot: number; inicio: number; fim: number };
+type Atribuicao = {
+  indice: number;
+  slot: number;
+  inicio: number;
+  fim: number;
+  /** Quando o lugar escolhido no posto vagava. */
+  livreDesde: number;
+};
+
+/** O lugar do posto que vaga mais cedo. */
+const lugarMaisCedo = (livres: number[]) => {
+  let slot = 0;
+  for (let i = 1; i < livres.length; i++) {
+    if (livres[i] < livres[slot]) slot = i;
+  }
+  return slot;
+};
 
 /**
  * Tenta encaixar os itens de um pedido terminando todos em `fim`.
@@ -79,12 +113,7 @@ function tentarEncaixar(
 
   for (const item of ordem) {
     const livres = copia.get(item.estacao) ?? [0];
-
-    // O slot que vaga mais cedo neste posto.
-    let slot = 0;
-    for (let i = 1; i < livres.length; i++) {
-      if (livres[i] < livres[slot]) slot = i;
-    }
+    const slot = lugarMaisCedo(livres);
 
     const maisCedoQuePode = livres[slot];
     const fimSeComecarJa = maisCedoQuePode + item.duracao;
@@ -99,7 +128,7 @@ function tentarEncaixar(
     const fim = inicio + item.duracao;
     livres[slot] = fim;
 
-    atribuicoes.push({ indice: item.indice, slot, inicio, fim });
+    atribuicoes.push({ indice: item.indice, slot, inicio, fim, livreDesde: maisCedoQuePode });
   }
 
   return { coube, minimoNecessario, atribuicoes };
@@ -114,14 +143,11 @@ export function montarAgenda(pedidos: Pedido[], agora: Date): PedidoAgendado[] {
     ESTACOES.map((e) => [e.id, new Array(Math.max(1, e.capacidade)).fill(0)])
   );
 
-  const naCozinha = pedidos
-    .filter((p) => p.situacao === "na-fila" || p.situacao === "em-preparo")
-    .sort((a, b) => a.lancadoEm.localeCompare(b.lancadoEm));
+  const minutosDesde = (iso: string) =>
+    Math.max(0, Math.round((agora.getTime() - new Date(iso).getTime()) / 60000));
 
-  const agenda: PedidoAgendado[] = [];
-
-  for (const pedido of naCozinha) {
-    const base = pedido.itens.flatMap((item) => {
+  const itensDoPedido = (pedido: Pedido) =>
+    pedido.itens.flatMap((item) => {
       const prato = PRATOS.find((p) => p.id === item.pratoId);
       if (!prato) return [];
       return [
@@ -136,6 +162,70 @@ export function montarAgenda(pedidos: Pedido[], agora: Date): PedidoAgendado[] {
       ];
     });
 
+  const agenda: PedidoAgendado[] = [];
+
+  const anotar = (pedido: Pedido, itens: ItemAgendado[], passouDoPrevisto: number) => {
+    const esperando = minutosDesde(pedido.lancadoEm);
+    const prontoEm = Math.max(0, ...itens.map((i) => i.fim));
+    const prazoEm = PRAZO_ALVO_MINUTOS - esperando;
+    const folga = prazoEm - prontoEm;
+
+    agenda.push({
+      pedido,
+      itens: [...itens].sort((a, b) => a.inicio - b.inicio),
+      comecaEm: Math.min(...itens.map((i) => i.inicio)),
+      prontoEm,
+      esperando,
+      prazoEm,
+      folga,
+      estadoDoPrazo: folga < 0 ? "atrasado" : folga <= FOLGA_DE_RISCO ? "risco" : "folga",
+      atrasado: folga < 0,
+      passouDoPrevisto,
+    });
+  };
+
+  // 1. O que já está no fogo. O plano é o de sair junto, contado de quando
+  // começou: o tempo que já passou é descontado, e o que ainda falta segura
+  // o lugar no posto para quem está na fila.
+  const noFogo = pedidos
+    .filter((p) => p.situacao === "em-preparo")
+    .sort((a, b) =>
+      (a.iniciadoEm ?? a.lancadoEm).localeCompare(b.iniciadoEm ?? b.lancadoEm)
+    );
+
+  for (const pedido of noFogo) {
+    const base = itensDoPedido(pedido);
+    if (base.length === 0) continue;
+
+    // Sem a hora de início (gravado antes do campo existir), conta de agora.
+    const decorrido = pedido.iniciadoEm ? minutosDesde(pedido.iniciadoEm) : 0;
+    const fimDoPlano = Math.max(...base.map((i) => i.duracao)) - decorrido;
+
+    const itens: ItemAgendado[] = base.map((i) => ({
+      ...i,
+      inicio: fimDoPlano - i.duracao,
+      fim: fimDoPlano,
+      esperaPosto: false,
+    }));
+
+    for (const item of itens) {
+      if (item.fim <= 0) continue;
+      const livres = slots.get(item.estacao);
+      if (!livres) continue;
+      const slot = lugarMaisCedo(livres);
+      livres[slot] = Math.max(livres[slot], item.fim);
+    }
+
+    anotar(pedido, itens, Math.max(0, -fimDoPlano));
+  }
+
+  // 2. A fila, na ordem de lançamento, no que sobrou dos postos.
+  const naFila = pedidos
+    .filter((p) => p.situacao === "na-fila")
+    .sort((a, b) => a.lancadoEm.localeCompare(b.lancadoEm));
+
+  for (const pedido of naFila) {
+    const base = itensDoPedido(pedido);
     if (base.length === 0) continue;
 
     // Procura o instante mais cedo em que o pedido inteiro fecha junto.
@@ -154,28 +244,21 @@ export function montarAgenda(pedidos: Pedido[], agora: Date): PedidoAgendado[] {
       if (livres) livres[atribuicao.slot] = atribuicao.fim;
     }
 
-    const itens: ItemAgendado[] = resultado.atribuicoes
-      .map((a) => ({ ...base[a.indice], inicio: a.inicio, fim: a.fim }))
-      .sort((a, b) => a.inicio - b.inicio);
-
-    const esperando = Math.max(
-      0,
-      Math.round((agora.getTime() - new Date(pedido.lancadoEm).getTime()) / 60000)
-    );
-    const prontoEm = Math.max(...itens.map((i) => i.fim));
-
-    agenda.push({
+    anotar(
       pedido,
-      itens,
-      comecaEm: Math.min(...itens.map((i) => i.inicio)),
-      prontoEm,
-      esperando,
-      esperaTotal: esperando + prontoEm,
-      atrasado: esperando + prontoEm > PRAZO_ALVO_MINUTOS,
-    });
+      resultado.atribuicoes.map((a) => ({
+        ...base[a.indice],
+        inicio: a.inicio,
+        fim: a.fim,
+        // Começa exatamente quando o posto vaga: é o posto que segura.
+        esperaPosto: a.livreDesde > 0 && a.inicio === a.livreDesde,
+      })),
+      0
+    );
   }
 
-  // Na tela, o que entra no posto primeiro aparece primeiro.
+  // Na tela, o que entra no posto primeiro aparece primeiro — o que já
+  // está no fogo, com início negativo, vem no topo.
   return agenda.sort((a, b) => a.comecaEm - b.comecaEm || a.prontoEm - b.prontoEm);
 }
 
@@ -184,8 +267,8 @@ export function cargaDasEstacoes(agenda: PedidoAgendado[], janela = 30) {
   return ESTACOES.map((estacao) => {
     const minutos = agenda
       .flatMap((p) => p.itens)
-      .filter((i) => i.estacao === estacao.id && i.inicio < janela)
-      .reduce((s, i) => s + Math.min(i.fim, janela) - i.inicio, 0);
+      .filter((i) => i.estacao === estacao.id && i.fim > 0 && i.inicio < janela)
+      .reduce((s, i) => s + Math.min(i.fim, janela) - Math.max(i.inicio, 0), 0);
 
     const capacidadeTotal = estacao.capacidade * janela;
 

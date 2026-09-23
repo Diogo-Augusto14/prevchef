@@ -1,13 +1,45 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Etiqueta, Secao, Vazio } from "./ui";
+import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, Etiqueta, Secao, Vazio } from "./ui";
 import { dataLonga, dinheiro, numero } from "@/lib/dados";
 import { apurarODia, contasDoDia } from "@/lib/fechamento";
 import { motivoDaNegativa } from "@/lib/equipe";
-import { useOperacao } from "@/lib/operacao";
+import { pedidosAbertos, useOperacao } from "@/lib/operacao";
 import type { Cenario } from "@/lib/tipos";
 import type { PrevisaoDePrato } from "@/lib/previsao";
+
+/* O trilho do painel aponta para cá; todos os ramos precisam carregar a âncora. */
+const ANCORA = "fechamento";
+/* O cabeçalho só gruda a partir de lg, numa linha só; abaixo disso não há o que recuar. */
+const RECUO_DA_ANCORA = "scroll-mt-4 lg:scroll-mt-28";
+
+/**
+ * Mesa ocupada só vira conta quando fecha; até lá fica fora da apuração.
+ * Avisa, mas não impede: o gerente pode fechar o dia mesmo assim.
+ */
+function avisoDePendencia(mesas: number, pedidos: number): string | null {
+  if (mesas === 0 && pedidos === 0) return null;
+
+  const partes: string[] = [];
+  if (mesas > 0) {
+    partes.push(`${mesas} mesa${mesas === 1 ? "" : "s"} ocupada${mesas === 1 ? "" : "s"}`);
+  }
+  if (pedidos > 0) {
+    partes.push(`${pedidos} pedido${pedidos === 1 ? "" : "s"} em aberto`);
+  }
+
+  const consequencia =
+    mesas === 1
+      ? "a conta dessa mesa ainda não existe e não entra neste fechamento."
+      : mesas > 1
+        ? "as contas dessas mesas ainda não existem e não entram neste fechamento."
+        : pedidos === 1
+          ? "esse pedido ainda não entra neste fechamento."
+          : "esses pedidos ainda não entram neste fechamento.";
+
+  return `Ainda há ${partes.join(" e ")} — ${consequencia}`;
+}
 
 /**
  * Fechar o dia: o serviço vira histórico e o modelo passa a consultá-lo.
@@ -30,6 +62,8 @@ export default function FechamentoDoDia({
     fecharODia,
     operador,
     autorizado,
+    ocupacoes,
+    pedidos,
   } = useOperacao();
 
   const [confirmando, setConfirmando] = useState(false);
@@ -50,12 +84,14 @@ export default function FechamentoDoDia({
   if (jaFechado) {
     return (
       <Secao
+        id={ANCORA}
+        className={RECUO_DA_ANCORA}
         titulo="Dia fechado"
         descricao="O serviço virou histórico e o modelo já pode usar este dia nas próximas previsões."
-        acao={<Etiqueta cor="jade">{dataLonga(data)}</Etiqueta>}
+        acao={<Etiqueta cor="fogo">{dataLonga(data)}</Etiqueta>}
       >
         <p className="text-[13px] leading-relaxed text-marfim/70">
-          A partir de agora, quando um dia parecido com hoje aparecer, este
+          A partir de agora, quando um dia parecido com este aparecer, este
           serviço entra entre os vizinhos que o KNN consulta.
         </p>
       </Secao>
@@ -65,11 +101,13 @@ export default function FechamentoDoDia({
   if (contas.length === 0) {
     return (
       <Secao
+        id={ANCORA}
+        className={RECUO_DA_ANCORA}
         titulo="Fechamento do dia"
         descricao="Compara o previsto com o que realmente saiu e devolve o dia para o modelo aprender."
       >
         <Vazio>
-          Nenhuma conta fechada hoje ainda. O fechamento aparece quando o
+          Nenhuma conta fechada neste dia ainda. O fechamento aparece quando o
           serviço começar a girar.
         </Vazio>
       </Secao>
@@ -77,14 +115,21 @@ export default function FechamentoDoDia({
   }
 
   const acertos = apuracao.pratos.filter((p) => p.dentroDaFaixa).length;
+  const pendencia = avisoDePendencia(
+    ocupacoes.length,
+    pedidosAbertos(pedidos).length
+  );
 
   return (
     <Secao
+      id={ANCORA}
+      className={RECUO_DA_ANCORA}
       titulo="Fechamento do dia"
       descricao="Compara o previsto com o que realmente saiu e devolve o dia para o modelo aprender."
       acao={
         <span className="text-[13px] text-marfim/62">
-          {apuracao.contas} contas · {apuracao.pessoas} pessoas ·{" "}
+          {apuracao.contas} conta{apuracao.contas === 1 ? "" : "s"} ·{" "}
+          {apuracao.pessoas} pessoa{apuracao.pessoas === 1 ? "" : "s"} ·{" "}
           <strong className="tabular font-semibold text-marfim">
             {dinheiro(apuracao.faturamento)}
           </strong>
@@ -97,7 +142,7 @@ export default function FechamentoDoDia({
           return (
             <li
               key={p.pratoId}
-              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-white/[0.06] py-2.5 md:grid-cols-[minmax(110px,1fr)_minmax(0,2fr)_auto]"
+              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-white/[0.07] py-2.5 md:grid-cols-[minmax(110px,1fr)_minmax(0,2fr)_auto]"
             >
               <span className="truncate text-[13px] font-semibold text-marfim">
                 {p.nome}
@@ -114,7 +159,7 @@ export default function FechamentoDoDia({
                 <span className="mt-1 block h-1.5 rounded-full bg-white/[0.06]">
                   <span
                     className={`block h-1.5 rounded-full ${
-                      p.dentroDaFaixa ? "bg-jade-400" : "bg-ambar-500"
+                      p.dentroDaFaixa ? "bg-nevoa-500" : "bg-ambar-500"
                     }`}
                     style={{ width: `${(p.realizado / teto) * 100}%` }}
                   />
@@ -127,11 +172,14 @@ export default function FechamentoDoDia({
                 <span className="font-semibold text-marfim">{p.realizado}</span>
                 <span
                   className={`w-12 text-right text-[11px] ${
-                    p.dentroDaFaixa ? "text-jade-300" : "text-ambar-300"
+                    p.dentroDaFaixa ? "text-nevoa-300" : "text-ambar-300"
                   }`}
                 >
                   {p.erro > 0 ? "+" : ""}
                   {numero(p.erro)}
+                </span>
+                <span className="sr-only">
+                  {p.dentroDaFaixa ? "dentro da faixa" : "fora da faixa"}
                 </span>
               </span>
             </li>
@@ -152,39 +200,50 @@ export default function FechamentoDoDia({
         </p>
 
         {!pode ? (
-          <p className="text-[12px] text-ambar-300/90">
+          <p className="vidro-ambar rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
             {motivoDaNegativa(operador, "fecharODia")}
           </p>
-        ) : !confirmando ? (
-          <button
-            type="button"
-            onClick={() => setConfirmando(true)}
-            className="rounded-xl bg-gradient-to-b from-jade-400 to-jade-500 px-4 py-2 text-[13px] font-bold text-tinta"
-          >
-            Fechar o dia
-          </button>
         ) : (
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] text-marfim/70">
-              Fechar e mandar para o histórico?
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                fecharODia(apuracao.registro);
-                setConfirmando(false);
-              }}
-              className="rounded-xl bg-gradient-to-b from-jade-400 to-jade-500 px-4 py-2 text-[13px] font-bold text-tinta"
-            >
-              Confirmar
-            </button>
-            <button
-              type="button"
-              onClick={() => setConfirmando(false)}
-              className="rounded-xl border border-white/12 px-3 py-2 text-[13px] font-semibold text-marfim/70 transition hover:border-white/30"
-            >
-              Voltar
-            </button>
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {pendencia && (
+              <p className="vidro-ambar max-w-sm rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+                {pendencia}
+              </p>
+            )}
+
+            {!confirmando ? (
+              <button
+                type="button"
+                onClick={() => setConfirmando(true)}
+                className={`${BOTAO_PRIMARIO} px-4 py-2 text-[13px]`}
+              >
+                Fechar o dia
+              </button>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[12px] text-marfim/70">
+                  Fechar {pendencia ? "mesmo assim " : ""}e mandar para o
+                  histórico?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    fecharODia(apuracao.registro);
+                    setConfirmando(false);
+                  }}
+                  className={`${BOTAO_PRIMARIO} px-4 py-2 text-[13px]`}
+                >
+                  Confirmar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmando(false)}
+                  className={`${BOTAO_SECUNDARIO} px-3 py-2 text-[13px]`}
+                >
+                  Voltar
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

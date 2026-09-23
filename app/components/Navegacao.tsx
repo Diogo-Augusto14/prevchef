@@ -15,7 +15,7 @@ export default function Navegacao() {
   const caminho = usePathname();
 
   return (
-    <nav className="flex gap-2" aria-label="Seções do PrevChef">
+    <nav className="flex flex-wrap gap-1.5" aria-label="Seções do PrevChef">
       {ABAS.map((aba) => {
         const ativa = caminho === aba.href;
         return (
@@ -25,7 +25,7 @@ export default function Navegacao() {
             aria-current={ativa ? "page" : undefined}
             className={
               ativa
-                ? "rounded-full bg-gradient-to-b from-jade-400 to-jade-500 px-4 py-2 text-[13px] font-semibold text-tinta shadow-[0_8px_22px_-10px_rgba(111,220,176,0.9)]"
+                ? "rounded-full bg-gradient-to-b from-fogo-400 to-fogo-600 px-4 py-2 text-[13px] font-bold text-tinta shadow-[0_8px_22px_-10px_rgba(255,122,72,0.9)]"
                 : "rounded-full border border-white/10 px-4 py-2 text-[13px] font-medium text-marfim/80 transition hover:border-white/20 hover:bg-white/5 hover:text-marfim"
             }
           >

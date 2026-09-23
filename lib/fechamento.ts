@@ -10,7 +10,13 @@
  * descobre se o modelo está servindo ou não.
  */
 
-import { PRATOS, PRATO_IDS, diaSemanaDe, inicioDoMes } from "./dados";
+import {
+  PRATOS,
+  PRATO_IDS,
+  dataLocal,
+  diaSemanaDe,
+  inicioDoMes,
+} from "./dados";
 import { HORAS_DE_SERVICO } from "./restaurante";
 import type { Cenario, ContaFechada, RegistroVenda } from "./tipos";
 import type { PrevisaoDePrato } from "./previsao";
@@ -143,10 +149,10 @@ export function apurarODia(
   };
 }
 
-/** Contas fechadas numa data (AAAA-MM-DD). */
+/** Contas fechadas numa data (AAAA-MM-DD), pelo relógio local. */
 export function contasDoDia(
   contas: ContaFechada[],
   data: string
 ): ContaFechada[] {
-  return contas.filter((c) => c.fechadaEm.slice(0, 10) === data);
+  return contas.filter((c) => dataLocal(c.fechadaEm) === data);
 }

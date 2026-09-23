@@ -37,31 +37,40 @@ export function calcularConta(
   agora: Date,
   comServico = true
 ): Conta {
-  const porPrato = new Map<string, number>();
+  // Só entra na conta o que saiu da cozinha (pronto ou entregue). O que
+  // ainda está na fila ou em preparo não é cobrado: fechar a mesa cancela
+  // esses pedidos — ninguém paga prato que não veio.
+  const cobraveis = pedidosDaMesa.filter(
+    (p) => p.situacao === "pronto" || p.situacao === "entregue"
+  );
 
-  for (const pedido of pedidosDaMesa) {
+  const porPrato = new Map<string, { quantidade: number; total: number }>();
+
+  for (const pedido of cobraveis) {
     for (const item of pedido.itens) {
-      porPrato.set(
-        item.pratoId,
-        (porPrato.get(item.pratoId) ?? 0) + item.quantidade
-      );
+      const prato = PRATOS.find((p) => p.id === item.pratoId);
+      if (!prato) continue;
+
+      // Cobra o preço da hora do lançamento; o da ficha só cobre pedidos
+      // antigos, gravados antes de o preço viajar com o item.
+      const preco = item.precoUnitario ?? prato.precoVenda;
+      const soma = porPrato.get(item.pratoId) ?? { quantidade: 0, total: 0 };
+      porPrato.set(item.pratoId, {
+        quantidade: soma.quantidade + item.quantidade,
+        total: soma.total + preco * item.quantidade,
+      });
     }
   }
 
-  const itens: ItemDaConta[] = [...porPrato.entries()].flatMap(
-    ([pratoId, quantidade]) => {
-      const prato = PRATOS.find((p) => p.id === pratoId);
-      if (!prato) return [];
-      return [
-        {
-          pratoId,
-          nome: prato.nome,
-          quantidade,
-          precoUnitario: prato.precoVenda,
-          total: centavos(prato.precoVenda * quantidade),
-        },
-      ];
-    }
+  const itens: ItemDaConta[] = [...porPrato.entries()].map(
+    ([pratoId, { quantidade, total }]) => ({
+      pratoId,
+      nome: PRATOS.find((p) => p.id === pratoId)!.nome,
+      quantidade,
+      // Se o preço mudou entre dois lançamentos, é a média do que foi cobrado.
+      precoUnitario: centavos(total / quantidade),
+      total: centavos(total),
+    })
   );
 
   itens.sort((a, b) => b.total - a.total);

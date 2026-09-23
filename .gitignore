@@ -9,3 +9,6 @@ next-env.d.ts
 .env
 .env.*
 !.env.example
+
+# Estado do servico gravado pelo app - operacao, nao codigo (e o temporario da gravacao)
+data/servico.json*

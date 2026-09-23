@@ -1,29 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { Etiqueta } from "./ui";
+import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO } from "./ui";
 import { dinheiro } from "@/lib/dados";
 import { TAXA_DE_SERVICO, calcularConta } from "@/lib/conta";
 import type { Mesa, Ocupacao, Pedido } from "@/lib/tipos";
 import { motivoDaNegativa } from "@/lib/equipe";
 import { useOperacao } from "@/lib/operacao";
+import { listarNumeros } from "@/lib/salao";
 
 /**
  * Fechamento da conta. Mostra o que a mesa consumiu, a taxa de serviço e a
  * divisão por pessoa, e só então libera a mesa de volta para o salão.
+ *
+ * Numa junção a conta é uma só: `mesas` traz todas as mesas do grupo,
+ * `ocupacao` já soma as pessoas e `pedidosDaMesa` junta o que foi lançado em
+ * qualquer uma delas.
  */
 export default function Conta({
-  mesa,
+  mesas,
   ocupacao,
   pedidosDaMesa,
   agora,
   aoFechar,
 }: {
-  mesa: Mesa;
+  mesas: Mesa[];
   ocupacao: Ocupacao;
   pedidosDaMesa: Pedido[];
   agora: Date;
-  aoFechar: (comServico: boolean) => void;
+  /** Recebe o total que o caixa viu, para a conta não fechar se mudar até gravar. */
+  aoFechar: (comServico: boolean, total: number) => void;
 }) {
   const { operador, autorizado } = useOperacao();
   const podeFechar = autorizado("fecharConta");
@@ -32,20 +38,33 @@ export default function Conta({
   const [confirmando, setConfirmando] = useState(false);
 
   const conta = calcularConta(pedidosDaMesa, ocupacao, agora, comServico);
+  const juntas = mesas.length > 1;
+  // "mesa 5" ou "mesas 5 e 13".
+  const nome = `${juntas ? "mesas" : "mesa"} ${listarNumeros(mesas)}`;
 
   if (conta.itens.length === 0) {
     return (
       <div className="space-y-3">
         <p className="text-[13px] text-marfim/62">
-          A mesa ainda não consumiu nada.
+          {conta.pendentes > 0
+            ? `Nada saiu da cozinha ainda. Liberar agora cancela ${conta.pendentes} pedido${conta.pendentes > 1 ? "s" : ""} ainda na cozinha.`
+            : juntas
+              ? "O grupo ainda não consumiu nada."
+              : "A mesa ainda não consumiu nada."}
         </p>
-        <button
-          type="button"
-          onClick={() => aoFechar(false)}
-          className="w-full rounded-xl border border-white/12 px-4 py-2 text-[13px] font-semibold text-marfim/80 transition hover:border-brasa-300/50 hover:text-brasa-300"
-        >
-          Liberar mesa {mesa.numero}
-        </button>
+        {!podeFechar ? (
+          <p className="vidro-ambar rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+            {motivoDaNegativa(operador, "fecharConta")}
+          </p>
+        ) : (
+          <button
+            type="button"
+            onClick={() => aoFechar(false, conta.total)}
+            className="w-full rounded-xl border border-white/12 px-4 py-2 text-[13px] font-semibold text-marfim/80 transition hover:border-brasa-300/50 hover:text-brasa-300"
+          >
+            Liberar {nome}
+          </button>
+        )}
       </div>
     );
   }
@@ -56,7 +75,7 @@ export default function Conta({
         {conta.itens.map((item) => (
           <li
             key={item.pratoId}
-            className="flex items-baseline justify-between gap-3 border-b border-white/[0.06] py-2 text-[13px]"
+            className="flex items-baseline justify-between gap-3 border-b border-white/[0.07] py-2 text-[13px]"
           >
             <span className="min-w-0 truncate text-marfim/85">
               <span className="text-marfim/50">{item.quantidade}×</span>{" "}
@@ -79,7 +98,7 @@ export default function Conta({
               type="checkbox"
               checked={comServico}
               onChange={(e) => setComServico(e.target.checked)}
-              className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 accent-jade-400"
+              className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 accent-fogo-500"
             />
             Serviço {Math.round(TAXA_DE_SERVICO * 100)}%
           </span>
@@ -88,22 +107,22 @@ export default function Conta({
 
         <div className="flex items-baseline justify-between border-t border-white/10 pt-2.5">
           <span className="font-semibold text-marfim">Total</span>
-          <span className="tabular font-display text-[26px] font-light text-jade-100">
+          <span className="tabular font-display text-[26px] font-medium tracking-tight text-fogo-100">
             {dinheiro(conta.total)}
           </span>
         </div>
 
         <div className="flex justify-between text-[11px] text-marfim/50">
           <span>
-            {conta.pessoas} pessoa{conta.pessoas > 1 ? "s" : ""} · {conta.minutosNaMesa} min
-            na mesa
+            {conta.pessoas} pessoa{conta.pessoas > 1 ? "s" : ""} · {conta.minutosNaMesa} min{" "}
+            {juntas ? "nas mesas" : "na mesa"}
           </span>
           <span className="tabular">{dinheiro(conta.porPessoa)} por pessoa</span>
         </div>
       </div>
 
       {conta.pendentes > 0 && (
-        <p className="flex items-start gap-2 text-[11px] leading-relaxed text-ambar-300/90">
+        <p className="flex items-start gap-2 text-[11px] leading-relaxed text-ambar-300">
           <svg
             width="14"
             height="14"
@@ -124,34 +143,34 @@ export default function Conta({
       )}
 
       {!podeFechar ? (
-        <p className="rounded-xl border border-ambar-500/30 bg-ambar-500/[0.07] px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+        <p className="vidro-ambar rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
           {motivoDaNegativa(operador, "fecharConta")}
         </p>
       ) : !confirmando ? (
         <button
           type="button"
           onClick={() => setConfirmando(true)}
-          className="w-full rounded-xl bg-gradient-to-b from-jade-400 to-jade-500 px-4 py-2.5 text-[13px] font-bold text-tinta"
+          className={BOTAO_SECUNDARIO + " w-full px-4 py-2.5 text-[13px]"}
         >
-          Fechar conta da mesa {mesa.numero}
+          Fechar conta {juntas ? "das" : "da"} {nome}
         </button>
       ) : (
         <div className="space-y-2">
           <p className="text-[12px] text-marfim/70">
-            Fechar em {dinheiro(conta.total)} e liberar a mesa?
+            Fechar em {dinheiro(conta.total)} e liberar {juntas ? `as ${nome}` : "a mesa"}?
           </p>
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => aoFechar(comServico)}
-              className="flex-1 rounded-xl bg-gradient-to-b from-jade-400 to-jade-500 px-4 py-2 text-[13px] font-bold text-tinta"
+              onClick={() => aoFechar(comServico, conta.total)}
+              className={BOTAO_PRIMARIO + " flex-1 px-4 py-2 text-[13px]"}
             >
               Confirmar
             </button>
             <button
               type="button"
               onClick={() => setConfirmando(false)}
-              className="rounded-xl border border-white/12 px-4 py-2 text-[13px] font-semibold text-marfim/70 transition hover:border-white/30"
+              className={BOTAO_SECUNDARIO + " px-4 py-2 text-[13px]"}
             >
               Voltar
             </button>
@@ -160,9 +179,4 @@ export default function Conta({
       )}
     </div>
   );
-}
-
-/** Etiqueta do caixa do dia, para a faixa de números. */
-export function EtiquetaDoCaixa({ contas }: { contas: number }) {
-  return <Etiqueta cor="jadeSuave">{contas} conta{contas > 1 ? "s" : ""}</Etiqueta>;
 }

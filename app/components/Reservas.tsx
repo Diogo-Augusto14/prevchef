@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Etiqueta, Secao, Vazio } from "./ui";
-import { TOLERANCIA_DE_ATRASO } from "@/lib/salao";
-import { mesaPorId } from "@/lib/restaurante";
+import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, Etiqueta, Secao, Vazio } from "./ui";
+import { TOLERANCIA_DE_ATRASO, listarNumeros } from "@/lib/salao";
+import { TEMPO_MEDIO_DE_REFEICAO, mesaPorId } from "@/lib/restaurante";
+import { duracao } from "@/lib/dados";
+import { motivoDaNegativa } from "@/lib/equipe";
+import { useOperacao } from "@/lib/operacao";
 import {
   apenasDigitos,
   cpfMascarado,
@@ -12,7 +15,7 @@ import {
   formatarTelefone,
   telefoneValido,
 } from "@/lib/documento";
-import type { Reserva } from "@/lib/tipos";
+import type { Mesa, Reserva } from "@/lib/tipos";
 
 /** Monta o ISO da próxima vez que der esse horário: hoje, ou amanhã se já passou. */
 function proximoHorario(hhmm: string, agora: Date): string {
@@ -31,6 +34,9 @@ const relogio = (iso: string) =>
     hour: "2-digit",
     minute: "2-digit",
   });
+
+/** Dia no fuso local como número (20260923), para comparar datas. */
+const diaLocal = (d: Date) => d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
 
 export default function Reservas({
   reservas,
@@ -59,18 +65,35 @@ export default function Reservas({
   const [telefone, setTelefone] = useState("");
   const [observacao, setObservacao] = useState("");
 
+  const { operador, autorizado, ocupacoes } = useOperacao();
+  const podeSalao = autorizado("gerenciarSalao");
+
   // A reserva só é aceita com identificação conferida: sem isso qualquer
   // nome segura mesa e some na hora do movimento.
   const cpfOk = cpfValido(cpf);
+  const cpfErrado = cpf.length === 11 && !cpfOk;
   const telefoneOk = telefoneValido(telefone);
-  const podeMarcar = Boolean(nome.trim()) && cpfOk && telefoneOk;
+  const podeMarcar =
+    podeSalao &&
+    Boolean(nome.trim()) &&
+    cpfOk &&
+    telefoneOk &&
+    /^\d{2}:\d{2}/.test(horario);
 
-  const ordenadas = [...reservas].sort((a, b) => a.para.localeCompare(b.para));
+  // Reserva de dia anterior, já vencida, sai da lista: não segura mais mesa.
+  const hoje = diaLocal(agora);
+  const ordenadas = [...reservas]
+    .filter(
+      (r) =>
+        diaLocal(new Date(r.para)) >= hoje ||
+        new Date(r.para).getTime() >= agora.getTime() - TOLERANCIA_DE_ATRASO * 60000
+    )
+    .sort((a, b) => a.para.localeCompare(b.para));
 
   return (
     <Secao
       titulo="Reservas"
-      descricao={`A mesa marcada fica guardada a partir de uma hora antes e é devolvida ${TOLERANCIA_DE_ATRASO} min depois do horário, se não aparecerem.`}
+      descricao={`A mesa marcada fica guardada a partir de ${TEMPO_MEDIO_DE_REFEICAO} min antes e é devolvida ${TOLERANCIA_DE_ATRASO} min depois do horário, se não aparecerem.`}
       acao={
         ordenadas.length > 0 ? (
           <span className="text-[13px] text-marfim/62">
@@ -79,8 +102,13 @@ export default function Reservas({
         ) : undefined
       }
     >
+      {!podeSalao && (
+        <p className="vidro-ambar mb-4 rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+          {motivoDaNegativa(operador, "gerenciarSalao")}
+        </p>
+      )}
       <form
-        className="flex flex-wrap items-end gap-2.5 border-b border-white/[0.06] pb-4"
+        className="grid gap-x-2.5 gap-y-3 border-b border-white/[0.07] pb-4 sm:grid-cols-2"
         onSubmit={(e) => {
           e.preventDefault();
           if (!podeMarcar) return;
@@ -99,7 +127,7 @@ export default function Reservas({
           setObservacao("");
         }}
       >
-        <div className="min-w-0 flex-1 basis-40">
+        <div className="min-w-0 sm:col-span-2">
           <label htmlFor="nome-reserva" className="rotulo">
             Nome
           </label>
@@ -111,7 +139,7 @@ export default function Reservas({
             className="campo mt-1.5 !py-2 !text-[13px]"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label htmlFor="pessoas-reserva" className="rotulo">
             Pessoas
           </label>
@@ -122,10 +150,10 @@ export default function Reservas({
             max={20}
             value={pessoas}
             onChange={(e) => setPessoas(Number(e.target.value))}
-            className="campo tabular mt-1.5 !w-20 !py-2 !text-[13px]"
+            className="campo tabular mt-1.5 !py-2 !text-[13px]"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label htmlFor="hora-reserva" className="rotulo">
             Horário
           </label>
@@ -134,10 +162,10 @@ export default function Reservas({
             type="time"
             value={horario}
             onChange={(e) => setHorario(e.target.value)}
-            className="campo tabular mt-1.5 !w-28 !py-2 !text-[13px]"
+            className="campo tabular mt-1.5 !py-2 !text-[13px]"
           />
         </div>
-        <div className="basis-40">
+        <div className="min-w-0">
           <label htmlFor="cpf-reserva" className="rotulo">
             CPF
           </label>
@@ -147,19 +175,20 @@ export default function Reservas({
             value={formatarCpf(cpf)}
             onChange={(e) => setCpf(apenasDigitos(e.target.value))}
             placeholder="000.000.000-00"
-            aria-invalid={cpf.length > 0 && !cpfOk}
+            aria-invalid={cpfErrado}
+            aria-describedby={cpfErrado ? "cpf-reserva-erro" : undefined}
             className={`campo tabular mt-1.5 !py-2 !text-[13px] ${
-              cpf.length > 0 && !cpfOk ? "!border-brasa-300/60" : ""
+              cpfErrado ? "!border-brasa-300/60" : ""
             }`}
           />
-          {cpf.length === 11 && !cpfOk && (
-            <p className="mt-1 text-[11px] text-brasa-300">
+          {cpfErrado && (
+            <p id="cpf-reserva-erro" className="mt-1 text-[11px] text-brasa-300">
               Dígito verificador não fecha.
             </p>
           )}
         </div>
 
-        <div className="basis-36">
+        <div className="min-w-0">
           <label htmlFor="tel-reserva" className="rotulo">
             Telefone
           </label>
@@ -169,29 +198,39 @@ export default function Reservas({
             value={formatarTelefone(telefone)}
             onChange={(e) => setTelefone(apenasDigitos(e.target.value, 11))}
             placeholder="(00) 00000-0000"
+            aria-describedby={
+              telefone.length > 0 && !telefoneOk ? "tel-reserva-dica" : undefined
+            }
             className="campo tabular mt-1.5 !py-2 !text-[13px]"
           />
+          {telefone.length > 0 && !telefoneOk && (
+            <p id="tel-reserva-dica" className="mt-1 text-[11px] text-marfim/55">
+              Com DDD: 10 ou 11 dígitos.
+            </p>
+          )}
         </div>
 
-        <div className="min-w-0 flex-1 basis-32">
+        <div className="min-w-0 sm:col-span-2">
           <label htmlFor="obs-reserva" className="rotulo">
             Observação
           </label>
-          <input
-            id="obs-reserva"
-            value={observacao}
-            onChange={(e) => setObservacao(e.target.value)}
-            placeholder="opcional"
-            className="campo mt-1.5 !py-2 !text-[13px]"
-          />
+          <div className="mt-1.5 flex items-center gap-2.5">
+            <input
+              id="obs-reserva"
+              value={observacao}
+              onChange={(e) => setObservacao(e.target.value)}
+              placeholder="opcional"
+              className="campo min-w-0 !py-2 !text-[13px]"
+            />
+            <button
+              type="submit"
+              disabled={!podeMarcar}
+              className={BOTAO_SECUNDARIO + " shrink-0 px-3.5 py-2 text-[13px]"}
+            >
+              Marcar
+            </button>
+          </div>
         </div>
-        <button
-          type="submit"
-          disabled={!podeMarcar}
-          className="rounded-xl border border-white/12 px-3.5 py-2 text-[13px] font-semibold text-marfim/85 transition hover:border-jade-400/50 hover:text-jade-200 disabled:cursor-not-allowed disabled:opacity-35"
-        >
-          Marcar
-        </button>
       </form>
 
       {ordenadas.length === 0 ? (
@@ -204,19 +243,25 @@ export default function Reservas({
             const emMinutos = Math.round(
               (new Date(r.para).getTime() - agora.getTime()) / 60000
             );
-            const mesa = r.mesaId ? mesaPorId(r.mesaId) : null;
-            const chegando = emMinutos <= 60 && emMinutos > 0;
+            const mesas = r.mesaIds
+              .map((id) => mesaPorId(id))
+              .filter((m): m is Mesa => Boolean(m));
+            const chegando = emMinutos <= TEMPO_MEDIO_DE_REFEICAO && emMinutos > 0;
             const atrasada = emMinutos <= 0;
-            const podeSentar = emMinutos <= 15 && Boolean(mesa);
+            const amanha = diaLocal(new Date(r.para)) > hoje;
+            const podeSentar =
+              emMinutos <= 15 && emMinutos >= -TOLERANCIA_DE_ATRASO && mesas.length > 0;
+            // Sentar a reserva por cima de quem está comendo tiraria esse grupo da mesa.
+            const ocupadas = mesas.filter((m) => ocupacoes.some((o) => o.mesaId === m.id));
 
             return (
               <li
                 key={r.id}
-                className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/[0.06] py-3 last:border-b-0"
+                className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/[0.07] py-3 last:border-b-0"
               >
                 <span
-                  className={`tabular w-14 shrink-0 font-display text-lg ${
-                    atrasada ? "text-ambar-200" : chegando ? "text-jade-200" : "text-marfim"
+                  className={`tabular w-14 shrink-0 font-display text-lg font-medium ${
+                    atrasada ? "text-brasa-300" : chegando ? "text-ambar-200" : "text-marfim"
                   }`}
                 >
                   {relogio(r.para)}
@@ -239,10 +284,12 @@ export default function Reservas({
                     {r.telefone && ` · ${formatarTelefone(r.telefone)}`}
                   </p>
                   <p className="tabular mt-0.5 text-[11px] text-marfim/50">
-                    {mesa ? `mesa ${mesa.numero}` : "sem mesa disponível nesse horário"}
+                    {mesas.length
+                      ? `${mesas.length > 1 ? "mesas" : "mesa"} ${listarNumeros(mesas)}`
+                      : "sem mesa disponível nesse horário"}
                     {atrasada
-                      ? ` · ${Math.abs(emMinutos)} min de atraso`
-                      : ` · em ${emMinutos} min`}
+                      ? ` · ${duracao(Math.abs(emMinutos))} de atraso`
+                      : ` · ${amanha ? "amanhã, " : ""}em ${duracao(emMinutos)}`}
                   </p>
                 </div>
 
@@ -250,13 +297,22 @@ export default function Reservas({
                   {atrasada && Math.abs(emMinutos) > TOLERANCIA_DE_ATRASO && (
                     <Etiqueta cor="brasa">mesa devolvida</Etiqueta>
                   )}
-                  {chegando && <Etiqueta cor="jadeSuave">mesa guardada</Etiqueta>}
-
-                  {podeSentar && (
+                  {chegando && ocupadas.length === 0 && (
+                    <Etiqueta cor="ambar">mesa guardada</Etiqueta>
+                  )}
+                  {(chegando || podeSentar) && ocupadas.length > 0 && (
+                    <Etiqueta cor="ambar">
+                      {`${ocupadas.length > 1 ? "mesas" : "mesa"} ${listarNumeros(ocupadas)} ocupada${
+                        ocupadas.length > 1 ? "s" : ""
+                      }`}
+                    </Etiqueta>
+                  )}
+                  {podeSentar && ocupadas.length === 0 && (
                     <button
                       type="button"
                       onClick={() => aoChegar(r.id)}
-                      className="rounded-lg bg-gradient-to-b from-jade-400 to-jade-500 px-3 py-1.5 text-[11px] font-bold text-tinta"
+                      disabled={!podeSalao}
+                      className={BOTAO_PRIMARIO + " px-3 py-1.5 text-[11px]"}
                     >
                       Chegaram
                     </button>
@@ -264,8 +320,9 @@ export default function Reservas({
                   <button
                     type="button"
                     onClick={() => aoCancelar(r.id)}
+                    disabled={!podeSalao}
                     aria-label={`Cancelar a reserva de ${r.nome}`}
-                    className="rounded-lg border border-white/12 px-2 py-1.5 text-[11px] font-semibold text-marfim/60 transition hover:border-brasa-300/50 hover:text-brasa-300"
+                    className="rounded-lg border border-white/12 px-2 py-1.5 text-[11px] font-semibold text-marfim/60 transition enabled:hover:border-brasa-300/50 enabled:hover:text-brasa-300 disabled:cursor-not-allowed disabled:opacity-35"
                   >
                     Cancelar
                   </button>

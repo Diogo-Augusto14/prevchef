@@ -1,8 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Etiqueta, Secao, Vazio } from "./ui";
-import type { SituacaoDaFila } from "@/lib/salao";
+import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, Etiqueta, Secao, Vazio } from "./ui";
+import { listarNumeros, type SituacaoDaFila } from "@/lib/salao";
+import { duracao } from "@/lib/dados";
+import { motivoDaNegativa } from "@/lib/equipe";
+import { useOperacao } from "@/lib/operacao";
+
+/** Espera 0 = a mesa prevista já passou do tempo médio de refeição. */
+function quando(esperaMinutos: number | null) {
+  return esperaMinutos === 0 ? "a qualquer momento" : `em ~${esperaMinutos} min`;
+}
 
 export default function FilaDeEspera({
   situacao,
@@ -13,8 +21,12 @@ export default function FilaDeEspera({
   situacao: SituacaoDaFila;
   aoEntrar: (nome: string, pessoas: number) => void;
   aoSair: (id: string) => void;
-  aoSentar: (id: string, mesaId: string) => void;
+  /** Uma mesa só, ou as mesas de uma junção. */
+  aoSentar: (id: string, mesaIds: string[]) => void;
 }) {
+  const { operador, autorizado } = useOperacao();
+  const podeSalao = autorizado("gerenciarSalao");
+
   const [nome, setNome] = useState("");
   const [pessoas, setPessoas] = useState(2);
 
@@ -24,7 +36,7 @@ export default function FilaDeEspera({
       descricao="Por ordem de chegada. Mesa prometida à fila não é oferecida a quem chega depois."
       acao={
         situacao.prontosParaSentar > 0 ? (
-          <Etiqueta cor="jade">
+          <Etiqueta cor="fogoSuave">
             {situacao.prontosParaSentar} pronto
             {situacao.prontosParaSentar > 1 ? "s" : ""} para sentar
           </Etiqueta>
@@ -32,16 +44,17 @@ export default function FilaDeEspera({
       }
     >
       <form
-        className="flex flex-wrap items-end gap-2.5 border-b border-white/[0.06] pb-4"
+        className="flex flex-wrap items-end gap-2.5 border-b border-white/[0.07] pb-4"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!podeSalao) return;
           aoEntrar(nome, pessoas);
           setNome("");
           setPessoas(2);
         }}
       >
-        <div className="min-w-0 flex-1">
-          <label htmlFor="nome-fila" className="rotulo">
+        <div className="min-w-0 flex-1 basis-40">
+          <label htmlFor="nome-fila" className="rotulo block">
             Nome
           </label>
           <input
@@ -53,7 +66,7 @@ export default function FilaDeEspera({
           />
         </div>
         <div>
-          <label htmlFor="pessoas-fila" className="rotulo">
+          <label htmlFor="pessoas-fila" className="rotulo block">
             Pessoas
           </label>
           <input
@@ -68,12 +81,18 @@ export default function FilaDeEspera({
         </div>
         <button
           type="submit"
-          disabled={!nome.trim()}
-          className="rounded-xl border border-white/12 px-3.5 py-2 text-[13px] font-semibold text-marfim/85 transition hover:border-jade-400/50 hover:text-jade-200 disabled:cursor-not-allowed disabled:opacity-35"
+          disabled={!nome.trim() || !podeSalao}
+          className={BOTAO_SECUNDARIO + " px-3.5 py-2 text-[13px]"}
         >
           Anotar
         </button>
       </form>
+
+      {!podeSalao && (
+        <p className="vidro-ambar mt-3 rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed text-ambar-200">
+          {motivoDaNegativa(operador, "gerenciarSalao")}
+        </p>
+      )}
 
       {situacao.chamados.length === 0 ? (
         <div className="pt-4">
@@ -84,9 +103,9 @@ export default function FilaDeEspera({
           {situacao.chamados.map((chamado, i) => (
             <li
               key={chamado.item.id}
-              className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/[0.06] py-3 last:border-b-0"
+              className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/[0.07] py-3 last:border-b-0"
             >
-              <span className="tabular w-5 shrink-0 font-display text-sm text-marfim/35">
+              <span className="tabular w-5 shrink-0 font-display text-sm text-marfim/55">
                 {i + 1}
               </span>
 
@@ -99,12 +118,16 @@ export default function FilaDeEspera({
                   </span>
                 </p>
                 <p className="tabular mt-0.5 text-[11px] text-marfim/50">
-                  esperando há {chamado.esperandoHa} min
+                  esperando há {duracao(chamado.esperandoHa)}
                   {chamado.mesa
                     ? ` · mesa ${chamado.mesa.numero} livre agora`
-                    : chamado.mesaPrevista
-                      ? ` · mesa ${chamado.mesaPrevista.numero} em ~${chamado.esperaMinutos} min`
-                      : " · nenhuma mesa da casa comporta"}
+                    : chamado.juntar
+                      ? ` · juntar as mesas ${listarNumeros(chamado.juntar)}, livres agora`
+                      : chamado.mesaPrevista
+                        ? ` · mesa ${chamado.mesaPrevista.numero} ${quando(chamado.esperaMinutos)}`
+                        : chamado.juntarPrevisto
+                          ? ` · mesas ${listarNumeros(chamado.juntarPrevisto)} juntas ${quando(chamado.esperaMinutos)}`
+                          : " · a casa não comporta nem juntando mesas"}
                 </p>
               </div>
 
@@ -112,23 +135,38 @@ export default function FilaDeEspera({
                 {chamado.mesa ? (
                   <button
                     type="button"
-                    onClick={() => aoSentar(chamado.item.id, chamado.mesa!.id)}
-                    className="rounded-lg bg-gradient-to-b from-jade-400 to-jade-500 px-3 py-1.5 text-[11px] font-bold text-tinta"
+                    onClick={() => aoSentar(chamado.item.id, [chamado.mesa!.id])}
+                    disabled={!podeSalao}
+                    className={BOTAO_PRIMARIO + " px-3 py-1.5 text-[11px]"}
                   >
                     Sentar na {chamado.mesa.numero}
+                  </button>
+                ) : chamado.juntar ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      aoSentar(chamado.item.id, chamado.juntar!.map((m) => m.id))
+                    }
+                    disabled={!podeSalao}
+                    className={BOTAO_PRIMARIO + " px-3 py-1.5 text-[11px]"}
+                  >
+                    Sentar nas {chamado.juntar.map((m) => m.numero).join("+")}
                   </button>
                 ) : (
                   <Etiqueta cor={chamado.esperaMinutos === null ? "brasa" : "ambar"}>
                     {chamado.esperaMinutos === null
                       ? "sem mesa"
-                      : `~${chamado.esperaMinutos} min`}
+                      : chamado.esperaMinutos === 0
+                        ? "a qualquer momento"
+                        : `~${chamado.esperaMinutos} min`}
                   </Etiqueta>
                 )}
                 <button
                   type="button"
                   onClick={() => aoSair(chamado.item.id)}
-                  aria-label={`Tirar ${chamado.item.nome} da fila`}
-                  className="rounded-lg border border-white/12 px-2 py-1.5 text-[11px] font-semibold text-marfim/60 transition hover:border-brasa-300/50 hover:text-brasa-300"
+                  disabled={!podeSalao}
+                  aria-label={`Desistiu: ${chamado.item.nome}`}
+                  className="rounded-lg border border-white/12 px-2 py-1.5 text-[11px] font-semibold text-marfim/60 transition hover:border-brasa-300/50 hover:text-brasa-300 disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   Desistiu
                 </button>

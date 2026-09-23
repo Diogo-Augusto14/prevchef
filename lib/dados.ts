@@ -76,6 +76,17 @@ export function somarDias(dataIso: string, dias: number): string {
     .slice(0, 10);
 }
 
+/**
+ * Data AAAA-MM-DD de um instante no fuso local (toISOString daria a de UTC,
+ * que no Brasil vira o dia seguinte a partir das 21h). Espera um instante;
+ * um "AAAA-MM-DD" puro é lido como meia-noite UTC e voltaria um dia.
+ */
+export function dataLocal(momento: string | Date = new Date()): string {
+  const d = new Date(momento);
+  const doisDigitos = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${doisDigitos(d.getMonth() + 1)}-${doisDigitos(d.getDate())}`;
+}
+
 /** Último dia fechado do histórico simulado. */
 export const ULTIMO_DIA = HISTORICO[HISTORICO.length - 1]?.data ?? GERADO_EM;
 
@@ -91,6 +102,23 @@ export const numero = (v: number, casas = 1) =>
     minimumFractionDigits: casas,
     maximumFractionDigits: casas,
   });
+
+/** Quantidade com unidade: "180 un", mas "2,50 kg". */
+export const quantidade = (v: number, unidade: string) =>
+  `${numero(v, unidade === "un" ? 0 : 2)} ${unidade}`;
+
+/** Minutos como "45 min", "2 h 15 min", "2 h" ou "2 dias". */
+export function duracao(min: number): string {
+  const m = Math.round(min);
+  if (m < 60) return `${m} min`;
+  if (m < 1440) {
+    const horas = Math.floor(m / 60);
+    const resto = m % 60;
+    return resto ? `${horas} h ${resto} min` : `${horas} h`;
+  }
+  const dias = Math.floor(m / 1440);
+  return dias === 1 ? "1 dia" : `${dias} dias`;
+}
 
 export const dinheiro = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });

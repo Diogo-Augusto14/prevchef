@@ -134,6 +134,8 @@ export function preverPrato(
 ): ResultadoPrevisao {
   const vizinhos = buscarVizinhos(historico, cenario, pratoId, k, escala);
   const vendas = vizinhos.map((v) => v.venda);
+  // Data anterior ao histórico: sem vizinhos, sem média (evita NaN e ±Infinity).
+  if (vendas.length === 0) return { pratoId, previsao: 0, minimo: 0, maximo: 0, vizinhos: [] };
   const media = vendas.reduce((s, v) => s + v, 0) / vendas.length;
 
   return {

@@ -110,13 +110,14 @@ export function lerSalao(
   const presas = new Set<string>();
 
   for (const { reserva, emMinutos } of segurando) {
-    const mesa = reserva.mesaId
-      ? vazias.find((m) => m.id === reserva.mesaId && !presas.has(m.id))
-      : undefined;
-    if (!mesa) continue;
+    // Uma reserva de junção segura todas as suas mesas.
+    for (const mesaId of reserva.mesaIds) {
+      const mesa = vazias.find((m) => m.id === mesaId && !presas.has(m.id));
+      if (!mesa) continue;
 
-    presas.add(mesa.id);
-    mesasReservadas.push({ mesa, reserva, emMinutos });
+      presas.add(mesa.id);
+      mesasReservadas.push({ mesa, reserva, emMinutos });
+    }
   }
 
   const mesasLivres = vazias.filter((m) => !presas.has(m.id));
@@ -144,23 +145,113 @@ function melhorEncaixe(livres: Mesa[], pessoas: number): Mesa | null {
   );
 }
 
-/** Duas mesas livres que, juntas, comportam o grupo com a menor sobra. */
-function melhorJuncao(livres: Mesa[], pessoas: number): Mesa[] | null {
-  let melhor: { mesas: Mesa[]; sobra: number } | null = null;
+/** Até quantas mesas a casa aceita juntar para um grupo só. */
+export const MAXIMO_DE_MESAS_JUNTAS = 3;
 
-  for (let i = 0; i < livres.length; i++) {
-    for (let j = i + 1; j < livres.length; j++) {
-      const soma = livres[i].lugares + livres[j].lugares;
-      if (soma < pessoas) continue;
+/** "4, 7 e 9" — números de mesa em frase. */
+export const listarNumeros = (mesas: Mesa[]) => {
+  const numeros = mesas.map((m) => String(m.numero));
+  return numeros.length <= 1
+    ? numeros.join("")
+    : `${numeros.slice(0, -1).join(", ")} e ${numeros[numeros.length - 1]}`;
+};
 
-      const sobra = soma - pessoas;
-      if (!melhor || sobra < melhor.sobra) {
-        melhor = { mesas: [livres[i], livres[j]], sobra };
-      }
+/**
+ * A melhor escolha com exatamente `tamanho` mesas: comporta o grupo com a
+ * menor sobra. Olha todas as combinações — com 14 mesas são algumas
+ * centenas, nada que se sinta.
+ */
+function melhorCombinacao(
+  livres: Mesa[],
+  pessoas: number,
+  tamanho: number
+): Mesa[] | null {
+  const explorar = (
+    aPartirDe: number,
+    escolhidas: Mesa[],
+    lugares: number
+  ): { mesas: Mesa[]; sobra: number } | null => {
+    if (escolhidas.length === tamanho) {
+      return lugares >= pessoas
+        ? { mesas: escolhidas, sobra: lugares - pessoas }
+        : null;
     }
-  }
 
-  return melhor?.mesas ?? null;
+    let melhor: { mesas: Mesa[]; sobra: number } | null = null;
+    for (let i = aPartirDe; i < livres.length; i++) {
+      const achado = explorar(
+        i + 1,
+        [...escolhidas, livres[i]],
+        lugares + livres[i].lugares
+      );
+      if (achado && (!melhor || achado.sobra < melhor.sobra)) melhor = achado;
+    }
+    return melhor;
+  };
+
+  return explorar(0, [], 0)?.mesas ?? null;
+}
+
+/**
+ * Mesas livres que, juntas, comportam o grupo. Tenta duas; só parte para
+ * três se nenhum par resolver — cada mesa a mais é mais arrasto no salão e
+ * mais lugar queimado.
+ */
+function melhorJuncao(livres: Mesa[], pessoas: number): Mesa[] | null {
+  for (let tamanho = 2; tamanho <= MAXIMO_DE_MESAS_JUNTAS; tamanho++) {
+    const combinacao = melhorCombinacao(livres, pessoas, tamanho);
+    if (combinacao) return combinacao;
+  }
+  return null;
+}
+
+/**
+ * Divide o grupo pelas mesas de uma junção: enche cada mesa na ordem e o
+ * resto senta na última. A junção só existe quando nenhuma combinação menor
+ * comporta, então nenhuma mesa fica vazia e a última nunca estoura.
+ */
+export function dividirPelasMesas(
+  mesas: Mesa[],
+  pessoas: number
+): { mesaId: string; pessoas: number }[] {
+  let restante = pessoas;
+  return mesas.map((mesa, i) => {
+    const nesta =
+      i === mesas.length - 1 ? restante : Math.min(mesa.lugares, restante);
+    restante -= nesta;
+    return { mesaId: mesa.id, pessoas: nesta };
+  });
+}
+
+const numeroDaMesa = (mesaId: string) =>
+  MESAS.find((m) => m.id === mesaId)?.numero ?? 0;
+
+/**
+ * Uma mesa ocupada e as que sentaram juntas com ela, em ordem de número.
+ * Mesa sozinha volta só ela; mesa livre, nada.
+ */
+export function ocupacoesDaJuncao(ocupacoes: Ocupacao[], mesaId: string): Ocupacao[] {
+  const propria = ocupacoes.find((o) => o.mesaId === mesaId);
+  if (!propria) return [];
+  if (!propria.grupo) return [propria];
+
+  return ocupacoes
+    .filter((o) => o.grupo === propria.grupo)
+    .sort((a, b) => numeroDaMesa(a.mesaId) - numeroDaMesa(b.mesaId));
+}
+
+/**
+ * A junção vista como uma mesa só, que é como a conta enxerga: as pessoas
+ * somam e vale o horário de quem sentou primeiro.
+ */
+export function ocupacaoConjunta(juntas: Ocupacao[]): Ocupacao | null {
+  if (juntas.length <= 1) return juntas[0] ?? null;
+
+  return {
+    ...juntas[0],
+    pessoas: juntas.reduce((s, o) => s + o.pessoas, 0),
+    desde: juntas.reduce((cedo, o) => (o.desde < cedo ? o.desde : cedo), juntas[0].desde),
+  };
 }
 
 /** Resolve um tamanho de grupo. */
@@ -186,7 +277,7 @@ export function planejarGrupo(
     };
   }
 
-  // Nenhuma mesa sozinha: dá para juntar duas que estão livres?
+  // Nenhuma mesa sozinha: dá para juntar duas ou três que estão livres?
   const juncao = melhorJuncao(salao.mesasLivres, pessoas);
   if (juncao) {
     const soma = juncao.reduce((s, m) => s + m.lugares, 0);
@@ -197,7 +288,7 @@ export function planejarGrupo(
       juntar: juncao,
       esperaMinutos: null,
       sobra: soma - pessoas,
-      explicacao: `Juntar as mesas ${juncao.map((m) => m.numero).join(" e ")} — ${soma} lugares.`,
+      explicacao: `Juntar as mesas ${listarNumeros(juncao)} — ${soma} lugares.`,
     };
   }
 
@@ -228,7 +319,7 @@ export function planejarGrupo(
     juntar: null,
     esperaMinutos: null,
     sobra: 0,
-    explicacao: "Nenhuma mesa da casa comporta esse grupo sem juntar mesas ocupadas.",
+    explicacao: `Nem juntando ${MAXIMO_DE_MESAS_JUNTAS} mesas o salão comporta esse grupo agora.`,
   };
 }
 
@@ -241,9 +332,13 @@ export type ChamadoDaFila = {
   esperandoHa: number;
   /** Mesa livre agora para este grupo. */
   mesa: Mesa | null;
-  /** Se não há mesa livre, quanto falta — e qual mesa vai liberar. */
+  /** Mesas livres a juntar agora, quando nenhuma sozinha comporta. */
+  juntar: Mesa[] | null;
+  /** Se não há mesa livre, quanto falta — e o que vai liberar. */
   esperaMinutos: number | null;
   mesaPrevista: Mesa | null;
+  /** Junção prevista para o grupo grande, quando é preciso esperar vagar. */
+  juntarPrevisto: Mesa[] | null;
 };
 
 export type SituacaoDaFila = {
@@ -275,49 +370,92 @@ export function atenderFila(
   );
 
   const chamados: ChamadoDaFila[] = porOrdemDeChegada.map((item) => {
-    const esperandoHa = minutosDesde(item.desde, agora);
-    const mesa = melhorEncaixe(livres, item.pessoas);
+    const semResposta: ChamadoDaFila = {
+      item,
+      esperandoHa: minutosDesde(item.desde, agora),
+      mesa: null,
+      juntar: null,
+      esperaMinutos: null,
+      mesaPrevista: null,
+      juntarPrevisto: null,
+    };
 
+    const mesa = melhorEncaixe(livres, item.pessoas);
     if (mesa) {
       // Some da lista: esta mesa já tem dono.
       livres.splice(livres.indexOf(mesa), 1);
-      return { item, esperandoHa, mesa, esperaMinutos: null, mesaPrevista: null };
+      return { ...semResposta, mesa };
     }
 
-    // Sem mesa livre: reserva a próxima que vaga e comporta o grupo.
+    // Nenhuma sozinha comporta: juntar livres resolve agora?
+    const juncao = melhorJuncao(livres, item.pessoas);
+    if (juncao) {
+      for (const m of juncao) livres.splice(livres.indexOf(m), 1);
+      return { ...semResposta, juntar: juncao };
+    }
+
+    // Esperar: a mesa que vaga primeiro e comporta o grupo sozinha...
     const indice = vagando.findIndex((o) => o.mesa.lugares >= item.pessoas);
-    if (indice === -1) {
-      return { item, esperandoHa, mesa: null, esperaMinutos: null, mesaPrevista: null };
+    if (indice !== -1) {
+      const [proxima] = vagando.splice(indice, 1);
+      return {
+        ...semResposta,
+        esperaMinutos: proxima.liberaEm,
+        mesaPrevista: proxima.mesa,
+      };
     }
 
-    const [proxima] = vagando.splice(indice, 1);
-    return {
-      item,
-      esperandoHa,
-      mesa: null,
-      esperaMinutos: proxima.liberaEm,
-      mesaPrevista: proxima.mesa,
-    };
+    /*
+     * ...ou, para o grupo grande, o instante em que uma junção fecha:
+     * solta na conta as mesas que vão vagando, na ordem, até dar. A
+     * primeira junção que aparecer usa a mesa recém-solta, então a espera
+     * é o tempo de liberação dela.
+     */
+    const combinaveis = [...livres];
+    for (let i = 0; i < vagando.length; i++) {
+      combinaveis.push(vagando[i].mesa);
+      const futura = melhorJuncao(combinaveis, item.pessoas);
+      if (!futura) continue;
+
+      const espera = vagando[i].liberaEm;
+      // Promete essas mesas: somem das livres e da lista de quem vaga.
+      for (const m of futura) {
+        const emLivres = livres.indexOf(m);
+        if (emLivres !== -1) livres.splice(emLivres, 1);
+        const emVagando = vagando.findIndex((v) => v.mesa.id === m.id);
+        if (emVagando !== -1) vagando.splice(emVagando, 1);
+      }
+
+      return {
+        ...semResposta,
+        esperaMinutos: espera,
+        // Em ordem de número para a tela — o cálculo mistura livres e ocupadas.
+        juntarPrevisto: [...futura].sort((a, b) => a.numero - b.numero),
+      };
+    }
+
+    return semResposta;
   });
 
   return {
     chamados,
     mesasLivresParaNovos: livres,
-    prontosParaSentar: chamados.filter((c) => c.mesa).length,
+    prontosParaSentar: chamados.filter((c) => c.mesa || c.juntar).length,
   };
 }
 
 /**
- * Escolhe a mesa de uma reserva nova.
+ * Escolhe as mesas de uma reserva nova.
  *
  * Melhor encaixe entre as que não têm outra reserva perto do mesmo horário —
- * duas reservas na mesma mesa com 20 minutos de diferença não cabem.
+ * duas reservas na mesma mesa com 20 minutos de diferença não cabem. Grupo
+ * que nenhuma mesa comporta sozinha recebe uma junção; vazio é "sem mesa".
  */
-export function mesaParaReserva(
+export function mesasParaReserva(
   reservas: Reserva[],
   pessoas: number,
   para: string
-): Mesa | null {
+): Mesa[] {
   const alvo = new Date(para).getTime();
 
   const conflitantes = new Set(
@@ -326,14 +464,15 @@ export function mesaParaReserva(
         const diferenca = Math.abs(new Date(r.para).getTime() - alvo) / 60000;
         return diferenca < TEMPO_MEDIO_DE_REFEICAO;
       })
-      .map((r) => r.mesaId)
-      .filter((id): id is string => Boolean(id))
+      .flatMap((r) => r.mesaIds)
   );
 
-  return melhorEncaixe(
-    MESAS.filter((m) => !conflitantes.has(m.id)),
-    pessoas
-  );
+  const candidatas = MESAS.filter((m) => !conflitantes.has(m.id));
+
+  const sozinha = melhorEncaixe(candidatas, pessoas);
+  if (sozinha) return [sozinha];
+
+  return melhorJuncao(candidatas, pessoas) ?? [];
 }
 
 /**
@@ -347,6 +486,8 @@ export function planejarChegadas(
   agora: Date
 ): {
   salao: EstadoDoSalao;
+  /** O salão como quem chega agora enxerga — para responder grupos avulsos. */
+  salaoParaNovos: EstadoDoSalao;
   planos: PlanoDeChegada[];
   situacaoDaFila: SituacaoDaFila;
 } {
@@ -365,6 +506,7 @@ export function planejarChegadas(
 
   return {
     salao,
+    salaoParaNovos,
     situacaoDaFila,
     planos: GRUPOS_PREVISTOS.map((pessoas) =>
       planejarGrupo(salaoParaNovos, pessoas)

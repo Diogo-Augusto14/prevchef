@@ -1,31 +1,45 @@
 @import "tailwindcss";
 
-@theme {
-  /* Tinta e vidro */
-  --color-tinta: #080d0b;
-  --color-tinta-2: #0f1714;
-  --color-marfim: #f4f7f5;
+/* O Tailwind lê o projeto inteiro atrás de classes, e o `next dev` refaz o
+   CSS — e recarrega as telas abertas — quando um arquivo lido muda. `data/`
+   não tem classe nenhuma, e o `servico.json` de lá muda a cada clique. */
+@source not "../data";
 
-  /* Jade — acento único: previsão, valores bons, aba ativa */
-  --color-jade-100: #e6fbf2;
-  --color-jade-200: #c8f5e1;
-  --color-jade-300: #9bebcb;
-  --color-jade-400: #7fe3bc;
-  --color-jade-500: #4fc79b;
+@theme {
+  /* Tinta azul-noite e vidro */
+  --color-tinta: #0b0e17;
+  --color-tinta-2: #121727;
+  --color-marfim: #f2f0ea;
+
+  /* Fogo — acento único: marca, ação principal, seleção, previsão */
+  --color-fogo-100: #ffe9df;
+  --color-fogo-200: #ffc9b3;
+  --color-fogo-300: #ff9e78;
+  --color-fogo-400: #ff8a5c;
+  --color-fogo-500: #ff7a48;
+  --color-fogo-600: #e5602f;
 
   /* Âmbar — só onde existe prazo ou risco */
   --color-ambar-200: #f7dcaa;
-  --color-ambar-300: #f5c87e;
+  --color-ambar-300: #f0c88c;
   --color-ambar-500: #f0b056;
 
-  /* Névoa — chuva e observação */
-  --color-nevoa-300: #9fd0f0;
+  /* Névoa — o que está livre, disponível ou dentro do esperado; e a chuva */
+  --color-nevoa-200: #d6defa;
+  --color-nevoa-300: #b9c8f2;
+  --color-nevoa-500: #9fb4f0;
 
-  /* Brasa — vencido e falta grave */
+  /* Brasa — vencido, falta grave e atraso */
   --color-brasa-300: #f2766b;
 
   --font-display: var(--fonte-display), Georgia, "Times New Roman", serif;
   --font-corpo: var(--fonte-corpo), system-ui, sans-serif;
+
+  /* Telas largas: a página ocupa a largura toda, e as grades ganham
+     colunas em vez de esticar os cartões. Em rem, como os do Tailwind —
+     misturar px e rem desordena os breakpoints. */
+  --breakpoint-3xl: 112rem;
+  --breakpoint-4xl: 140rem;
 }
 
 /*
@@ -44,13 +58,14 @@ body {
   -webkit-font-smoothing: antialiased;
   background-color: var(--color-tinta);
   /*
-   * Poças de luz em vez de degradê corrido: dá ao vidro algo para borrar
-   * sem virar papel de parede. `fixed` mantém a composição ao rolar.
+   * Três poças de luz — fogo no alto, âmbar no canto, azul embaixo — dão
+   * ao vidro algo para borrar sem virar papel de parede. `fixed` mantém a
+   * composição parada enquanto a página rola.
    */
   background-image:
-    radial-gradient(1000px 640px at 8% -6%, rgba(52, 185, 138, 0.2), transparent 62%),
-    radial-gradient(760px 520px at 96% 2%, rgba(240, 176, 86, 0.13), transparent 64%),
-    radial-gradient(920px 780px at 64% 82%, rgba(56, 118, 160, 0.17), transparent 66%);
+    radial-gradient(1000px 640px at 5% -8%, rgba(255, 122, 72, 0.15), transparent 62%),
+    radial-gradient(760px 520px at 96% 0%, rgba(240, 176, 86, 0.1), transparent 64%),
+    radial-gradient(1000px 760px at 60% 110%, rgba(70, 90, 150, 0.18), transparent 66%);
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
@@ -72,15 +87,24 @@ optgroup {
 /* Camadas de vidro                                                    */
 /* ------------------------------------------------------------------ */
 
-/* Painel: a superfície que flutua sobre o fundo. */
+/* Painel: a superfície que flutua sobre o fundo.
+   Sem desfoque próprio: atrás de um cartão só existe o fundo parado, então
+   não há o que borrar — e o desfoque do Chrome vaza uns 50 px para fora do
+   cartão, que os vidros vizinhos mostravam como um retângulo mais claro em
+   volta do trilho. */
 .vidro {
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 24px 60px -32px rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(30px) saturate(150%);
-  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* Só o que passa POR CIMA do conteúdo (o cabeçalho, que gruda no topo)
+   precisa borrar o que está atrás. */
+.vidro-flutuante {
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
 }
 
 /* Bloco interno: vidro dentro de vidro não recebe blur próprio, senão
@@ -91,25 +115,17 @@ optgroup {
 }
 
 /* Destaque: um por tela, no máximo. */
-.vidro-jade {
-  background: linear-gradient(150deg, rgba(111, 220, 176, 0.13), rgba(255, 255, 255, 0.035));
-  border: 1px solid rgba(111, 220, 176, 0.26);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+.vidro-fogo {
+  background: linear-gradient(150deg, rgba(255, 122, 72, 0.13), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 122, 72, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 60px -32px rgba(0, 0, 0, 0.95);
 }
 
 .vidro-ambar {
   background: rgba(240, 176, 86, 0.09);
-  border: 1px solid rgba(240, 176, 86, 0.26);
-}
-
-.vidro-nevoa {
-  background: rgba(86, 150, 200, 0.11);
-  border: 1px solid rgba(120, 180, 225, 0.28);
-}
-
-.vidro-brasa {
-  background: rgba(242, 118, 107, 0.1);
-  border: 1px solid rgba(242, 118, 107, 0.28);
+  border: 1px solid rgba(240, 176, 86, 0.3);
 }
 
 /* ------------------------------------------------------------------ */
@@ -130,8 +146,19 @@ optgroup {
 
 .campo:focus {
   outline: none;
-  border-color: rgba(127, 227, 188, 0.55);
-  box-shadow: 0 0 0 3px rgba(127, 227, 188, 0.14);
+  border-color: rgba(255, 138, 92, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 122, 72, 0.16);
+}
+
+/* No celular, campo abaixo de 16px faz o Safari do iOS dar zoom ao focar.
+   Fica em @layer base porque, no !important, camada anterior vence: assim
+   passa por cima do !text-[13px] do Tailwind, que mora em utilities. */
+@layer base {
+  @media (max-width: 39.99rem) {
+    .campo {
+      font-size: 1rem !important;
+    }
+  }
 }
 
 .rotulo {
@@ -139,7 +166,7 @@ optgroup {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(244, 247, 245, 0.52);
+  color: rgba(242, 240, 234, 0.52);
 }
 
 /* Trilho da faixa do KNN. */
@@ -148,4 +175,11 @@ optgroup {
   height: 6px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* A barra lateral rola sozinha quando é mais alta que a janela; a barra
+   de rolagem fica discreta para não competir com o conteúdo. */
+.rolagem-discreta {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
 }

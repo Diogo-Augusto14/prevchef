@@ -1,40 +1,14 @@
 "use client";
 
 import type { EstadoDaAnalise } from "@/lib/analise";
-import { Etiqueta, Secao } from "./ui";
+import { BOTAO_SECUNDARIO, Etiqueta, Secao } from "./ui";
 
 /**
- * A análise vem partida em dois: a frase de leitura entra na faixa do topo,
- * junto do clima, e o detalhe fica na coluna do raciocínio. Assim o resumo
- * não aparece duas vezes.
+ * A leitura do dia num cartão só: a frase de resumo no topo e o detalhe
+ * embaixo. A frase é a única que mostra o resumo e a mensagem de erro —
+ * o detalhe nunca os repete.
  */
-
-export function ResumoDaIA({ estado }: { estado: EstadoDaAnalise }) {
-  if (estado.estado === "carregando" || estado.estado === "ocioso") {
-    return (
-      <p className="flex items-center gap-3 text-sm text-marfim/50" aria-live="polite">
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-jade-400" />
-        A IA está lendo o clima, o histórico e o estoque…
-      </p>
-    );
-  }
-
-  if (estado.estado === "erro") {
-    return (
-      <p className="text-sm leading-relaxed text-ambar-300/90">
-        A leitura automática não rodou: {estado.mensagem}
-      </p>
-    );
-  }
-
-  return (
-    <p className="max-w-4xl font-display text-[22px] font-light leading-[1.45] tracking-tight text-marfim">
-      {estado.analise.resumo}
-    </p>
-  );
-}
-
-export function DetalheDaIA({
+export function LeituraDoDia({
   estado,
   aoTentarDeNovo,
 }: {
@@ -43,10 +17,10 @@ export function DetalheDaIA({
 }) {
   return (
     <Secao
-      titulo="Leitura da IA"
+      titulo="Leitura do dia"
       descricao="Gerada sozinha assim que o clima e a previsão ficam prontos — sem pergunta, sem chat."
       acao={
-        <Etiqueta cor="jadeSuave">
+        <Etiqueta cor="fogoSuave">
           <svg
             width="12"
             height="12"
@@ -64,35 +38,87 @@ export function DetalheDaIA({
         </Etiqueta>
       }
     >
-      {estado.estado === "carregando" && <Esqueleto />}
+      <div aria-live="polite">
+        <FraseDaIA estado={estado} />
+      </div>
 
-      {estado.estado === "ocioso" && (
-        <p className="text-sm text-marfim/55">
-          Aguardando a previsão do tempo para analisar o dia.
-        </p>
-      )}
-
-      {estado.estado === "erro" && (
-        <div className="text-sm">
-          <p className="leading-relaxed text-ambar-200/90">{estado.mensagem}</p>
-          {estado.configuracaoAusente && (
-            <p className="mt-1.5 text-xs leading-relaxed text-marfim/55">
-              O resto do painel — previsão, compras, alertas — continua
-              funcionando. Só este texto depende da chave.
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={aoTentarDeNovo}
-            className="mt-3 rounded-lg border border-ambar-500/40 px-3 py-1.5 text-xs font-bold text-ambar-300 transition hover:bg-white/5"
-          >
-            Tentar de novo
-          </button>
-        </div>
-      )}
-
-      {estado.estado === "pronto" && <Conteudo analise={estado.analise} />}
+      <div className="mt-5 border-t border-white/10 pt-5">
+        <DetalheDaIA estado={estado} aoTentarDeNovo={aoTentarDeNovo} />
+      </div>
     </Secao>
+  );
+}
+
+function FraseDaIA({ estado }: { estado: EstadoDaAnalise }) {
+  if (estado.estado === "carregando" || estado.estado === "ocioso") {
+    return (
+      <p className="flex items-center gap-3 text-sm text-marfim/50">
+        <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-fogo-400" />
+        A IA está lendo o clima, o histórico e o estoque…
+      </p>
+    );
+  }
+
+  if (estado.estado === "erro") {
+    return (
+      <p className="text-sm leading-relaxed text-ambar-300/90">
+        A leitura automática não rodou: {estado.mensagem}
+      </p>
+    );
+  }
+
+  return (
+    <p className="max-w-4xl font-display text-[20px] font-light leading-[1.5] tracking-tight text-marfim">
+      {estado.analise.resumo}
+    </p>
+  );
+}
+
+function DetalheDaIA({
+  estado,
+  aoTentarDeNovo,
+}: {
+  estado: EstadoDaAnalise;
+  aoTentarDeNovo: () => void;
+}) {
+  if (estado.estado === "carregando") return <Esqueleto />;
+
+  if (estado.estado === "ocioso") {
+    return (
+      <p className="text-sm text-marfim/55">
+        Aguardando a previsão do tempo para analisar o dia.
+      </p>
+    );
+  }
+
+  if (estado.estado === "erro") {
+    return (
+      <div className="text-sm">
+        {estado.configuracaoAusente && (
+          <p className="text-xs leading-relaxed text-marfim/55">
+            O resto do painel — previsão, compras, alertas — continua
+            funcionando. Só este texto depende da chave.
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={aoTentarDeNovo}
+          className={`${BOTAO_SECUNDARIO} px-3 py-1.5 text-xs ${
+            estado.configuracaoAusente ? "mt-3" : ""
+          }`}
+        >
+          Tentar de novo
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Conteudo
+      analise={estado.analise}
+      salvaEm={estado.salvaEm}
+      aoGerarDeNovo={aoTentarDeNovo}
+    />
   );
 }
 
@@ -112,38 +138,44 @@ function Esqueleto() {
 
 function Conteudo({
   analise,
+  salvaEm,
+  aoGerarDeNovo,
 }: {
   analise: Extract<EstadoDaAnalise, { estado: "pronto" }>["analise"];
+  salvaEm?: string;
+  aoGerarDeNovo: () => void;
 }) {
   return (
     <div className="space-y-5">
-      <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
-        {analise.clima && (
-          <div>
-            <p className="rotulo">Leitura do clima</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-marfim/84">
-              {analise.clima}
-            </p>
-          </div>
-        )}
-        {analise.padrao && (
-          <div className="sm:border-l sm:border-white/10 sm:pl-8">
-            <p className="rotulo">O que é comum vender</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-marfim/84">
-              {analise.padrao}
-            </p>
-          </div>
-        )}
-      </div>
+      {(analise.clima || analise.padrao) && (
+        <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+          {analise.clima && (
+            <div>
+              <p className="rotulo">Leitura do clima</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-marfim/84">
+                {analise.clima}
+              </p>
+            </div>
+          )}
+          {analise.padrao && (
+            <div className="sm:border-l sm:border-white/10 sm:pl-8">
+              <p className="rotulo">O que é comum vender</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-marfim/84">
+                {analise.padrao}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {analise.sugestoes.length > 0 && (
         <ol className="border-t border-white/10 pt-1">
           {analise.sugestoes.map((s, i) => (
             <li
               key={`${s.titulo}-${i}`}
-              className="flex gap-4 border-b border-white/[0.06] py-3 last:border-b-0"
+              className="flex gap-4 border-b border-white/[0.07] py-3 last:border-b-0"
             >
-              <span className="tabular mt-0.5 shrink-0 font-display text-sm text-jade-400/70">
+              <span className="tabular mt-0.5 shrink-0 font-display text-sm text-fogo-400/70">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div>
@@ -185,11 +217,29 @@ function Conteudo({
         </p>
       )}
 
-      <p className="text-xs leading-relaxed text-marfim/45">
+      <p className="text-xs leading-relaxed text-marfim/55">
         Texto escrito por um modelo de linguagem a partir dos números do painel.
         Os números vêm do modelo de previsão; a interpretação é da IA e pode
         conter erro — confira antes de comprar.
       </p>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <p className="text-xs leading-relaxed text-marfim/50">
+          {salvaEm
+            ? `Leitura guardada às ${new Date(salvaEm).toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })} de ${new Date(salvaEm).toLocaleDateString("pt-BR")} — recarregar a página não chama a IA de novo.`
+            : "Leitura deste dia."}
+        </p>
+        <button
+          type="button"
+          onClick={aoGerarDeNovo}
+          className={`${BOTAO_SECUNDARIO} px-3 py-1.5 text-xs`}
+        >
+          Gerar de novo
+        </button>
+      </div>
     </div>
   );
 }

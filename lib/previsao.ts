@@ -1,6 +1,6 @@
 /**
  * Camada que transforma a saída do KNN em informação de gerente:
- * lista de compras, destaques do dia, prato do dia e alertas.
+ * lista de compras, prato do dia e alertas.
  */
 
 import {
@@ -11,7 +11,7 @@ import {
   dataLonga,
   diasEntre,
   nomeDoPrato,
-  numero,
+  quantidade,
 } from "./dados";
 import { K_PADRAO, preverPratos, type ResultadoPrevisao, type Vizinho } from "./knn";
 import { mediasPorDiaSemana } from "./mae";
@@ -56,12 +56,6 @@ export type Alerta = {
   detalhe: string;
 };
 
-export type Destaque = {
-  rotulo: string;
-  valor: string;
-  detalhe: string;
-};
-
 export type PratoDoDia = {
   pratoId: string;
   nome: string;
@@ -81,7 +75,6 @@ export type ResumoDoDia = {
   /** Curva de chegada por hora, tirada dos mesmos vizinhos. */
   chegadas: PrevisaoDeChegada;
   compras: ItemCompra[];
-  destaques: Destaque[];
   pratoDoDia: PratoDoDia;
   alertas: Alerta[];
   totalPorcoes: number;
@@ -102,7 +95,9 @@ export function gerarResumoDoDia(
   /** Estoque do momento. Sem isso, usa a carga inicial do arquivo. */
   estoque: ItemEstoque[] = ESTOQUE,
   /** Histórico do modelo. Cresce a cada dia fechado. */
-  historico: RegistroVenda[] = HISTORICO
+  historico: RegistroVenda[] = HISTORICO,
+  /** Preços de venda do dia. Sem isso, usa o preço do arquivo. */
+  precos?: Record<string, number>
 ): ResumoDoDia {
   /*
    * O modelo só pode olhar para trás.
@@ -121,7 +116,7 @@ export function gerarResumoDoDia(
     return {
       ...r,
       nome: prato.nome,
-      precoVenda: prato.precoVenda,
+      precoVenda: precos?.[prato.id] ?? prato.precoVenda,
       mediaDoDiaSemana: arredondar(mediaSemana, 1),
       variacao: mediaSemana ? arredondar(((r.previsao - mediaSemana) / mediaSemana) * 100, 0) : 0,
       incerteza: r.previsao ? arredondar((r.maximo - r.minimo) / r.previsao, 2) : 0,
@@ -146,7 +141,6 @@ export function gerarResumoDoDia(
     diasParecidos,
     chegadas: preverChegadas(diasParecidos),
     compras,
-    destaques: montarDestaques(previsoes, totalPorcoes, faturamentoEstimado),
     pratoDoDia,
     alertas: montarAlertas(previsoes, compras, cenario, dataAlvo, estoque),
     totalPorcoes: arredondar(totalPorcoes, 1),
@@ -213,60 +207,7 @@ export function montarListaDeCompras(
 }
 
 /* ------------------------------------------------------------------ */
-/* Destaques                                                           */
-/* ------------------------------------------------------------------ */
-
-function montarDestaques(
-  previsoes: PrevisaoDePrato[],
-  totalPorcoes: number,
-  faturamento: number
-): Destaque[] {
-  const porVolume = [...previsoes].sort((a, b) => b.previsao - a.previsao);
-  const porVariacao = [...previsoes].sort((a, b) => b.variacao - a.variacao);
-  const campeao = porVolume[0];
-  const emAlta = porVariacao[0];
-  const emBaixa = porVariacao[porVariacao.length - 1];
-
-  const destaques: Destaque[] = [
-    {
-      rotulo: "Movimento previsto",
-      valor: `${Math.round(totalPorcoes)} porções`,
-      detalhe: `faturamento estimado de ${faturamento.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      })}`,
-    },
-  ];
-
-  if (campeao) {
-    destaques.push({
-      rotulo: "Prato mais pedido",
-      valor: campeao.nome,
-      detalhe: `${campeao.previsao} porções previstas (faixa ${campeao.minimo}–${campeao.maximo})`,
-    });
-  }
-
-  if (emAlta && emAlta.variacao > 5) {
-    destaques.push({
-      rotulo: "Saindo mais que o normal",
-      valor: emAlta.nome,
-      detalhe: `+${emAlta.variacao}% acima da média de ${emAlta.mediaDoDiaSemana} porções desse dia da semana`,
-    });
-  }
-
-  if (emBaixa && emBaixa.variacao < -5 && emBaixa.pratoId !== emAlta?.pratoId) {
-    destaques.push({
-      rotulo: "Segurar a produção",
-      valor: emBaixa.nome,
-      detalhe: `${emBaixa.variacao}% abaixo da média de ${emBaixa.mediaDoDiaSemana} porções desse dia da semana`,
-    });
-  }
-
-  return destaques;
-}
-
-/* ------------------------------------------------------------------ */
-/* Prato do dia                                                        */
+/* Prato do dia                                                       */
 /* ------------------------------------------------------------------ */
 
 /**
@@ -337,7 +278,7 @@ function montarAlertas(
           : `${vencidos.length} itens vencidos no dia escolhido`,
       detalhe: `Retirar do estoque antes do serviço: ${vencidos
         .map((e) => `${e.nome} (${dataLonga(e.validade)})`)
-        .join(", ")}. Já foram descontados da lista de compras.`,
+        .join(", ")}. ${vencidos.length === 1 ? "Já foi descontado" : "Já foram descontados"} da lista de compras.`,
     });
   }
 
@@ -348,13 +289,14 @@ function montarAlertas(
     alertas.push({
       nivel: dias <= 1 ? "alto" : "medio",
       titulo: `${e.nome} vence ${dias === 0 ? "no dia" : `em ${dias} dia${dias > 1 ? "s" : ""}`}`,
-      detalhe: `${numero(e.quantidade, 2)} ${e.unidade} em estoque. Priorizar no cardápio ou transformar em promoção.`,
+      detalhe: `${quantidade(e.quantidade, e.unidade)} em estoque. Priorizar no cardápio ou transformar em promoção.`,
     });
   }
   if (vencendo.length > 3) {
+    const n = vencendo.length - 3;
     alertas.push({
       nivel: "info",
-      titulo: `Mais ${vencendo.length - 3} itens perto do vencimento`,
+      titulo: `Mais ${n} ${n === 1 ? "item" : "itens"} perto do vencimento`,
       detalhe: `Ver a tela de Estoque: ${vencendo
         .slice(3)
         .map(({ e }) => e.nome)
@@ -373,10 +315,7 @@ function montarAlertas(
     alertas.push({
       nivel: cobertura < 50 ? "alto" : "medio",
       titulo: `Falta ${item.nome}`,
-      detalhe: `O estoque cobre ${Math.round(cobertura)}% do previsto. Comprar ${numero(
-        item.comprar,
-        2
-      )} ${item.unidade}.`,
+      detalhe: `O estoque cobre ${Math.round(cobertura)}% do previsto. Comprar ${quantidade(item.unidade === "un" ? Math.ceil(item.comprar) : item.comprar, item.unidade)}.`,
     });
   }
 

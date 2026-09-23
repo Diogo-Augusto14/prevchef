@@ -8,12 +8,21 @@
  * O estoque considerado é o inicial menos o que os pedidos em aberto já
  * comprometeram. Um pedido "entregue" já consumiu; um pedido na fila ainda
  * vai consumir. Os dois descontam.
+ *
+ * O gerente também pode pausar um prato na mão. Pausado não é falta de
+ * estoque — é decisão da casa — mas bloqueia a venda do mesmo jeito.
  */
 
+import { estaPausado } from "./cardapio";
 import { PRATOS, diasEntre } from "./dados";
-import type { ItemEstoque, Pedido } from "./tipos";
+import type { AjustesDoCardapio, ItemEstoque, Pedido } from "./tipos";
 
-export type SituacaoDoPrato = "disponivel" | "acabando" | "ultimas" | "esgotado";
+export type SituacaoDoPrato =
+  | "disponivel"
+  | "acabando"
+  | "ultimas"
+  | "esgotado"
+  | "pausado";
 
 export type DisponibilidadeDoPrato = {
   pratoId: string;
@@ -96,11 +105,24 @@ function classificar(porcoes: number): SituacaoDoPrato {
 export function calcularDisponibilidade(
   pedidos: Pedido[],
   dataAlvo: string,
-  estoque: ItemEstoque[]
+  estoque: ItemEstoque[],
+  ajustes: AjustesDoCardapio = {}
 ): DisponibilidadeDoPrato[] {
   const restante = estoqueRestante(pedidos, dataAlvo, estoque);
 
   return PRATOS.map((prato) => {
+    // Pausado vence qualquer conta de estoque: a casa decidiu não vender.
+    if (estaPausado(ajustes, prato.id)) {
+      return {
+        pratoId: prato.id,
+        nome: prato.nome,
+        porcoes: 0,
+        situacao: "pausado" as const,
+        limitante: null,
+        comprometidas: porcoesComprometidas(pedidos, prato.id),
+      };
+    }
+
     let teto = Infinity;
     let limitante: DisponibilidadeDoPrato["limitante"] = null;
 
@@ -145,6 +167,10 @@ export function podeLancar(
 ): { pode: boolean; motivo?: string } {
   const item = disponibilidade.find((d) => d.pratoId === pratoId);
   if (!item) return { pode: false, motivo: "Prato fora do cardápio." };
+
+  if (item.situacao === "pausado") {
+    return { pode: false, motivo: "Pausado no cardápio de hoje." };
+  }
 
   if (item.porcoes <= 0) {
     return {

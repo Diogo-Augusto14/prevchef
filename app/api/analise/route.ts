@@ -63,6 +63,8 @@ function extrairJson(texto: string): AnaliseDoDia | null {
 
   try {
     const bruto = JSON.parse(limpo.slice(inicio, fim + 1));
+    // Sem resumo o cartão fica em branco e ainda seria guardado como a leitura do dia.
+    if (typeof bruto.resumo !== "string" || !bruto.resumo.trim()) return null;
     const sugestoes = Array.isArray(bruto.sugestoes) ? bruto.sugestoes : [];
 
     return {
@@ -138,9 +140,29 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(analise);
   } catch (erro: unknown) {
+    console.error(
+      "[analise]",
+      erro instanceof Error ? erro.message : "Erro ao consultar a IA."
+    );
+
+    // A ResponseError do ollama traz o status HTTP; falha de rede chega como TypeError.
+    const status = (erro as { status_code?: number } | null)?.status_code;
+    if (status === 401 || status === 403) {
+      return NextResponse.json(
+        {
+          error: "A chave da IA foi recusada. Confira OLLAMA_API_KEY no .env.local.",
+          configuracaoAusente: true,
+        },
+        { status: 502 }
+      );
+    }
+
     const mensagem =
-      erro instanceof Error ? erro.message : "Erro ao consultar a IA.";
-    console.error("[analise]", mensagem);
+      status === 429
+        ? "Limite de uso da IA atingido. Tente mais tarde."
+        : erro instanceof TypeError
+          ? "O servidor não conseguiu falar com a IA (sem internet?)."
+          : "A IA não respondeu agora.";
     return NextResponse.json({ error: mensagem }, { status: 502 });
   }
 }
