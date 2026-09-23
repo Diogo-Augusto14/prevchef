@@ -183,6 +183,55 @@ const MESAS = [
 /** Quanto uma mesa fica ocupada, em média, do sentar ao levantar. */
 const TEMPO_MEDIO_DE_REFEICAO = 55;
 
+/** Horas em que a casa atende. */
+const HORAS_DE_SERVICO = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+
+/**
+ * Como o movimento se espalha pelas horas do dia.
+ *
+ * Dia útil tem pico de almoço forte e curto (executivo) e jantar mais tarde.
+ * Fim de semana almoça mais tarde, estica a tarde e distribui melhor.
+ * Os dois perfis somam 1 — são a fatia do movimento do dia em cada hora.
+ */
+const PERFIL_UTIL = [
+  0.04, 0.16, 0.14, 0.06, 0.02, 0.01, 0.02, 0.05, 0.1, 0.15, 0.13, 0.08, 0.04,
+];
+const PERFIL_FIM_DE_SEMANA = [
+  0.03, 0.12, 0.15, 0.1, 0.05, 0.03, 0.03, 0.05, 0.09, 0.13, 0.12, 0.07, 0.03,
+];
+
+/** Quantos pratos, em média, cada pessoa pede. */
+const PRATOS_POR_PESSOA = 1.15;
+
+/**
+ * Distribui o movimento do dia pelas horas.
+ *
+ * O total sai das porções vendidas naquele dia, para o histórico ficar
+ * coerente consigo mesmo: se o dia vendeu 147 porções, chegaram por volta de
+ * 128 pessoas, e não um número solto.
+ */
+function chegadasDoDia(ctx, totalDePorcoes) {
+  const fimDeSemana = ctx.diaSemana === 0 || ctx.diaSemana === 6;
+  const base = fimDeSemana ? PERFIL_FIM_DE_SEMANA : PERFIL_UTIL;
+
+  const pessoas = Math.round(totalDePorcoes / PRATOS_POR_PESSOA);
+
+  const pesos = base.map((peso, i) => {
+    const hora = HORAS_DE_SERVICO[i];
+    let ajuste = 1;
+
+    // Chuva segura o jantar e empurra um pouco para o almoço.
+    if (ctx.chuva) ajuste *= hora >= 18 ? 0.88 : 1.1;
+    // Feriado esvazia o almoço de executivo e enche a noite.
+    if (ctx.feriado) ajuste *= hora <= 15 ? 0.85 : 1.2;
+
+    return Math.max(0, peso * ajuste * (1 + ruido(0.12)));
+  });
+
+  const soma = pesos.reduce((a, b) => a + b, 0) || 1;
+  return pesos.map((peso) => Math.max(0, Math.round((peso / soma) * pessoas)));
+}
+
 const PRATOS = [
   {
     id: "feijoada",
@@ -347,6 +396,8 @@ function gerarVendas() {
       vendas[prato.id] = Math.max(0, Math.round(comRuido));
     }
 
+    const totalDePorcoes = Object.values(vendas).reduce((a, b) => a + b, 0);
+
     registros.push({
       data: iso(data),
       diaSemana: ctx.diaSemana,
@@ -356,6 +407,7 @@ function gerarVendas() {
       feriado: ctx.feriado,
       inicioMes: ctx.inicioMes,
       vendas,
+      chegadasPorHora: chegadasDoDia(ctx, totalDePorcoes),
     });
   }
 
@@ -444,6 +496,7 @@ gravar("pratos.json", pratos);
 gravar("estoque.json", gerarEstoque());
 gravar("restaurante.json", {
   tempoMedioDeRefeicaoMinutos: TEMPO_MEDIO_DE_REFEICAO,
+  horasDeServico: HORAS_DE_SERVICO,
   estacoes: ESTACOES,
   mesas: MESAS.map((m) => ({ id: `mesa-${m.numero}`, ...m })),
 });

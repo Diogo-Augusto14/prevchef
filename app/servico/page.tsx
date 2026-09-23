@@ -9,7 +9,18 @@ import {
   TituloDaTela,
   Vazio,
 } from "../components/ui";
-import { DIA_PADRAO, dinheiro, nomeDoPrato } from "@/lib/dados";
+import {
+  DIA_PADRAO,
+  diaSemanaDe,
+  dinheiro,
+  inicioDoMes,
+  nomeDoPrato,
+} from "@/lib/dados";
+import { feriadoDe } from "@/lib/feriados";
+import { temperaturaTipicaPara } from "@/lib/padroes";
+import { gerarResumoDoDia } from "@/lib/previsao";
+import { chegadasProximas, picoAindaPorVir } from "@/lib/chegadas";
+import FilaDeEspera from "../components/FilaDeEspera";
 import { MESAS, PRATOS, TEMPO_MEDIO_DE_REFEICAO } from "@/lib/restaurante";
 import { calcularDisponibilidade, podeLancar } from "@/lib/disponibilidade";
 import { planejarChegadas, type PlanoDeChegada } from "@/lib/salao";
@@ -25,15 +36,47 @@ export default function ServicoPage() {
     sentar,
     liberar,
     lancarPedido,
+    fila,
+    entrarNaFila,
+    sairDaFila,
+    sentarDaFila,
   } = useOperacao();
 
   const [mesaSelecionada, setMesaSelecionada] = useState<string | null>(null);
   const [pessoas, setPessoas] = useState(2);
   const [rascunho, setRascunho] = useState<Record<string, number>>({});
 
-  const { salao, planos } = useMemo(
-    () => planejarChegadas(ocupacoes, agora),
-    [ocupacoes, agora]
+  const { salao, planos, situacaoDaFila } = useMemo(
+    () => planejarChegadas(ocupacoes, fila, agora),
+    [ocupacoes, fila, agora]
+  );
+
+  /*
+   * Previsão de chegada do dia. Usa o clima típico da época: esta tela não
+   * busca previsão do tempo — quem faz isso é o Painel.
+   */
+  const previsaoDoDia = useMemo(
+    () =>
+      gerarResumoDoDia(
+        {
+          diaSemana: diaSemanaDe(DIA_PADRAO),
+          temperatura: temperaturaTipicaPara(DIA_PADRAO),
+          chuva: false,
+          feriado: Boolean(feriadoDe(DIA_PADRAO)),
+          inicioMes: inicioDoMes(DIA_PADRAO),
+        },
+        DIA_PADRAO
+      ),
+    []
+  );
+
+  const proximas = useMemo(
+    () => chegadasProximas(previsaoDoDia.chegadas, agora),
+    [previsaoDoDia, agora]
+  );
+  const pico = useMemo(
+    () => picoAindaPorVir(previsaoDoDia.chegadas, agora),
+    [previsaoDoDia, agora]
   );
 
   const abertos = useMemo(() => pedidosAbertos(pedidos), [pedidos]);
@@ -107,11 +150,23 @@ export default function ServicoPage() {
             detalhe: "na fila ou em preparo",
           },
           {
-            rotulo: "Giro da mesa",
-            valor: `${TEMPO_MEDIO_DE_REFEICAO} min`,
-            detalhe: "base para estimar a liberação",
+            rotulo: "Chegando na próxima hora",
+            valor: proximas.seguinte
+              ? `${proximas.seguinte.pessoas} pessoas`
+              : "fora do serviço",
+            detalhe: pico
+              ? `pico ainda por vir às ${pico.rotulo} com ${pico.pessoas}`
+              : `giro médio de ${TEMPO_MEDIO_DE_REFEICAO} min por mesa`,
+            forte: Boolean(proximas.seguinte && proximas.seguinte.pessoas > 0),
           },
         ]}
+      />
+
+      <FilaDeEspera
+        situacao={situacaoDaFila}
+        aoEntrar={entrarNaFila}
+        aoSair={sairDaFila}
+        aoSentar={sentarDaFila}
       />
 
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-12">

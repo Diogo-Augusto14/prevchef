@@ -14,7 +14,7 @@
  */
 
 import { MESAS, TEMPO_MEDIO_DE_REFEICAO } from "./restaurante";
-import type { Mesa, Ocupacao } from "./tipos";
+import type { ItemDaFila, Mesa, Ocupacao } from "./tipos";
 
 /** Tamanhos de grupo para os quais a resposta fica pronta de antemão. */
 export const GRUPOS_PREVISTOS = [1, 2, 3, 4, 5, 6];
@@ -171,17 +171,112 @@ export function planejarGrupo(
   };
 }
 
+/* ------------------------------------------------------------------ */
+/* Fila de espera                                                      */
+/* ------------------------------------------------------------------ */
+
+export type ChamadoDaFila = {
+  item: ItemDaFila;
+  esperandoHa: number;
+  /** Mesa livre agora para este grupo. */
+  mesa: Mesa | null;
+  /** Se não há mesa livre, quanto falta — e qual mesa vai liberar. */
+  esperaMinutos: number | null;
+  mesaPrevista: Mesa | null;
+};
+
+export type SituacaoDaFila = {
+  chamados: ChamadoDaFila[];
+  /** Mesas que sobram para quem chegar sem estar na fila. */
+  mesasLivresParaNovos: Mesa[];
+  prontosParaSentar: number;
+};
+
+/**
+ * Distribui as mesas entre quem já está esperando, por ordem de chegada.
+ *
+ * Isso vem ANTES de responder sobre quem entrar pela porta agora: uma mesa
+ * prometida a quem está na fila há 20 minutos não pode ser oferecida a um
+ * grupo que acabou de chegar. É por isso que a fila entra no mesmo cálculo,
+ * e não numa lista separada.
+ */
+export function atenderFila(
+  salao: EstadoDoSalao,
+  fila: ItemDaFila[],
+  agora: Date
+): SituacaoDaFila {
+  const livres = [...salao.mesasLivres];
+  // As que vão vagando, da mais próxima para a mais distante.
+  const vagando = [...salao.mesasOcupadas].sort((a, b) => a.liberaEm - b.liberaEm);
+
+  const porOrdemDeChegada = [...fila].sort((a, b) =>
+    a.desde.localeCompare(b.desde)
+  );
+
+  const chamados: ChamadoDaFila[] = porOrdemDeChegada.map((item) => {
+    const esperandoHa = minutosDesde(item.desde, agora);
+    const mesa = melhorEncaixe(livres, item.pessoas);
+
+    if (mesa) {
+      // Some da lista: esta mesa já tem dono.
+      livres.splice(livres.indexOf(mesa), 1);
+      return { item, esperandoHa, mesa, esperaMinutos: null, mesaPrevista: null };
+    }
+
+    // Sem mesa livre: reserva a próxima que vaga e comporta o grupo.
+    const indice = vagando.findIndex((o) => o.mesa.lugares >= item.pessoas);
+    if (indice === -1) {
+      return { item, esperandoHa, mesa: null, esperaMinutos: null, mesaPrevista: null };
+    }
+
+    const [proxima] = vagando.splice(indice, 1);
+    return {
+      item,
+      esperandoHa,
+      mesa: null,
+      esperaMinutos: proxima.liberaEm,
+      mesaPrevista: proxima.mesa,
+    };
+  });
+
+  return {
+    chamados,
+    mesasLivresParaNovos: livres,
+    prontosParaSentar: chamados.filter((c) => c.mesa).length,
+  };
+}
+
 /**
  * As respostas prontas para todos os tamanhos de grupo.
  * É isto que fica calculado esperando alguém entrar pela porta.
  */
 export function planejarChegadas(
   ocupacoes: Ocupacao[],
+  fila: ItemDaFila[],
   agora: Date
-): { salao: EstadoDoSalao; planos: PlanoDeChegada[] } {
+): {
+  salao: EstadoDoSalao;
+  planos: PlanoDeChegada[];
+  situacaoDaFila: SituacaoDaFila;
+} {
   const salao = lerSalao(ocupacoes, agora);
+  const situacaoDaFila = atenderFila(salao, fila, agora);
+
+  // Quem chega agora só enxerga o que sobrou depois de atender a fila.
+  const salaoParaNovos: EstadoDoSalao = {
+    ...salao,
+    mesasLivres: situacaoDaFila.mesasLivresParaNovos,
+    lugaresLivres: situacaoDaFila.mesasLivresParaNovos.reduce(
+      (s, m) => s + m.lugares,
+      0
+    ),
+  };
+
   return {
     salao,
-    planos: GRUPOS_PREVISTOS.map((pessoas) => planejarGrupo(salao, pessoas)),
+    situacaoDaFila,
+    planos: GRUPOS_PREVISTOS.map((pessoas) =>
+      planejarGrupo(salaoParaNovos, pessoas)
+    ),
   };
 }

@@ -18,12 +18,22 @@ import {
   type ReactNode,
 } from "react";
 import { MESAS } from "./restaurante";
-import type { ItemDePedido, Ocupacao, Pedido, SituacaoDoPedido } from "./tipos";
+import type {
+  ItemDaFila,
+  ItemDePedido,
+  Ocupacao,
+  Pedido,
+  SituacaoDoPedido,
+} from "./tipos";
 
 const CHAVE = "prevchef:operacao:v1";
 const INTERVALO_DO_RELOGIO = 30_000;
 
-type Guardado = { ocupacoes: Ocupacao[]; pedidos: Pedido[] };
+type Guardado = {
+  ocupacoes: Ocupacao[];
+  pedidos: Pedido[];
+  fila: ItemDaFila[];
+};
 
 type Operacao = Guardado & {
   /** Instante de referência; avança sozinho. */
@@ -33,6 +43,9 @@ type Operacao = Guardado & {
   sentar: (mesaId: string, pessoas: number) => void;
   liberar: (mesaId: string) => void;
   lancarPedido: (mesaId: string, itens: ItemDePedido[]) => void;
+  entrarNaFila: (nome: string, pessoas: number) => void;
+  sairDaFila: (id: string) => void;
+  sentarDaFila: (id: string, mesaId: string) => void;
   mudarSituacao: (pedidoId: string, situacao: SituacaoDoPedido) => void;
   cancelarPedido: (pedidoId: string) => void;
   reiniciarServico: () => void;
@@ -84,11 +97,19 @@ function servicoDeExemplo(): Guardado {
         situacao: "na-fila",
       },
     ],
+    fila: [
+      { id: "fila-exemplo-1", nome: "Ribeiro", pessoas: 2, desde: minutosAtras(14) },
+      { id: "fila-exemplo-2", nome: "Tanaka", pessoas: 6, desde: minutosAtras(7) },
+    ],
   };
 }
 
 export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
-  const [estado, setEstado] = useState<Guardado>({ ocupacoes: [], pedidos: [] });
+  const [estado, setEstado] = useState<Guardado>({
+    ocupacoes: [],
+    pedidos: [],
+    fila: [],
+  });
   const [pronto, setPronto] = useState(false);
   const [agora, setAgora] = useState(() => new Date(0));
 
@@ -101,7 +122,7 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       if (salvo) {
         const lido = JSON.parse(salvo) as Guardado;
         if (Array.isArray(lido.ocupacoes) && Array.isArray(lido.pedidos)) {
-          inicial = lido;
+          inicial = { ...lido, fila: Array.isArray(lido.fila) ? lido.fila : [] };
         }
       }
     } catch {
@@ -143,6 +164,7 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
   /** Liberar a mesa fecha a conta: os pedidos dela saem da cozinha. */
   const liberar = useCallback((mesaId: string) => {
     setEstado((atual) => ({
+      ...atual,
       ocupacoes: atual.ocupacoes.filter((o) => o.mesaId !== mesaId),
       pedidos: atual.pedidos.map((p) =>
         p.mesaId === mesaId && p.situacao !== "entregue"
@@ -170,6 +192,51 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
         },
       ],
     }));
+    setAgora(new Date());
+  }, []);
+
+  const entrarNaFila = useCallback((nome: string, pessoas: number) => {
+    const limpo = nome.trim();
+    if (!limpo || pessoas <= 0) return;
+
+    setEstado((atual) => ({
+      ...atual,
+      fila: [
+        ...atual.fila,
+        {
+          id: `fila-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          nome: limpo,
+          pessoas,
+          desde: new Date().toISOString(),
+        },
+      ],
+    }));
+    setAgora(new Date());
+  }, []);
+
+  const sairDaFila = useCallback((id: string) => {
+    setEstado((atual) => ({
+      ...atual,
+      fila: atual.fila.filter((f) => f.id !== id),
+    }));
+    setAgora(new Date());
+  }, []);
+
+  /** Senta o grupo e tira ele da fila num passo só. */
+  const sentarDaFila = useCallback((id: string, mesaId: string) => {
+    setEstado((atual) => {
+      const item = atual.fila.find((f) => f.id === id);
+      if (!item) return atual;
+
+      return {
+        ...atual,
+        fila: atual.fila.filter((f) => f.id !== id),
+        ocupacoes: [
+          ...atual.ocupacoes.filter((o) => o.mesaId !== mesaId),
+          { mesaId, pessoas: item.pessoas, desde: new Date().toISOString() },
+        ],
+      };
+    });
     setAgora(new Date());
   }, []);
 
@@ -207,6 +274,9 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       sentar,
       liberar,
       lancarPedido,
+      entrarNaFila,
+      sairDaFila,
+      sentarDaFila,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,
@@ -218,6 +288,9 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       sentar,
       liberar,
       lancarPedido,
+      entrarNaFila,
+      sairDaFila,
+      sentarDaFila,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,

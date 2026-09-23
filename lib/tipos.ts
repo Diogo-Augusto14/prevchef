@@ -14,6 +14,8 @@ export type RegistroVenda = {
   inicioMes: boolean;
   /** Porções vendidas por prato, indexadas pelo id do prato. */
   vendas: Record<string, number>;
+  /** Pessoas que chegaram em cada hora de serviço, na ordem de `horasDeServico`. */
+  chegadasPorHora: number[];
 };
 
 export type ArquivoVendas = {
@@ -81,6 +83,7 @@ export type Estacao = {
 
 export type ArquivoRestaurante = {
   tempoMedioDeRefeicaoMinutos: number;
+  horasDeServico: number[];
   estacoes: Estacao[];
   mesas: Mesa[];
 };
@@ -107,4 +110,13 @@ export type Pedido = {
   /** Momento do lançamento, em ISO. */
   lancadoEm: string;
   situacao: SituacaoDoPedido;
+};
+
+/** Um grupo esperando mesa. */
+export type ItemDaFila = {
+  id: string;
+  nome: string;
+  pessoas: number;
+  /** Momento em que entrou na fila, em ISO. */
+  desde: string;
 };

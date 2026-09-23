@@ -1,13 +1,14 @@
 # PrevChef
 
-Protótipo de painel para o gerente de um restaurante: prevê quantas porções de
-cada prato saem no dia e transforma isso em lista de compras, prato do dia e
-alertas de estoque.
+Sistema de gestão de restaurante: prevê a venda de cada prato e a chegada de
+gente por hora, cuida do salão e da fila de espera, sequencia a cozinha e
+controla o que ainda dá para vender.
 
-> **O histórico é simulado.** Vendas, fichas técnicas e estoque saem de um
-> script gerador (`scripts/gerar-dados.mjs`) e não vêm de um restaurante real.
-> Só duas coisas são reais: a **previsão do tempo** (Open-Meteo) e a **análise
-> escrita pela IA**. O aviso aparece em todas as telas do app.
+> **Nota para quem lê o código:** o histórico de vendas, as fichas técnicas, o
+> estoque e o salão saem de um script gerador (`scripts/gerar-dados.mjs`) e não
+> vêm de um restaurante real — é um trabalho de faculdade. Reais são a
+> **previsão do tempo** (Open-Meteo), a **localização do aparelho** e a
+> **análise escrita pela IA**.
 
 Next.js (App Router) + TypeScript + Tailwind. O KNN roda no navegador, em cima
 de JSON embutidos no bundle. O único código de servidor é um route handler
@@ -58,9 +59,11 @@ A previsão do tempo não precisa de chave (a Open-Meteo é aberta).
 
 | Rota | O que mostra |
 | --- | --- |
-| `/` | **Painel** — escolhe dia, clima (quente/ameno/frio, com ou sem chuva) e feriado; o botão *Gerar previsão* traz previsão por prato com faixa, os dias parecidos usados, lista de compras, destaques, prato do dia e alertas. |
-| `/estoque` | **Estoque** — quantidade, validade, dias restantes e em que pratos cada ingrediente entra. |
-| `/desempenho` | **Desempenho** — gráfico previsto × real no período de teste (Recharts) e tabela de MAE por método. |
+| `/` | **Painel** — previsão de venda por prato, curva de chegada por hora, lista de compras, prato do dia, alertas e a leitura da IA. |
+| `/servico` | **Serviço** — mapa do salão, fila de espera, lançamento de pedido e a alocação de mesa pré-calculada para grupos de 1 a 6. |
+| `/cozinha` | **Cozinha** — fila de produção sequenciada por tempo de preparo, carga dos postos e o que ainda dá para fazer. |
+| `/estoque` | **Estoque** — quantidade, validade e a linha do tempo até vencer. |
+| `/desempenho` | **Desempenho** — previsto × real no período de teste e a tabela de MAE. |
 
 ## Os dados simulados
 
@@ -73,12 +76,32 @@ temperatura, chuva, feriado e início do mês. Os padrões embutidos:
 - **chuva** reforça prato quente e derruba salada;
 - **feriado** (+28%) e **início do mês** (+16%) mexem no movimento da casa;
 - fim do mês segura o movimento, há um leve crescimento ao longo do ano e um
-  ruído aleatório em cima de tudo.
+  ruído aleatório em cima de tudo;
+- cada dia guarda também a **chegada de pessoas por hora**, derivada do total de
+  porções daquele dia, para o histórico ficar coerente consigo mesmo. Dia útil
+  tem pico de almoço curto e forte; fim de semana almoça mais tarde e estica a
+  tarde; chuva segura o jantar.
 
 A aleatoriedade usa semente fixa, então o histórico é reproduzível.
 
 Também são gerados `data/pratos.json` (ficha técnica: quanto de cada ingrediente
 sai por porção) e `data/estoque.json` (quantidade, validade e custo unitário).
+
+## As quatro inteligências
+
+O projeto não usa um tipo só de IA. Cada problema pede o método certo:
+
+| Camada | Técnica | Onde |
+| --- | --- | --- |
+| Previsão de demanda | KNN de regressão | venda por prato e chegada por hora |
+| Otimização | sequenciamento com restrição de capacidade | fila da cozinha |
+| Sistema de regras | melhor encaixe, teto de estoque | mesas e disponibilidade |
+| Linguagem | modelo generativo | leitura do dia |
+
+**Só a última chama um modelo de linguagem, e uma vez por dia.** Pedido, mesa e
+estoque são aritmética: precisam ser exatos, instantâneos e dar o mesmo
+resultado sempre. Se um modelo decidisse quantas porções ainda dá para fazer,
+poderia errar a conta e liberar a venda de um prato que não existe.
 
 ## O modelo
 
@@ -132,7 +155,8 @@ Dia (único campo)
 Localização do aparelho → Open-Meteo (clima real)
        + detecção de feriado                         ← entrada automática
    ↓
-KNN sobre 365 dias simulados                          ← inteligência (previsão)
+KNN sobre 365 dias de histórico                       ← inteligência (previsão)
+       venda por prato + chegada por hora
    ↓
 Ficha técnica − estoque + padrões históricos          ← inteligência (regras)
    ↓

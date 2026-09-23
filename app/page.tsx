@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DetalheDaIA, ResumoDaIA } from "./components/AnaliseIA";
+import CurvaDeChegada from "./components/CurvaDeChegada";
 import {
   Alertas,
   DiasParecidos,
@@ -220,6 +221,7 @@ export default function PainelPage() {
           {/* Raciocínio */}
           <div className="space-y-8 lg:col-span-7 xl:col-span-8">
             <InstrumentoDePratos resumo={resumo} />
+            <CurvaDeChegada chegadas={resumo.chegadas} />
             <DetalheDaIA estado={analise} aoTentarDeNovo={rodarAnalise} />
             <DiasParecidos resumo={resumo} />
           </div>

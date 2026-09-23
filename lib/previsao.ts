@@ -15,6 +15,7 @@ import {
 } from "./dados";
 import { K_PADRAO, preverPratos, type ResultadoPrevisao, type Vizinho } from "./knn";
 import { mediasPorDiaSemana } from "./mae";
+import { preverChegadas, type PrevisaoDeChegada } from "./chegadas";
 import type { Cenario, ItemEstoque } from "./tipos";
 
 /** Quantos dias antes do vencimento já consideramos "perto de vencer". */
@@ -77,6 +78,8 @@ export type ResumoDoDia = {
   previsoes: PrevisaoDePrato[];
   /** Os K dias parecidos usados (são os mesmos para todos os pratos). */
   diasParecidos: Vizinho[];
+  /** Curva de chegada por hora, tirada dos mesmos vizinhos. */
+  chegadas: PrevisaoDeChegada;
   compras: ItemCompra[];
   destaques: Destaque[];
   pratoDoDia: PratoDoDia;
@@ -128,6 +131,7 @@ export function gerarResumoDoDia(
     dataAlvo,
     previsoes,
     diasParecidos,
+    chegadas: preverChegadas(diasParecidos),
     compras,
     destaques: montarDestaques(previsoes, totalPorcoes, faturamentoEstimado),
     pratoDoDia,

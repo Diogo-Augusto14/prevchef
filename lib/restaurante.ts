@@ -8,6 +8,7 @@ const arquivo = restauranteJson as unknown as ArquivoRestaurante;
 export const MESAS = arquivo.mesas;
 export const ESTACOES = arquivo.estacoes;
 export const TEMPO_MEDIO_DE_REFEICAO = arquivo.tempoMedioDeRefeicaoMinutos;
+export const HORAS_DE_SERVICO = arquivo.horasDeServico;
 
 export const LUGARES_TOTAIS = MESAS.reduce((s, m) => s + m.lugares, 0);
 
