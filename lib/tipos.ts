@@ -35,6 +35,10 @@ export type Prato = {
   id: string;
   nome: string;
   precoVenda: number;
+  /** Minutos que a porção leva no posto, do pedido ao prato pronto. */
+  tempoPreparoMinutos: number;
+  /** Posto da cozinha que executa o prato. */
+  estacao: string;
   ingredientes: IngredienteDaFicha[];
 };
 
@@ -55,4 +59,52 @@ export type Cenario = {
   chuva: boolean;
   feriado: boolean;
   inicioMes: boolean;
+};
+
+/* ------------------------------------------------------------------ */
+/* Operação do salão e da cozinha                                      */
+/* ------------------------------------------------------------------ */
+
+export type Mesa = {
+  id: string;
+  numero: number;
+  lugares: number;
+  area: string;
+};
+
+export type Estacao = {
+  id: string;
+  nome: string;
+  /** Quantas porções o posto toca ao mesmo tempo. */
+  capacidade: number;
+};
+
+export type ArquivoRestaurante = {
+  tempoMedioDeRefeicaoMinutos: number;
+  estacoes: Estacao[];
+  mesas: Mesa[];
+};
+
+/** Uma mesa ocupada agora. */
+export type Ocupacao = {
+  mesaId: string;
+  pessoas: number;
+  /** Momento em que sentaram, em ISO. */
+  desde: string;
+};
+
+export type ItemDePedido = {
+  pratoId: string;
+  quantidade: number;
+};
+
+export type SituacaoDoPedido = "na-fila" | "em-preparo" | "pronto" | "entregue";
+
+export type Pedido = {
+  id: string;
+  mesaId: string;
+  itens: ItemDePedido[];
+  /** Momento do lançamento, em ISO. */
+  lancadoEm: string;
+  situacao: SituacaoDoPedido;
 };

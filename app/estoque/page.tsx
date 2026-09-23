@@ -1,7 +1,6 @@
 import {
   CABECALHO_TABELA,
   CELULA,
-  AvisoSimulado,
   Etiqueta,
   Heroi,
   LinhaDeNumeros,
@@ -27,10 +26,7 @@ export default function EstoquePage() {
 
   return (
     <div className="space-y-8">
-      <TituloDaTela
-        titulo="Estoque"
-        acao={<AvisoSimulado className="max-w-md" />}
-      >
+      <TituloDaTela titulo="Estoque">
         Contando os dias a partir de {dataLonga(DIA_PADRAO)} — o próximo dia a
         planejar.
       </TituloDaTela>

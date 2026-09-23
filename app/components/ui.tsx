@@ -164,36 +164,6 @@ export function Etiqueta({
   );
 }
 
-/** Aviso fixo de que o histórico não vem de um restaurante de verdade. */
-export function AvisoSimulado({ className = "" }: { className?: string }) {
-  return (
-    <p
-      className={`flex items-start gap-2.5 text-xs leading-relaxed text-marfim/55 ${className}`}
-    >
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        aria-hidden
-        className="mt-0.5 shrink-0 text-ambar-500"
-      >
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 8h.01M12 11v5" />
-      </svg>
-      <span>
-        <strong className="font-semibold text-ambar-300">Dados simulados.</strong>{" "}
-        Histórico de vendas, fichas técnicas e estoque saem de um script de
-        exemplo e não vêm de um restaurante real. Reais são só a previsão do
-        tempo, a sua localização e a análise escrita pela IA.
-      </span>
-    </p>
-  );
-}
-
 export function Vazio({ children }: { children: ReactNode }) {
   return (
     <p className="rounded-2xl border border-dashed border-white/13 px-4 py-7 text-center text-sm leading-relaxed text-marfim/58">

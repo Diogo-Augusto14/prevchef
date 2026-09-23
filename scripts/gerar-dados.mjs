@@ -139,6 +139,50 @@ const INGREDIENTES = {
   "feijao-carioca": { nome: "Feijão carioca", unidade: "kg" },
 };
 
+/**
+ * Tempo de preparo e posto da cozinha, por prato.
+ *
+ * O tempo é o da porção saindo do posto: a feijoada cozinha em panelão desde
+ * cedo, então a porção só monta; a parmegiana empana, frita e gratina na hora.
+ * É essa diferença que faz a fila da cozinha ter o que ordenar.
+ */
+const PREPARO = {
+  feijoada: { tempoPreparoMinutos: 10, estacao: "fogao" },
+  "caldo-verde": { tempoPreparoMinutos: 6, estacao: "fogao" },
+  salada: { tempoPreparoMinutos: 5, estacao: "frio" },
+  parmegiana: { tempoPreparoMinutos: 22, estacao: "fritura" },
+  "frango-grelhado": { tempoPreparoMinutos: 16, estacao: "grelha" },
+};
+
+/** Postos da cozinha e quantas porções cada um toca ao mesmo tempo. */
+const ESTACOES = [
+  { id: "fogao", nome: "Fogão", capacidade: 2 },
+  { id: "grelha", nome: "Grelha", capacidade: 2 },
+  { id: "fritura", nome: "Fritura e forno", capacidade: 1 },
+  { id: "frio", nome: "Praça fria", capacidade: 2 },
+];
+
+/** Salão: número, lugares e área de cada mesa. */
+const MESAS = [
+  { numero: 1, lugares: 2, area: "Salão" },
+  { numero: 2, lugares: 2, area: "Salão" },
+  { numero: 3, lugares: 2, area: "Varanda" },
+  { numero: 4, lugares: 2, area: "Varanda" },
+  { numero: 5, lugares: 4, area: "Salão" },
+  { numero: 6, lugares: 4, area: "Salão" },
+  { numero: 7, lugares: 4, area: "Salão" },
+  { numero: 8, lugares: 4, area: "Varanda" },
+  { numero: 9, lugares: 4, area: "Mezanino" },
+  { numero: 10, lugares: 6, area: "Salão" },
+  { numero: 11, lugares: 6, area: "Mezanino" },
+  { numero: 12, lugares: 6, area: "Mezanino" },
+  { numero: 13, lugares: 8, area: "Salão" },
+  { numero: 14, lugares: 8, area: "Mezanino" },
+];
+
+/** Quanto uma mesa fica ocupada, em média, do sentar ao levantar. */
+const TEMPO_MEDIO_DE_REFEICAO = 55;
+
 const PRATOS = [
   {
     id: "feijoada",
@@ -379,6 +423,7 @@ const pratos = PRATOS.map((p) => ({
   id: p.id,
   nome: p.nome,
   precoVenda: p.precoVenda,
+  ...PREPARO[p.id],
   ingredientes: p.ingredientes.map(([id, quantidade]) => ({
     id,
     nome: INGREDIENTES[id].nome,
@@ -397,6 +442,11 @@ gravar("vendas.json", {
 
 gravar("pratos.json", pratos);
 gravar("estoque.json", gerarEstoque());
+gravar("restaurante.json", {
+  tempoMedioDeRefeicaoMinutos: TEMPO_MEDIO_DE_REFEICAO,
+  estacoes: ESTACOES,
+  mesas: MESAS.map((m) => ({ id: `mesa-${m.numero}`, ...m })),
+});
 
 const total = vendas.reduce(
   (s, d) => s + Object.values(d.vendas).reduce((a, b) => a + b, 0),

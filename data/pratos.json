@@ -3,6 +3,8 @@
     "id": "feijoada",
     "nome": "Feijoada",
     "precoVenda": 52,
+    "tempoPreparoMinutos": 10,
+    "estacao": "fogao",
     "ingredientes": [
       {
         "id": "feijao-preto",
@@ -52,6 +54,8 @@
     "id": "caldo-verde",
     "nome": "Caldo verde",
     "precoVenda": 28,
+    "tempoPreparoMinutos": 6,
+    "estacao": "fogao",
     "ingredientes": [
       {
         "id": "batata",
@@ -95,6 +99,8 @@
     "id": "salada",
     "nome": "Salada da casa",
     "precoVenda": 32,
+    "tempoPreparoMinutos": 5,
+    "estacao": "frio",
     "ingredientes": [
       {
         "id": "alface",
@@ -138,6 +144,8 @@
     "id": "parmegiana",
     "nome": "Parmegiana",
     "precoVenda": 48,
+    "tempoPreparoMinutos": 22,
+    "estacao": "fritura",
     "ingredientes": [
       {
         "id": "file-frango",
@@ -187,6 +195,8 @@
     "id": "frango-grelhado",
     "nome": "Frango grelhado",
     "precoVenda": 38,
+    "tempoPreparoMinutos": 16,
+    "estacao": "grelha",
     "ingredientes": [
       {
         "id": "file-frango",

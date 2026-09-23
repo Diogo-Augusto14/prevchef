@@ -1,0 +1,111 @@
+{
+  "tempoMedioDeRefeicaoMinutos": 55,
+  "estacoes": [
+    {
+      "id": "fogao",
+      "nome": "Fogão",
+      "capacidade": 2
+    },
+    {
+      "id": "grelha",
+      "nome": "Grelha",
+      "capacidade": 2
+    },
+    {
+      "id": "fritura",
+      "nome": "Fritura e forno",
+      "capacidade": 1
+    },
+    {
+      "id": "frio",
+      "nome": "Praça fria",
+      "capacidade": 2
+    }
+  ],
+  "mesas": [
+    {
+      "id": "mesa-1",
+      "numero": 1,
+      "lugares": 2,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-2",
+      "numero": 2,
+      "lugares": 2,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-3",
+      "numero": 3,
+      "lugares": 2,
+      "area": "Varanda"
+    },
+    {
+      "id": "mesa-4",
+      "numero": 4,
+      "lugares": 2,
+      "area": "Varanda"
+    },
+    {
+      "id": "mesa-5",
+      "numero": 5,
+      "lugares": 4,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-6",
+      "numero": 6,
+      "lugares": 4,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-7",
+      "numero": 7,
+      "lugares": 4,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-8",
+      "numero": 8,
+      "lugares": 4,
+      "area": "Varanda"
+    },
+    {
+      "id": "mesa-9",
+      "numero": 9,
+      "lugares": 4,
+      "area": "Mezanino"
+    },
+    {
+      "id": "mesa-10",
+      "numero": 10,
+      "lugares": 6,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-11",
+      "numero": 11,
+      "lugares": 6,
+      "area": "Mezanino"
+    },
+    {
+      "id": "mesa-12",
+      "numero": 12,
+      "lugares": 6,
+      "area": "Mezanino"
+    },
+    {
+      "id": "mesa-13",
+      "numero": 13,
+      "lugares": 8,
+      "area": "Salão"
+    },
+    {
+      "id": "mesa-14",
+      "numero": 14,
+      "lugares": 8,
+      "area": "Mezanino"
+    }
+  ]
+}

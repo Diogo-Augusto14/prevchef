@@ -9,7 +9,7 @@ import {
   ListaDeCompras,
   PratoDoDia,
 } from "./components/ResultadoDia";
-import { AvisoSimulado, Etiqueta, Heroi, TituloDaTela } from "./components/ui";
+import { Etiqueta, Heroi, TituloDaTela } from "./components/ui";
 import {
   DIA_PADRAO,
   NOMES_DIAS,
@@ -141,7 +141,7 @@ export default function PainelPage() {
 
   return (
     <div className="space-y-8">
-      <TituloDaTela titulo="Painel do dia" acao={<AvisoSimulado className="max-w-md" />}>
+      <TituloDaTela titulo="Painel do dia">
         Localização, clima e feriado entram sozinhos. Você escolhe só o dia.
       </TituloDaTela>
 

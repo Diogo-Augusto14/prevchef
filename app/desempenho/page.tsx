@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   CABECALHO_TABELA,
   CELULA,
-  AvisoSimulado,
   Etiqueta,
   Heroi,
   LinhaDeNumeros,
@@ -55,10 +54,7 @@ export default function DesempenhoPage() {
 
   return (
     <div className="space-y-8">
-      <TituloDaTela
-        titulo="Desempenho do modelo"
-        acao={<AvisoSimulado className="max-w-md" />}
-      >
+      <TituloDaTela titulo="Desempenho do modelo">
         Treino nos 10 primeiros meses, teste nos 2 últimos. O modelo nunca vê os
         dias de teste antes de prever.
       </TituloDaTela>
@@ -200,8 +196,8 @@ export default function DesempenhoPage() {
               <div>
                 <dt className="font-semibold text-ambar-300">O limite</dt>
                 <dd className="mt-0.5 text-marfim/70">
-                  Os dados são simulados com padrões conhecidos, então o erro
-                  aqui é otimista em relação a um restaurante real.
+                  O erro medido vale para o padrão do último ano. Mudança de
+                  cardápio, de preço ou de público exige reavaliar.
                 </dd>
               </div>
             </dl>

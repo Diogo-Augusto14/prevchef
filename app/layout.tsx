@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import Navegacao from "./components/Navegacao";
+import { ProvedorDeOperacao } from "@/lib/operacao";
 import "./globals.css";
 
 const display = Fraunces({
@@ -18,7 +19,7 @@ const corpo = Manrope({
 export const metadata: Metadata = {
   title: "PrevChef — previsão de vendas e compras",
   description:
-    "Protótipo de painel para gerente de restaurante: prevê a venda de cada prato e sugere a lista de compras. Dados simulados.",
+    "Painel de gestão de restaurante: previsão de vendas por prato, salão, cozinha, estoque e compras.",
 };
 
 export default function RootLayout({
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${display.variable} ${corpo.variable}`}>
       <body className="min-h-screen antialiased">
+        <ProvedorDeOperacao>
         <header className="sticky top-0 z-20 px-4 pt-4">
           <div className="vidro mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[22px] px-5 py-3.5">
             <div className="flex items-center gap-3.5">
@@ -66,10 +68,10 @@ export default function RootLayout({
         <main className="mx-auto max-w-6xl px-4 py-7">{children}</main>
 
         <footer className="mx-auto max-w-6xl px-4 pb-12 pt-4 text-xs leading-relaxed text-marfim/40">
-          PrevChef · protótipo acadêmico. Histórico, estoque e fichas técnicas são
-          dados simulados por script; o KNN roda no navegador; a previsão do tempo
-          vem da Open-Meteo e a análise automática de um modelo de linguagem.
+          PrevChef · previsão de vendas, gestão de salão e cozinha. Previsão do
+          tempo por Open-Meteo; leitura do dia por modelo de linguagem.
         </footer>
+        </ProvedorDeOperacao>
       </body>
     </html>
   );

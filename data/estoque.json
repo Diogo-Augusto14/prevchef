@@ -4,7 +4,7 @@
     "nome": "Feijão preto",
     "unidade": "kg",
     "quantidade": 14,
-    "validade": "2027-01-20",
+    "validade": "2027-01-21",
     "custoUnitario": 9.4
   },
   {
@@ -12,7 +12,7 @@
     "nome": "Carne seca",
     "unidade": "kg",
     "quantidade": 6.5,
-    "validade": "2026-10-01",
+    "validade": "2026-10-02",
     "custoUnitario": 42.9
   },
   {
@@ -20,7 +20,7 @@
     "nome": "Linguiça calabresa",
     "unidade": "kg",
     "quantidade": 7,
-    "validade": "2026-09-29",
+    "validade": "2026-09-30",
     "custoUnitario": 27.5
   },
   {
@@ -28,7 +28,7 @@
     "nome": "Bacon",
     "unidade": "kg",
     "quantidade": 3.2,
-    "validade": "2026-10-03",
+    "validade": "2026-10-04",
     "custoUnitario": 34
   },
   {
@@ -36,7 +36,7 @@
     "nome": "Arroz",
     "unidade": "kg",
     "quantidade": 30,
-    "validade": "2027-03-21",
+    "validade": "2027-03-22",
     "custoUnitario": 6.2
   },
   {
@@ -44,7 +44,7 @@
     "nome": "Couve",
     "unidade": "kg",
     "quantidade": 4,
-    "validade": "2026-09-24",
+    "validade": "2026-09-25",
     "custoUnitario": 12
   },
   {
@@ -52,7 +52,7 @@
     "nome": "Laranja",
     "unidade": "kg",
     "quantidade": 9,
-    "validade": "2026-09-28",
+    "validade": "2026-09-29",
     "custoUnitario": 5.5
   },
   {
@@ -60,7 +60,7 @@
     "nome": "Batata",
     "unidade": "kg",
     "quantidade": 22,
-    "validade": "2026-10-07",
+    "validade": "2026-10-08",
     "custoUnitario": 4.8
   },
   {
@@ -68,7 +68,7 @@
     "nome": "Cebola",
     "unidade": "kg",
     "quantidade": 6,
-    "validade": "2026-10-12",
+    "validade": "2026-10-13",
     "custoUnitario": 5.2
   },
   {
@@ -76,7 +76,7 @@
     "nome": "Alho",
     "unidade": "kg",
     "quantidade": 1.2,
-    "validade": "2026-11-06",
+    "validade": "2026-11-07",
     "custoUnitario": 38
   },
   {
@@ -84,7 +84,7 @@
     "nome": "Azeite",
     "unidade": "L",
     "quantidade": 4,
-    "validade": "2027-07-19",
+    "validade": "2027-07-20",
     "custoUnitario": 46
   },
   {
@@ -92,7 +92,7 @@
     "nome": "Alface",
     "unidade": "kg",
     "quantidade": 2.6,
-    "validade": "2026-09-25",
+    "validade": "2026-09-26",
     "custoUnitario": 14.5
   },
   {
@@ -100,7 +100,7 @@
     "nome": "Tomate",
     "unidade": "kg",
     "quantidade": 7.5,
-    "validade": "2026-09-27",
+    "validade": "2026-09-28",
     "custoUnitario": 8.9
   },
   {
@@ -108,7 +108,7 @@
     "nome": "Cenoura",
     "unidade": "kg",
     "quantidade": 4.5,
-    "validade": "2026-10-04",
+    "validade": "2026-10-05",
     "custoUnitario": 6.4
   },
   {
@@ -116,7 +116,7 @@
     "nome": "Pepino",
     "unidade": "kg",
     "quantidade": 2.8,
-    "validade": "2026-09-26",
+    "validade": "2026-09-27",
     "custoUnitario": 7.2
   },
   {
@@ -124,7 +124,7 @@
     "nome": "Queijo branco",
     "unidade": "kg",
     "quantidade": 2.2,
-    "validade": "2026-09-30",
+    "validade": "2026-10-01",
     "custoUnitario": 48
   },
   {
@@ -132,7 +132,7 @@
     "nome": "Filé de frango",
     "unidade": "kg",
     "quantidade": 16,
-    "validade": "2026-09-25",
+    "validade": "2026-09-26",
     "custoUnitario": 26.9
   },
   {
@@ -140,7 +140,7 @@
     "nome": "Queijo mussarela",
     "unidade": "kg",
     "quantidade": 4.5,
-    "validade": "2026-10-06",
+    "validade": "2026-10-07",
     "custoUnitario": 52
   },
   {
@@ -148,7 +148,7 @@
     "nome": "Molho de tomate",
     "unidade": "kg",
     "quantidade": 8,
-    "validade": "2026-12-21",
+    "validade": "2026-12-22",
     "custoUnitario": 11.5
   },
   {
@@ -156,7 +156,7 @@
     "nome": "Farinha de rosca",
     "unidade": "kg",
     "quantidade": 5,
-    "validade": "2026-11-21",
+    "validade": "2026-11-22",
     "custoUnitario": 9
   },
   {
@@ -164,7 +164,7 @@
     "nome": "Ovo",
     "unidade": "un",
     "quantidade": 180,
-    "validade": "2026-10-10",
+    "validade": "2026-10-11",
     "custoUnitario": 0.85
   },
   {
@@ -172,7 +172,7 @@
     "nome": "Feijão carioca",
     "unidade": "kg",
     "quantidade": 12,
-    "validade": "2027-01-20",
+    "validade": "2027-01-21",
     "custoUnitario": 8.1
   }
 ]

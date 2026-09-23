@@ -187,8 +187,8 @@ function Conteudo({
 
       <p className="text-xs leading-relaxed text-marfim/45">
         Texto escrito por um modelo de linguagem a partir dos números do painel.
-        Os números vêm do KNN e do histórico simulado; a interpretação é da IA e
-        pode conter erro — confira antes de comprar.
+        Os números vêm do modelo de previsão; a interpretação é da IA e pode
+        conter erro — confira antes de comprar.
       </p>
     </div>
   );
