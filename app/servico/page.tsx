@@ -21,6 +21,9 @@ import { temperaturaTipicaPara } from "@/lib/padroes";
 import { gerarResumoDoDia } from "@/lib/previsao";
 import { chegadasProximas, picoAindaPorVir } from "@/lib/chegadas";
 import FilaDeEspera from "../components/FilaDeEspera";
+import Reservas from "../components/Reservas";
+import Conta from "../components/Conta";
+import { resumoDoCaixa } from "@/lib/conta";
 import { MESAS, PRATOS, TEMPO_MEDIO_DE_REFEICAO } from "@/lib/restaurante";
 import { calcularDisponibilidade, podeLancar } from "@/lib/disponibilidade";
 import { planejarChegadas, type PlanoDeChegada } from "@/lib/salao";
@@ -34,12 +37,17 @@ export default function ServicoPage() {
     pedidos,
     agora,
     sentar,
-    liberar,
     lancarPedido,
     fila,
     entrarNaFila,
     sairDaFila,
     sentarDaFila,
+    reservas,
+    reservar,
+    cancelarReserva,
+    sentarReserva,
+    contasFechadas,
+    fecharConta,
   } = useOperacao();
 
   const [mesaSelecionada, setMesaSelecionada] = useState<string | null>(null);
@@ -47,9 +55,11 @@ export default function ServicoPage() {
   const [rascunho, setRascunho] = useState<Record<string, number>>({});
 
   const { salao, planos, situacaoDaFila } = useMemo(
-    () => planejarChegadas(ocupacoes, fila, agora),
-    [ocupacoes, fila, agora]
+    () => planejarChegadas(ocupacoes, fila, reservas, agora),
+    [ocupacoes, fila, reservas, agora]
   );
+
+  const caixa = useMemo(() => resumoDoCaixa(contasFechadas), [contasFechadas]);
 
   /*
    * Previsão de chegada do dia. Usa o clima típico da época: esta tela não
@@ -145,9 +155,11 @@ export default function ServicoPage() {
             detalhe: `${salao.ocupacaoPercentual}% das mesas ocupadas`,
           },
           {
-            rotulo: "Pedidos abertos",
-            valor: String(abertos.length),
-            detalhe: "na fila ou em preparo",
+            rotulo: "Caixa do dia",
+            valor: dinheiro(caixa.faturamento),
+            detalhe: caixa.contas
+              ? `${caixa.contas} conta${caixa.contas > 1 ? "s" : ""} · ${dinheiro(caixa.ticketMedio)} por pessoa`
+              : `${abertos.length} pedidos abertos, nenhuma conta fechada`,
           },
           {
             rotulo: "Chegando na próxima hora",
@@ -169,15 +181,26 @@ export default function ServicoPage() {
         aoSentar={sentarDaFila}
       />
 
+      <Reservas
+        reservas={reservas}
+        agora={agora}
+        aoReservar={reservar}
+        aoCancelar={cancelarReserva}
+        aoChegar={sentarReserva}
+      />
+
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-12">
         <div className="lg:col-span-7 xl:col-span-8">
           <Secao
             titulo="Mapa do salão"
-            descricao="Clique numa mesa para sentar um grupo, lançar pedido ou liberar."
+            descricao="Clique numa mesa para sentar, lançar pedido ou fechar a conta."
           >
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">
               {MESAS.map((m) => {
                 const ocupada = salao.mesasOcupadas.find((o) => o.mesa.id === m.id);
+                const guardada = salao.mesasReservadas.find(
+                  (r) => r.mesa.id === m.id
+                );
                 const ativa = m.id === mesaSelecionada;
 
                 return (
@@ -195,7 +218,9 @@ export default function ServicoPage() {
                         ? "border-jade-400/60 bg-jade-400/10"
                         : ocupada
                           ? "border-ambar-500/30 bg-ambar-500/[0.07] hover:border-ambar-500/50"
-                          : "border-white/10 bg-white/[0.03] hover:border-white/25"
+                          : guardada
+                            ? "border-nevoa-300/30 bg-[rgba(86,150,200,0.07)] hover:border-nevoa-300/50"
+                            : "border-white/10 bg-white/[0.03] hover:border-white/25"
                     }`}
                   >
                     <span className="flex items-baseline justify-between gap-2">
@@ -215,6 +240,10 @@ export default function ServicoPage() {
                           {ocupada.ocupacao.pessoas} pessoa
                           {ocupada.ocupacao.pessoas > 1 ? "s" : ""} · há{" "}
                           {ocupada.ha} min
+                        </span>
+                      ) : guardada ? (
+                        <span className="tabular text-[11px] font-semibold text-nevoa-300">
+                          {guardada.reserva.nome} · em {guardada.emMinutos} min
                         </span>
                       ) : (
                         <span className="text-[11px] font-semibold text-jade-300">
@@ -238,20 +267,6 @@ export default function ServicoPage() {
             <Secao
               titulo={`Mesa ${mesa.numero}`}
               descricao={`${mesa.lugares} lugares · ${mesa.area}`}
-              acao={
-                ocupacao ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      liberar(mesa.id);
-                      setRascunho({});
-                    }}
-                    className="rounded-lg border border-white/12 px-3 py-1.5 text-xs font-semibold text-marfim/80 transition hover:border-brasa-300/50 hover:text-brasa-300"
-                  >
-                    Liberar mesa
-                  </button>
-                ) : undefined
-              }
             >
               {!ocupacao ? (
                 <SentarGrupo
@@ -298,6 +313,23 @@ export default function ServicoPage() {
                       </ul>
                     </div>
                   )}
+
+                  <div>
+                    <p className="rotulo">Conta</p>
+                    <div className="mt-2">
+                      <Conta
+                        mesa={mesa}
+                        ocupacao={ocupacao}
+                        pedidosDaMesa={pedidos.filter((p) => p.mesaId === mesa.id)}
+                        agora={agora}
+                        aoFechar={(comServico) => {
+                          fecharConta(mesa.id, comServico);
+                          setRascunho({});
+                          setMesaSelecionada(null);
+                        }}
+                      />
+                    </div>
+                  </div>
 
                   <div>
                     <p className="rotulo">Lançar pedido</p>

@@ -14,7 +14,7 @@
  */
 
 import { MESAS, TEMPO_MEDIO_DE_REFEICAO } from "./restaurante";
-import type { ItemDaFila, Mesa, Ocupacao } from "./tipos";
+import type { ItemDaFila, Mesa, Ocupacao, Reserva } from "./tipos";
 
 /** Tamanhos de grupo para os quais a resposta fica pronta de antemão. */
 export const GRUPOS_PREVISTOS = [1, 2, 3, 4, 5, 6];
@@ -33,9 +33,25 @@ export type PlanoDeChegada = {
   explicacao: string;
 };
 
+/**
+ * Quanto tempo depois do horário marcado a mesa continua guardada.
+ * Passado isso, o sistema entende que não vieram e devolve a mesa.
+ */
+export const TOLERANCIA_DE_ATRASO = 20;
+
+export type MesaReservada = {
+  mesa: Mesa;
+  reserva: Reserva;
+  /** Minutos até o horário marcado (negativo se já passou). */
+  emMinutos: number;
+};
+
 export type EstadoDoSalao = {
+  /** Livres E sem reserva em cima: o que a recepção pode entregar agora. */
   mesasLivres: Mesa[];
   mesasOcupadas: { mesa: Mesa; ocupacao: Ocupacao; ha: number; liberaEm: number }[];
+  /** Livres, mas guardadas para uma reserva que está chegando. */
+  mesasReservadas: MesaReservada[];
   lugaresLivres: number;
   pessoasSentadas: number;
   ocupacaoPercentual: number;
@@ -44,8 +60,35 @@ export type EstadoDoSalao = {
 const minutosDesde = (iso: string, agora: Date) =>
   Math.max(0, Math.round((agora.getTime() - new Date(iso).getTime()) / 60000));
 
+const minutosAte = (iso: string, agora: Date) =>
+  Math.round((new Date(iso).getTime() - agora.getTime()) / 60000);
+
+/**
+ * Reservas que já seguram a mesa neste instante.
+ *
+ * Uma reserva das 20h não bloqueia nada às 15h. Ela passa a segurar quando
+ * falta menos que uma refeição inteira — entregar a mesa depois disso faria
+ * o grupo anterior ainda estar comendo na hora da reserva.
+ */
+export function reservasQueSeguram(
+  reservas: Reserva[],
+  agora: Date
+): { reserva: Reserva; emMinutos: number }[] {
+  return reservas
+    .map((reserva) => ({ reserva, emMinutos: minutosAte(reserva.para, agora) }))
+    .filter(
+      ({ emMinutos }) =>
+        emMinutos <= TEMPO_MEDIO_DE_REFEICAO && emMinutos >= -TOLERANCIA_DE_ATRASO
+    )
+    .sort((a, b) => a.emMinutos - b.emMinutos);
+}
+
 /** Fotografia do salão neste instante. */
-export function lerSalao(ocupacoes: Ocupacao[], agora: Date): EstadoDoSalao {
+export function lerSalao(
+  ocupacoes: Ocupacao[],
+  reservas: Reserva[],
+  agora: Date
+): EstadoDoSalao {
   const ocupadasPorId = new Map(ocupacoes.map((o) => [o.mesaId, o]));
 
   const mesasOcupadas = MESAS.filter((m) => ocupadasPorId.has(m.id)).map((mesa) => {
@@ -59,13 +102,31 @@ export function lerSalao(ocupacoes: Ocupacao[], agora: Date): EstadoDoSalao {
     };
   });
 
-  const mesasLivres = MESAS.filter((m) => !ocupadasPorId.has(m.id));
+  const vazias = MESAS.filter((m) => !ocupadasPorId.has(m.id));
+
+  // Mesas vazias que estão guardadas para uma reserva chegando.
+  const segurando = reservasQueSeguram(reservas, agora);
+  const mesasReservadas: MesaReservada[] = [];
+  const presas = new Set<string>();
+
+  for (const { reserva, emMinutos } of segurando) {
+    const mesa = reserva.mesaId
+      ? vazias.find((m) => m.id === reserva.mesaId && !presas.has(m.id))
+      : undefined;
+    if (!mesa) continue;
+
+    presas.add(mesa.id);
+    mesasReservadas.push({ mesa, reserva, emMinutos });
+  }
+
+  const mesasLivres = vazias.filter((m) => !presas.has(m.id));
   const pessoasSentadas = ocupacoes.reduce((s, o) => s + o.pessoas, 0);
   const lugaresLivres = mesasLivres.reduce((s, m) => s + m.lugares, 0);
 
   return {
     mesasLivres,
     mesasOcupadas,
+    mesasReservadas,
     lugaresLivres,
     pessoasSentadas,
     ocupacaoPercentual: MESAS.length
@@ -247,19 +308,49 @@ export function atenderFila(
 }
 
 /**
+ * Escolhe a mesa de uma reserva nova.
+ *
+ * Melhor encaixe entre as que não têm outra reserva perto do mesmo horário —
+ * duas reservas na mesma mesa com 20 minutos de diferença não cabem.
+ */
+export function mesaParaReserva(
+  reservas: Reserva[],
+  pessoas: number,
+  para: string
+): Mesa | null {
+  const alvo = new Date(para).getTime();
+
+  const conflitantes = new Set(
+    reservas
+      .filter((r) => {
+        const diferenca = Math.abs(new Date(r.para).getTime() - alvo) / 60000;
+        return diferenca < TEMPO_MEDIO_DE_REFEICAO;
+      })
+      .map((r) => r.mesaId)
+      .filter((id): id is string => Boolean(id))
+  );
+
+  return melhorEncaixe(
+    MESAS.filter((m) => !conflitantes.has(m.id)),
+    pessoas
+  );
+}
+
+/**
  * As respostas prontas para todos os tamanhos de grupo.
  * É isto que fica calculado esperando alguém entrar pela porta.
  */
 export function planejarChegadas(
   ocupacoes: Ocupacao[],
   fila: ItemDaFila[],
+  reservas: Reserva[],
   agora: Date
 ): {
   salao: EstadoDoSalao;
   planos: PlanoDeChegada[];
   situacaoDaFila: SituacaoDaFila;
 } {
-  const salao = lerSalao(ocupacoes, agora);
+  const salao = lerSalao(ocupacoes, reservas, agora);
   const situacaoDaFila = atenderFila(salao, fila, agora);
 
   // Quem chega agora só enxerga o que sobrou depois de atender a fila.

@@ -18,11 +18,15 @@ import {
   type ReactNode,
 } from "react";
 import { MESAS } from "./restaurante";
+import { calcularConta } from "./conta";
+import { mesaParaReserva } from "./salao";
 import type {
+  ContaFechada,
   ItemDaFila,
   ItemDePedido,
   Ocupacao,
   Pedido,
+  Reserva,
   SituacaoDoPedido,
 } from "./tipos";
 
@@ -33,6 +37,8 @@ type Guardado = {
   ocupacoes: Ocupacao[];
   pedidos: Pedido[];
   fila: ItemDaFila[];
+  reservas: Reserva[];
+  contasFechadas: ContaFechada[];
 };
 
 type Operacao = Guardado & {
@@ -46,6 +52,10 @@ type Operacao = Guardado & {
   entrarNaFila: (nome: string, pessoas: number) => void;
   sairDaFila: (id: string) => void;
   sentarDaFila: (id: string, mesaId: string) => void;
+  reservar: (nome: string, pessoas: number, para: string, observacao?: string) => void;
+  cancelarReserva: (id: string) => void;
+  sentarReserva: (id: string) => void;
+  fecharConta: (mesaId: string, comServico?: boolean) => void;
   mudarSituacao: (pedidoId: string, situacao: SituacaoDoPedido) => void;
   cancelarPedido: (pedidoId: string) => void;
   reiniciarServico: () => void;
@@ -55,6 +65,9 @@ const Contexto = createContext<Operacao | null>(null);
 
 const minutosAtras = (minutos: number) =>
   new Date(Date.now() - minutos * 60000).toISOString();
+
+const daquiA = (minutos: number) =>
+  new Date(Date.now() + minutos * 60000).toISOString();
 
 /** Um serviço em andamento, para a tela não abrir vazia. */
 function servicoDeExemplo(): Guardado {
@@ -101,6 +114,25 @@ function servicoDeExemplo(): Guardado {
       { id: "fila-exemplo-1", nome: "Ribeiro", pessoas: 2, desde: minutosAtras(14) },
       { id: "fila-exemplo-2", nome: "Tanaka", pessoas: 6, desde: minutosAtras(7) },
     ],
+    reservas: [
+      {
+        id: "reserva-exemplo-1",
+        nome: "Moreira",
+        pessoas: 6,
+        // Daqui a 40 min: perto o bastante para já segurar a mesa.
+        para: daquiA(40),
+        mesaId: mesa(12),
+        observacao: "aniversário",
+      },
+      {
+        id: "reserva-exemplo-2",
+        nome: "Salgado",
+        pessoas: 4,
+        para: daquiA(150),
+        mesaId: mesa(9),
+      },
+    ],
+    contasFechadas: [],
   };
 }
 
@@ -109,6 +141,8 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
     ocupacoes: [],
     pedidos: [],
     fila: [],
+    reservas: [],
+    contasFechadas: [],
   });
   const [pronto, setPronto] = useState(false);
   const [agora, setAgora] = useState(() => new Date(0));
@@ -122,7 +156,14 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       if (salvo) {
         const lido = JSON.parse(salvo) as Guardado;
         if (Array.isArray(lido.ocupacoes) && Array.isArray(lido.pedidos)) {
-          inicial = { ...lido, fila: Array.isArray(lido.fila) ? lido.fila : [] };
+          inicial = {
+            ...lido,
+            fila: Array.isArray(lido.fila) ? lido.fila : [],
+            reservas: Array.isArray(lido.reservas) ? lido.reservas : [],
+            contasFechadas: Array.isArray(lido.contasFechadas)
+              ? lido.contasFechadas
+              : [],
+          };
         }
       }
     } catch {
@@ -240,6 +281,113 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
     setAgora(new Date());
   }, []);
 
+  /* ---------------------------------------------------------------- */
+  /* Reservas                                                          */
+  /* ---------------------------------------------------------------- */
+
+  const reservar = useCallback(
+    (nome: string, pessoas: number, para: string, observacao?: string) => {
+      const limpo = nome.trim();
+      if (!limpo || pessoas <= 0 || !para) return;
+
+      setEstado((atual) => ({
+        ...atual,
+        reservas: [
+          ...atual.reservas,
+          {
+            id: `reserva-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            nome: limpo,
+            pessoas,
+            para,
+            // A mesa é escolhida na hora de marcar, evitando choque de horário.
+            mesaId: mesaParaReserva(atual.reservas, pessoas, para)?.id ?? null,
+            observacao: observacao?.trim() || undefined,
+          },
+        ],
+      }));
+      setAgora(new Date());
+    },
+    []
+  );
+
+  const cancelarReserva = useCallback((id: string) => {
+    setEstado((atual) => ({
+      ...atual,
+      reservas: atual.reservas.filter((r) => r.id !== id),
+    }));
+    setAgora(new Date());
+  }, []);
+
+  /** Chegou quem reservou: senta na mesa guardada e a reserva se encerra. */
+  const sentarReserva = useCallback((id: string) => {
+    setEstado((atual) => {
+      const reserva = atual.reservas.find((r) => r.id === id);
+      if (!reserva?.mesaId) return atual;
+
+      return {
+        ...atual,
+        reservas: atual.reservas.filter((r) => r.id !== id),
+        ocupacoes: [
+          ...atual.ocupacoes.filter((o) => o.mesaId !== reserva.mesaId),
+          {
+            mesaId: reserva.mesaId,
+            pessoas: reserva.pessoas,
+            desde: new Date().toISOString(),
+          },
+        ],
+      };
+    });
+    setAgora(new Date());
+  }, []);
+
+  /* ---------------------------------------------------------------- */
+  /* Fechamento de conta                                               */
+  /* ---------------------------------------------------------------- */
+
+  const fecharConta = useCallback((mesaId: string, comServico = true) => {
+    const momento = new Date();
+
+    setEstado((atual) => {
+      const ocupacao = atual.ocupacoes.find((o) => o.mesaId === mesaId) ?? null;
+      const mesa = MESAS.find((m) => m.id === mesaId);
+      const daMesa = atual.pedidos.filter((p) => p.mesaId === mesaId);
+      const conta = calcularConta(daMesa, ocupacao, momento, comServico);
+
+      // Mesa que não consumiu nada só volta para o salão: não vira conta de
+      // zero real inflando a contagem do caixa.
+      if (conta.itens.length === 0) {
+        return {
+          ...atual,
+          ocupacoes: atual.ocupacoes.filter((o) => o.mesaId !== mesaId),
+          pedidos: atual.pedidos.filter((p) => p.mesaId !== mesaId),
+        };
+      }
+
+      const fechada: ContaFechada = {
+        id: `conta-${momento.getTime()}-${Math.random().toString(36).slice(2, 7)}`,
+        mesaId,
+        mesaNumero: mesa?.numero ?? 0,
+        pessoas: conta.pessoas,
+        itens: conta.itens,
+        subtotal: conta.subtotal,
+        servico: conta.servico,
+        total: conta.total,
+        abertaEm: ocupacao?.desde ?? momento.toISOString(),
+        fechadaEm: momento.toISOString(),
+        minutosNaMesa: conta.minutosNaMesa,
+      };
+
+      return {
+        ...atual,
+        // A mesa some dos pedidos abertos e volta para o salão.
+        ocupacoes: atual.ocupacoes.filter((o) => o.mesaId !== mesaId),
+        pedidos: atual.pedidos.filter((p) => p.mesaId !== mesaId),
+        contasFechadas: [...atual.contasFechadas, fechada],
+      };
+    });
+    setAgora(momento);
+  }, []);
+
   const mudarSituacao = useCallback(
     (pedidoId: string, situacao: SituacaoDoPedido) => {
       setEstado((atual) => ({
@@ -277,6 +425,10 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       entrarNaFila,
       sairDaFila,
       sentarDaFila,
+      reservar,
+      cancelarReserva,
+      sentarReserva,
+      fecharConta,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,
@@ -291,6 +443,10 @@ export function ProvedorDeOperacao({ children }: { children: ReactNode }) {
       entrarNaFila,
       sairDaFila,
       sentarDaFila,
+      reservar,
+      cancelarReserva,
+      sentarReserva,
+      fecharConta,
       mudarSituacao,
       cancelarPedido,
       reiniciarServico,

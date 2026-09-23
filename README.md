@@ -60,7 +60,7 @@ A previsão do tempo não precisa de chave (a Open-Meteo é aberta).
 | Rota | O que mostra |
 | --- | --- |
 | `/` | **Painel** — previsão de venda por prato, curva de chegada por hora, lista de compras, prato do dia, alertas e a leitura da IA. |
-| `/servico` | **Serviço** — mapa do salão, fila de espera, lançamento de pedido e a alocação de mesa pré-calculada para grupos de 1 a 6. |
+| `/servico` | **Serviço** — mapa do salão, fila de espera, reservas, lançamento de pedido, fechamento de conta e a alocação de mesa pré-calculada para grupos de 1 a 6. |
 | `/cozinha` | **Cozinha** — fila de produção sequenciada por tempo de preparo, carga dos postos e o que ainda dá para fazer. |
 | `/estoque` | **Estoque** — quantidade, validade e a linha do tempo até vencer. |
 | `/desempenho` | **Desempenho** — previsto × real no período de teste e a tabela de MAE. |
@@ -95,8 +95,21 @@ O projeto não usa um tipo só de IA. Cada problema pede o método certo:
 | --- | --- | --- |
 | Previsão de demanda | KNN de regressão | venda por prato e chegada por hora |
 | Otimização | sequenciamento com restrição de capacidade | fila da cozinha |
-| Sistema de regras | melhor encaixe, teto de estoque | mesas e disponibilidade |
+| Sistema de regras | melhor encaixe, teto de estoque, janela de reserva | mesas, fila e disponibilidade |
 | Linguagem | modelo generativo | leitura do dia |
+
+### Uma mesa livre nem sempre está disponível
+
+Ocupação, fila de espera e reserva entram no **mesmo** cálculo, nesta ordem:
+
+1. quem já está na fila recebe as mesas livres, por ordem de chegada;
+2. uma mesa com reserva chegando fica guardada a partir de uma refeição antes
+   (55 min) — entregá-la a quem chega agora estouraria o horário marcado;
+3. o que sobra é o que a recepção pode oferecer na porta.
+
+Por isso a resposta para "entrou um grupo de 6" muda sozinha quando alguém
+entra na fila ou marca uma mesa. A reserva é devolvida 20 min depois do
+horário, se não aparecerem.
 
 **Só a última chama um modelo de linguagem, e uma vez por dia.** Pedido, mesa e
 estoque são aritmética: precisam ser exatos, instantâneos e dar o mesmo
@@ -168,8 +181,11 @@ alertas e sugestões                                   ← decisão
 
 ## Limites do protótipo
 
-- Sem banco de dados: não dá para registrar vendas nem editar o estoque pela
-  interface. O histórico vem de arquivo.
+- Sem banco de dados: o serviço do dia (mesas, pedidos, fila, reservas e
+  contas) vive no `localStorage` do navegador. Fecha a aba num computador e
+  abre em outro, o serviço não vai junto.
+- As contas fechadas não voltam para o histórico: o `data/vendas.json` continua
+  sendo o passado de onde o KNN aprende.
 - Como os dados são gerados com padrões conhecidos, o erro do modelo é otimista
   em relação a um restaurante de verdade.
 - O KNN não tem tendência nem sazonalidade explícitas: ele só copia dias

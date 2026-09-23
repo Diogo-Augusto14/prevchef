@@ -120,3 +120,39 @@ export type ItemDaFila = {
   /** Momento em que entrou na fila, em ISO. */
   desde: string;
 };
+
+/** Uma mesa marcada para um horário. */
+export type Reserva = {
+  id: string;
+  nome: string;
+  pessoas: number;
+  /** Horário marcado, em ISO. */
+  para: string;
+  /** Mesa designada na hora de marcar. */
+  mesaId: string | null;
+  observacao?: string;
+};
+
+export type ItemDaConta = {
+  pratoId: string;
+  nome: string;
+  quantidade: number;
+  precoUnitario: number;
+  total: number;
+};
+
+/** Conta de uma mesa, já fechada. */
+export type ContaFechada = {
+  id: string;
+  mesaId: string;
+  mesaNumero: number;
+  pessoas: number;
+  itens: ItemDaConta[];
+  subtotal: number;
+  servico: number;
+  total: number;
+  /** Momento em que a mesa sentou e em que a conta fechou, em ISO. */
+  abertaEm: string;
+  fechadaEm: string;
+  minutosNaMesa: number;
+};
